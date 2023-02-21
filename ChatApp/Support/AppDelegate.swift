@@ -12,7 +12,6 @@ class AppDelegate: UIResponder {
     var window: UIWindow?
     var appState: ApplicationState = .notRunning
     var appCoordinator: AppCoordinator?
-    let showLogs = Bundle.main.object(forInfoDictionaryKey: SystemLog.showLogs) as? Bool
 }
 
 // MARK: - App Lifecycle
@@ -23,9 +22,8 @@ extension AppDelegate: UIApplicationDelegate {
     // Not running
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     
-        if let showLogs, showLogs {
-            appStateChanged(application, from: .notRunning, to: ApplicationState(rawValue: application.applicationState.rawValue), in: #function)
-        }
+        
+        appStateChanged(application, from: .notRunning, to: ApplicationState(rawValue: application.applicationState.rawValue), in: #function)
         
         return true
     }
@@ -94,9 +92,10 @@ extension AppDelegate {
                          from previousState: ApplicationState?,
                          to nextState: ApplicationState?,
                          in method: String) {
-        guard let showLogs, showLogs else { return }
         guard let previousState, let nextState else { return }
+        #if DEBUG
         print("Application moved from \(previousState.description) to \(nextState.description): \(method)")
+        #endif
         
         appState = nextState
     }

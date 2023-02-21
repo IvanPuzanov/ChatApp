@@ -10,7 +10,6 @@ import UIKit
 class MainVC: UIViewController {
     // MARK: Parameters
     public var coordintor: AppCoordinator?
-    private let showLogs = Bundle.main.object(forInfoDictionaryKey: "Show Logs") as? Bool
     
     // MARK: Views
     private let showDetailButton = UIButton()
@@ -33,8 +32,7 @@ extension MainVC {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
     
     // Данный метод вызывается, чтобы уведомить ViewController
@@ -42,8 +40,7 @@ extension MainVC {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
     
     // Данный метод вызывается, чтобы уведомить ViewController
@@ -51,16 +48,14 @@ extension MainVC {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
     
     // Данный метод вызывается ПОСЛЕ того, как view появился
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
     
     // Данный метод вызывается ПЕРЕД тем, как этот
@@ -68,8 +63,7 @@ extension MainVC {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
     
     // Данный метод вызывается ПОСЛЕ того, как этот
@@ -77,8 +71,7 @@ extension MainVC {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        guard let showLogs, showLogs else { return }
-        print("Called method: \(#function)")
+        printLifecycleMethod(#function)
     }
 }
 
@@ -92,6 +85,12 @@ private extension MainVC {
         default:
             break
         }
+    }
+    
+    func printLifecycleMethod(_ method: String) {
+        #if DEBUG
+        print("Called method: \(method)")
+        #endif
     }
 }
 
