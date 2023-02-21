@@ -13,8 +13,9 @@
 		2ABEC56E29A4A1C50046CB38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56C29A4A1C50046CB38 /* LaunchScreen.storyboard */; };
 		2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57929A4A27F0046CB38 /* Coordinator.swift */; };
 		2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */; };
-		2ABEC57E29A4A3FA0046CB38 /* UIApplication.State + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57D29A4A3FA0046CB38 /* UIApplication.State + Ex.swift */; };
+		2ABEC57E29A4A3FA0046CB38 /* ApplicationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57D29A4A3FA0046CB38 /* ApplicationState.swift */; };
 		2ABEC58029A4B5EF0046CB38 /* DetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57F29A4B5EF0046CB38 /* DetailVC.swift */; };
+		2AE1897A29A5455B00296F31 /* SystemLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1897929A5455B00296F31 /* SystemLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +27,9 @@
 		2ABEC56F29A4A1C50046CB38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2ABEC57929A4A27F0046CB38 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		2ABEC57D29A4A3FA0046CB38 /* UIApplication.State + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication.State + Ex.swift"; sourceTree = "<group>"; };
+		2ABEC57D29A4A3FA0046CB38 /* ApplicationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationState.swift; sourceTree = "<group>"; };
 		2ABEC57F29A4B5EF0046CB38 /* DetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailVC.swift; sourceTree = "<group>"; };
+		2AE1897929A5455B00296F31 /* SystemLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +73,7 @@
 		2ABEC57529A4A2020046CB38 /* Support */ = {
 			isa = PBXGroup;
 			children = (
-				2ABEC57629A4A2060046CB38 /* Extension */,
+				2ABEC57629A4A2060046CB38 /* Constants */,
 				2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */,
 				2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */,
 				2ABEC56C29A4A1C50046CB38 /* LaunchScreen.storyboard */,
@@ -79,12 +81,13 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		2ABEC57629A4A2060046CB38 /* Extension */ = {
+		2ABEC57629A4A2060046CB38 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
-				2ABEC57D29A4A3FA0046CB38 /* UIApplication.State + Ex.swift */,
+				2ABEC57D29A4A3FA0046CB38 /* ApplicationState.swift */,
+				2AE1897929A5455B00296F31 /* SystemLog.swift */,
 			);
-			path = Extension;
+			path = Constants;
 			sourceTree = "<group>";
 		};
 		2ABEC57729A4A20E0046CB38 /* View */ = {
@@ -179,7 +182,8 @@
 				2ABEC56629A4A1C10046CB38 /* MainVC.swift in Sources */,
 				2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
-				2ABEC57E29A4A3FA0046CB38 /* UIApplication.State + Ex.swift in Sources */,
+				2ABEC57E29A4A3FA0046CB38 /* ApplicationState.swift in Sources */,
+				2AE1897A29A5455B00296F31 /* SystemLog.swift in Sources */,
 				2ABEC58029A4B5EF0046CB38 /* DetailVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

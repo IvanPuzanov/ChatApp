@@ -10,9 +10,9 @@ import UIKit
 @main
 class AppDelegate: UIResponder {
     var window: UIWindow?
-    var appState: UIApplication.State = .inactive
+    var appState: ApplicationState = .notRunning
     var appCoordinator: AppCoordinator?
-    let showLogs = Bundle.main.object(forInfoDictionaryKey: "Show Logs") as? Bool
+    let showLogs = Bundle.main.object(forInfoDictionaryKey: SystemLog.showLogs) as? Bool
 }
 
 // MARK: - App Lifecycle
@@ -24,8 +24,7 @@ extension AppDelegate: UIApplicationDelegate {
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     
         if let showLogs, showLogs {
-            print("Application moved from Not running to \(application.applicationState.description): \(#function)")
-            appState = application.applicationState
+            appStateChanged(application, from: .notRunning, to: ApplicationState(rawValue: application.applicationState.rawValue), in: #function)
         }
         
         return true
@@ -51,7 +50,9 @@ extension AppDelegate: UIApplicationDelegate {
         appCoordinator?.start()
         
         // Записывается состояние приложения в переменную
-        appState = application.applicationState
+        if let appState = ApplicationState(rawValue: application.applicationState.rawValue) {
+            self.appState = appState
+        }
         
         return true
     }
@@ -59,7 +60,7 @@ extension AppDelegate: UIApplicationDelegate {
     // Данный метод вызывается ПОСЛЕ того, как
     // приложение переходит в состояние ACTIVE
     func applicationDidBecomeActive(_ application: UIApplication) {
-        appStateChanged(application, from: appState, to: application.applicationState, in: #function)
+        appStateChanged(application, from: appState, to: ApplicationState(rawValue: application.applicationState.rawValue), in: #function)
     }
     
     // MARK: ПРИМЕЧАНИЕ
@@ -74,14 +75,29 @@ extension AppDelegate: UIApplicationDelegate {
     // Данный метод вызывается ПОСЛЕ того, как
     // приложение переходит в состояние BACKGROUND
     func applicationDidEnterBackground(_ application: UIApplication) {
-        appStateChanged(application, from: appState, to: application.applicationState, in: #function)
+        appStateChanged(application, from: appState, to: ApplicationState(rawValue: application.applicationState.rawValue), in: #function)
+    }
+    
+    // Данный метод вызывается ПЕРЕД тем, как
+    // приложение перейдёт в FOREGROUND
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        appStateChanged(application, from: ApplicationState(rawValue: application.applicationState.rawValue), to: .inactive, in: #function)
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        appStateChanged(application, from: ApplicationState(rawValue: application.applicationState.rawValue), to: .notRunning, in: #function)
     }
 }
 
 extension AppDelegate {
-    func appStateChanged(_ application: UIApplication, from previousState: UIApplication.State, to nextState: UIApplication.State, in method: String) {
+    func appStateChanged(_ application: UIApplication,
+                         from previousState: ApplicationState?,
+                         to nextState: ApplicationState?,
+                         in method: String) {
         guard let showLogs, showLogs else { return }
+        guard let previousState, let nextState else { return }
         print("Application moved from \(previousState.description) to \(nextState.description): \(method)")
+        
         appState = nextState
     }
 }
