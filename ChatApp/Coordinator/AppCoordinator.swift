@@ -15,13 +15,16 @@ final class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = MainVC()
+        let viewController = ChatListVC()
         viewController.coordintor = self
         navigationController.pushViewController(viewController, animated: false)
     }
     
-    func showDetailedVC() {
-        let viewController = DetailVC()
-        navigationController.show(viewController, sender: nil)
+    func showProfileVC() {
+        let profileNC = UINavigationController()
+        let profileCoordinator = ProfileCoordinator(navigationController: profileNC)
+        profileCoordinator.start()
+        
+        navigationController.present(profileNC, animated: true)
     }
 }
