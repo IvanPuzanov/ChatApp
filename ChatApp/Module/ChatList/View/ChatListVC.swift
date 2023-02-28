@@ -10,9 +10,10 @@ import UIKit
 class ChatListVC: UIViewController {
     // MARK: Parameters
     public var coordintor: AppCoordinator?
+    private let presenter = ChatListPresenter()
     
     // MARK: - Views
-    private var profileButton   = UIBarButtonItem()
+    private var profileButton   = TCProfileImageView(size: .small)
     private var settingsButton  = UIBarButtonItem()
 }
 
@@ -21,15 +22,22 @@ extension ChatListVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bindToPresenter()
         configure()
         configureNavigationBar()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        coordintor?.showProfileVC()
     }
 }
 
 // MARK: - Event methods
 private extension ChatListVC {
     @objc
-    func buttonTapped(_ button: UIBarButtonItem) {
+    func buttonTapped(_ button: UIView) {
         switch button {
         case profileButton:
             coordintor?.showProfileVC()
@@ -41,6 +49,10 @@ private extension ChatListVC {
 
 // MARK: - Configure methods
 private extension ChatListVC {
+    func bindToPresenter() {
+        self.presenter.setDelegate(self)
+    }
+    
     func configure() {
         self.view.backgroundColor = .systemBackground
     }
@@ -51,11 +63,9 @@ private extension ChatListVC {
         navigationItem.title = "Chat"
         
         // Profile BarButtonItem
-        profileButton = UIBarButtonItem(image: Project.Image.profile,
-                                        style: .plain,
-                                        target: self,
-                                        action: #selector(buttonTapped))
-        navigationItem.setRightBarButton(profileButton, animated: true)
+        profileButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        let profileNavButton = UIBarButtonItem(customView: profileButton)
+        navigationItem.setRightBarButton(profileNavButton, animated: true)
         
         // Settings BarButtonItem
         settingsButton = UIBarButtonItem(image: Project.Image.settings,
@@ -64,4 +74,9 @@ private extension ChatListVC {
                                          action: #selector(buttonTapped))
         navigationItem.setLeftBarButton(settingsButton, animated: true)
     }
+}
+
+// MARK: - Conforming ChatListPresenterProtocol
+extension ChatListVC: ChatListPresenterProtocol {
+    
 }

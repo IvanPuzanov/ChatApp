@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
+		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
 		2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */; };
 		2ABEC56629A4A1C10046CB38 /* ChatListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */; };
 		2ABEC56B29A4A1C50046CB38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */; };
@@ -18,9 +20,17 @@
 		2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB029AC9DC000DBB90E /* Project.swift */; };
 		2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */; };
 		2AE1897A29A5455B00296F31 /* SystemLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE1897929A5455B00296F31 /* SystemLog.swift */; };
+		2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */; };
+		2AEC10DF29ACCF8C000EF08D /* ChatListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10DE29ACCF8C000EF08D /* ChatListPresenter.swift */; };
+		2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */; };
+		2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */; };
+		2AEC10E629ACE1C1000EF08D /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */; };
+		2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
+		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
 		2ABEC55E29A4A1C10046CB38 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListVC.swift; sourceTree = "<group>"; };
@@ -34,6 +44,12 @@
 		2AE04CB029AC9DC000DBB90E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		2AE1897929A5455B00296F31 /* SystemLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemLog.swift; sourceTree = "<group>"; };
+		2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImageView.swift; sourceTree = "<group>"; };
+		2AEC10DE29ACCF8C000EF08D /* ChatListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListPresenter.swift; sourceTree = "<group>"; };
+		2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel + Ex.swift"; sourceTree = "<group>"; };
+		2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton + Ex.swift"; sourceTree = "<group>"; };
+		2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2AA6ACD829ADCC47002BB019 /* ProfileImageView */ = {
+			isa = PBXGroup;
+			children = (
+				2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */,
+				2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */,
+			);
+			path = ProfileImageView;
+			sourceTree = "<group>";
+		};
 		2ABEC55529A4A1C10046CB38 = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +93,7 @@
 			children = (
 				2ABEC57829A4A2110046CB38 /* Coordinator */,
 				2AE04CA829AC9AD400DBB90E /* Module */,
+				2AEC10DB29ACBE77000EF08D /* ReusasbleView */,
 				2ABEC57529A4A2020046CB38 /* Support */,
 				2ABEC56F29A4A1C50046CB38 /* Info.plist */,
 			);
@@ -77,6 +103,7 @@
 		2ABEC57529A4A2020046CB38 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				2AEC10E029ACD943000EF08D /* Extension */,
 				2ABEC57629A4A2060046CB38 /* Constants */,
 				2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */,
 				2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */,
@@ -135,6 +162,7 @@
 		2AE04CAB29AC9AE400DBB90E /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -150,6 +178,7 @@
 		2AE04CAD29AC9B1000DBB90E /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2AEC10DE29ACCF8C000EF08D /* ChatListPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -160,6 +189,33 @@
 				2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		2AEC10DB29ACBE77000EF08D /* ReusasbleView */ = {
+			isa = PBXGroup;
+			children = (
+				2AEC10E729ACEA21000EF08D /* Image */,
+			);
+			path = ReusasbleView;
+			sourceTree = "<group>";
+		};
+		2AEC10E029ACD943000EF08D /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */,
+				2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */,
+				2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		2AEC10E729ACEA21000EF08D /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				2AA6ACD829ADCC47002BB019 /* ProfileImageView */,
+				2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,12 +291,20 @@
 				2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */,
 				2ABEC56629A4A1C10046CB38 /* ChatListVC.swift in Sources */,
 				2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */,
+				2AEC10DF29ACCF8C000EF08D /* ChatListPresenter.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
 				2ABEC57E29A4A3FA0046CB38 /* ApplicationState.swift in Sources */,
+				2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */,
 				2AE1897A29A5455B00296F31 /* SystemLog.swift in Sources */,
+				2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */,
+				2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */,
+				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
 				2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */,
 				2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */,
+				2AEC10E629ACE1C1000EF08D /* ProfilePresenter.swift in Sources */,
 				2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */,
+				2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */,
+				2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,10 +446,12 @@
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app wants to use your photos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -413,10 +479,12 @@
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app wants to use your photos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -505,10 +573,12 @@
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "This app wants to take pictures.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "This app wants to use your photos.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
