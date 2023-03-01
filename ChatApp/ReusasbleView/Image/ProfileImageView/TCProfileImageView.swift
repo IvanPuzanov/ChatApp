@@ -19,7 +19,8 @@ final class TCProfileImageView: UIControl {
     /// small: uses in navigation bar
     /// medium: uses in table/collection cell
     /// large: uses in profile page
-    private var size: Size = .small
+    private var size: Size  = .small
+    private var presenter   = TCProfileImagePresenter()
     
     // MARK: - Views
     private let stackView = UIStackView()
@@ -35,6 +36,7 @@ final class TCProfileImageView: UIControl {
         configureStackView()
         configureImageView()
         configureNameLabel()
+        bindToPresenter()
     }
     
     required init?(coder: NSCoder) {
@@ -54,16 +56,17 @@ extension TCProfileImageView {
     // Этим будет заниматься Presenter, когда будет модель пользователя
     func setImage(_ image: UIImage?) {
         guard let image else { return }
-        
         self.nameLabel.isHidden = true
         self.imageView.isHidden = false
-        
-        self.imageView.image = image
-        imageView.transform = .identity
+        presenter.setImage(image)
     }
     
     func setName(_ name: String) {
-        
+        self.presenter.setName(name)
+    }
+    
+    func bindToPresenter() {
+        self.presenter.setDelegate(self)
     }
 }
 
@@ -121,6 +124,19 @@ private extension TCProfileImageView {
         
         // MARK: ВРЕМЕННОЕ РЕШЕНИЕ
         // Этим будет заниматься Presenter, когда будет модель пользователя
-        nameLabel.text = "IP"
+//        nameLabel.text = "IP"
+    }
+}
+
+extension TCProfileImageView: TCProfileImagePresenterProtocol {
+    func nameDidSet(name: String) {
+        self.nameLabel.text = name
+    }
+    
+    func imageDidSet(image: UIImage) {
+        DispatchQueue.main.async {
+            self.imageView.image        = image
+            self.imageView.transform    = .identity
+        }
     }
 }

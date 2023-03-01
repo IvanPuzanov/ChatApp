@@ -64,6 +64,7 @@ private extension ChatListVC {
         
         // Profile BarButtonItem
         profileButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        profileButton.setName("Ivan Puzanov")
         let profileNavButton = UIBarButtonItem(customView: profileButton)
         navigationItem.setRightBarButton(profileNavButton, animated: true)
         

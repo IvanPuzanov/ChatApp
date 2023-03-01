@@ -24,6 +24,7 @@ final class AppCoordinator: Coordinator {
         let profileNC = UINavigationController()
         let profileCoordinator = ProfileCoordinator(navigationController: profileNC)
         profileCoordinator.start()
+        profileNC.isModalInPresentation = true
         
         navigationController.present(profileNC, animated: true)
     }

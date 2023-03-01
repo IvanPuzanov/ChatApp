@@ -38,11 +38,11 @@ extension TCProfileImagePresenter {
     }
     
     private func prepareName(_ name: String) -> String {
-        var splitedName = name.split(separator: " ")
+        let splitedName = name.split(separator: " ")
         var preparedName = String()
         
         for word in splitedName {
-            guard let firstChar = word.first else { continue }
+            guard let firstChar = word.first, preparedName.count < 2 else { continue }
             preparedName.append(String(firstChar))
         }
         

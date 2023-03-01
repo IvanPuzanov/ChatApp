@@ -115,6 +115,7 @@ private extension ProfileVC {
     
     func configureProfileImageView() {
         self.stackView.addArrangedSubview(profileImageView)
+        profileImageView.setName("Ivan Puzanov")
     }
     
     func configureAddPhotoButton() {
