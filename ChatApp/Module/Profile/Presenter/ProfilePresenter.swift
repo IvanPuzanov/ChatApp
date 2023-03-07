@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ProfilePresenterProtocol: AnyObject {
-    
+    func userDidFetch(_ userProfile: UserProfile)
 }
 
 final class ProfilePresenter {
@@ -18,17 +18,16 @@ final class ProfilePresenter {
     
     // MARK: -
     private let imagePicker = UIImagePickerController()
-    
-    // MARK: -
-    init() {
-        
-    }
 }
 
 // MARK: - Event methods
 extension ProfilePresenter {
     func setDelegate(_ view: ProfilePresenterView) {
         self.view = view
+    }
+    
+    func fetchUserProfile() {
+        view?.userDidFetch(UserProfile.fetchUserProfile())
     }
     
     func showActionSheetController() {

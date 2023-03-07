@@ -9,8 +9,11 @@ import UIKit
 
 enum Project {
     enum Title {
-        static let chat                 = NSLocalizedString("Chat", comment: "")
-        static let myProfile            = NSLocalizedString("My Profile", comment: "")
+        static let chat        = NSLocalizedString("Chat", comment: "")
+        static let myProfile   = NSLocalizedString("My Profile", comment: "")
+        static let typeMessage = NSLocalizedString("Type message", comment: "")
+        static let online      = NSLocalizedString("Online", comment: "")
+        static let history     = NSLocalizedString("History", comment: "")
     }
     
     enum Button {
@@ -24,6 +27,7 @@ enum Project {
     }
     
     enum Image {
+        static let arrowUp  = UIImage(systemName: "arrow.up.circle.fill")
         static let profile  = UIImage(systemName: "person.fill")
         static let settings = UIImage(systemName: "gear")
     }

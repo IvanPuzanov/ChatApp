@@ -12,7 +12,8 @@ final class TCProfileImageView: UIControl {
     // MARK: - Parameters
     enum Size: CGFloat {
         case small  = 30
-        case medium = 80
+        case medium = 45
+        case chat   = 50
         case large  = 150
     }
     /// Image view size
@@ -48,7 +49,7 @@ final class TCProfileImageView: UIControl {
 extension TCProfileImageView {
     override var bounds: CGRect {
         didSet {
-            self.layer.setGradient(with: .systemPink)
+            self.layer.setGradient(with: .systemGray)
         }
     }
     
@@ -121,10 +122,6 @@ private extension TCProfileImageView {
         
         let fontSize: CGFloat = size.rawValue / 2
         nameLabel.configure(fontSize: fontSize, fontWeight: .semibold, textColor: .white, design: .rounded)
-        
-        // MARK: ВРЕМЕННОЕ РЕШЕНИЕ
-        // Этим будет заниматься Presenter, когда будет модель пользователя
-//        nameLabel.text = "IP"
     }
 }
 

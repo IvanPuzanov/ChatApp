@@ -9,6 +9,22 @@
 /* Begin PBXBuildFile section */
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
 		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
+		2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B09D29B1E90500311B3F /* NetworkService.swift */; };
+		2AA9B0A129B1ED1800311B3F /* ConversationCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */; };
+		2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */; };
+		2AA9B0A829B4A37800311B3F /* ConversationTVHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */; };
+		2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0AC29B4D76700311B3F /* ConversationVC.swift */; };
+		2AA9B0AF29B4DDA900311B3F /* ConversationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0AE29B4DDA900311B3F /* ConversationPresenter.swift */; };
+		2AA9B0B529B520FF00311B3F /* TCChatNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0B429B520FF00311B3F /* TCChatNavigationBar.swift */; };
+		2AA9B0B729B5D65500311B3F /* Reusable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0B629B5D65500311B3F /* Reusable.swift */; };
+		2AA9B0B929B6067800311B3F /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0B829B6067800311B3F /* Conversation.swift */; };
+		2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0BB29B62A5200311B3F /* TCMessageTextView.swift */; };
+		2AA9B0BF29B62D8100311B3F /* TCSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */; };
+		2AA9B0C129B7383F00311B3F /* MessageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */; };
+		2AA9B0C329B741BF00311B3F /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C229B741BF00311B3F /* UserProfile.swift */; };
+		2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */; };
+		2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C629B75F1E00311B3F /* String + Ex.swift */; };
+		2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */; };
 		2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */; };
 		2ABEC56629A4A1C10046CB38 /* ChatListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */; };
 		2ABEC56B29A4A1C50046CB38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */; };
@@ -31,6 +47,22 @@
 /* Begin PBXFileReference section */
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
 		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
+		2AA9B09D29B1E90500311B3F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellModel.swift; sourceTree = "<group>"; };
+		2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVCell.swift; sourceTree = "<group>"; };
+		2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVHeader.swift; sourceTree = "<group>"; };
+		2AA9B0AC29B4D76700311B3F /* ConversationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationVC.swift; sourceTree = "<group>"; };
+		2AA9B0AE29B4DDA900311B3F /* ConversationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPresenter.swift; sourceTree = "<group>"; };
+		2AA9B0B429B520FF00311B3F /* TCChatNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCChatNavigationBar.swift; sourceTree = "<group>"; };
+		2AA9B0B629B5D65500311B3F /* Reusable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reusable.swift; sourceTree = "<group>"; };
+		2AA9B0B829B6067800311B3F /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		2AA9B0BB29B62A5200311B3F /* TCMessageTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCMessageTextView.swift; sourceTree = "<group>"; };
+		2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCSendButton.swift; sourceTree = "<group>"; };
+		2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellModel.swift; sourceTree = "<group>"; };
+		2AA9B0C229B741BF00311B3F /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Ex.swift"; sourceTree = "<group>"; };
+		2AA9B0C629B75F1E00311B3F /* String + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ex.swift"; sourceTree = "<group>"; };
+		2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCVCell.swift; sourceTree = "<group>"; };
 		2ABEC55E29A4A1C10046CB38 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListVC.swift; sourceTree = "<group>"; };
@@ -72,6 +104,99 @@
 			path = ProfileImageView;
 			sourceTree = "<group>";
 		};
+		2AA9B09C29B1E8FB00311B3F /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B09D29B1E90500311B3F /* NetworkService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		2AA9B09F29B1ED0D00311B3F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0B829B6067800311B3F /* Conversation.swift */,
+				2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */,
+				2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */,
+				2AA9B0C229B741BF00311B3F /* UserProfile.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		2AA9B0A229B2040D00311B3F /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */,
+				2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		2AA9B0A529B2311900311B3F /* ImagePicker */ = {
+			isa = PBXGroup;
+			children = (
+				2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */,
+			);
+			path = ImagePicker;
+			sourceTree = "<group>";
+		};
+		2AA9B0A629B4A36800311B3F /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		2AA9B0A929B4D73C00311B3F /* Conversation */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0AB29B4D75D00311B3F /* View */,
+				2AA9B0AA29B4D75B00311B3F /* Presenter */,
+			);
+			path = Conversation;
+			sourceTree = "<group>";
+		};
+		2AA9B0AA29B4D75B00311B3F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0AE29B4DDA900311B3F /* ConversationPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		2AA9B0AB29B4D75D00311B3F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0AC29B4D76700311B3F /* ConversationVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2AA9B0B329B520F200311B3F /* Bar */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0B429B520FF00311B3F /* TCChatNavigationBar.swift */,
+			);
+			path = Bar;
+			sourceTree = "<group>";
+		};
+		2AA9B0BA29B62A4200311B3F /* TextView */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0BB29B62A5200311B3F /* TCMessageTextView.swift */,
+			);
+			path = TextView;
+			sourceTree = "<group>";
+		};
+		2AA9B0BD29B62D7800311B3F /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
 		2ABEC55529A4A1C10046CB38 = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +216,8 @@
 		2ABEC56029A4A1C10046CB38 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				2AA9B09F29B1ED0D00311B3F /* Model */,
+				2AA9B09C29B1E8FB00311B3F /* Service */,
 				2ABEC57829A4A2110046CB38 /* Coordinator */,
 				2AE04CA829AC9AD400DBB90E /* Module */,
 				2AEC10DB29ACBE77000EF08D /* ReusasbleView */,
@@ -137,6 +264,7 @@
 			children = (
 				2AE04CA929AC9AD700DBB90E /* ChatList */,
 				2AE04CAA29AC9ADD00DBB90E /* Profile */,
+				2AA9B0A929B4D73C00311B3F /* Conversation */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -194,6 +322,11 @@
 		2AEC10DB29ACBE77000EF08D /* ReusasbleView */ = {
 			isa = PBXGroup;
 			children = (
+				2AA9B0BD29B62D7800311B3F /* Button */,
+				2AA9B0BA29B62A4200311B3F /* TextView */,
+				2AA9B0B329B520F200311B3F /* Bar */,
+				2AA9B0A629B4A36800311B3F /* Header */,
+				2AA9B0A229B2040D00311B3F /* Cell */,
 				2AEC10E729ACEA21000EF08D /* Image */,
 			);
 			path = ReusasbleView;
@@ -205,6 +338,9 @@
 				2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */,
 				2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */,
 				2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */,
+				2AA9B0B629B5D65500311B3F /* Reusable.swift */,
+				2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */,
+				2AA9B0C629B75F1E00311B3F /* String + Ex.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -212,8 +348,8 @@
 		2AEC10E729ACEA21000EF08D /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				2AA9B0A529B2311900311B3F /* ImagePicker */,
 				2AA6ACD829ADCC47002BB019 /* ProfileImageView */,
-				2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -288,21 +424,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */,
 				2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */,
+				2AA9B0C329B741BF00311B3F /* UserProfile.swift in Sources */,
 				2ABEC56629A4A1C10046CB38 /* ChatListVC.swift in Sources */,
+				2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */,
+				2AA9B0B929B6067800311B3F /* Conversation.swift in Sources */,
+				2AA9B0AF29B4DDA900311B3F /* ConversationPresenter.swift in Sources */,
+				2AA9B0B729B5D65500311B3F /* Reusable.swift in Sources */,
 				2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */,
 				2AEC10DF29ACCF8C000EF08D /* ChatListPresenter.swift in Sources */,
+				2AA9B0C129B7383F00311B3F /* MessageCellModel.swift in Sources */,
+				2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */,
+				2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */,
+				2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */,
+				2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */,
+				2AA9B0B529B520FF00311B3F /* TCChatNavigationBar.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
 				2ABEC57E29A4A3FA0046CB38 /* ApplicationState.swift in Sources */,
 				2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */,
 				2AE1897A29A5455B00296F31 /* SystemLog.swift in Sources */,
+				2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */,
 				2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */,
 				2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */,
 				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
 				2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */,
 				2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */,
+				2AA9B0A129B1ED1800311B3F /* ConversationCellModel.swift in Sources */,
+				2AA9B0BF29B62D8100311B3F /* TCSendButton.swift in Sources */,
 				2AEC10E629ACE1C1000EF08D /* ProfilePresenter.swift in Sources */,
 				2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */,
+				2AA9B0A829B4A37800311B3F /* ConversationTVHeader.swift in Sources */,
 				2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */,
 				2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */,
 			);

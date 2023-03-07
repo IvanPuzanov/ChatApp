@@ -24,8 +24,13 @@ final class AppCoordinator: Coordinator {
         let profileNC = UINavigationController()
         let profileCoordinator = ProfileCoordinator(navigationController: profileNC)
         profileCoordinator.start()
-        profileNC.isModalInPresentation = true
         
         navigationController.present(profileNC, animated: true)
+    }
+    
+    func showChatVC(for conversation: ConversationCellModel?) {
+        let conversationVC = ConversationVC(collectionViewLayout: .init())
+        conversationVC.conversation = conversation
+        navigationController.show(conversationVC, sender: nil)
     }
 }
