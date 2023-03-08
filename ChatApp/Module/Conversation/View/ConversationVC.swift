@@ -81,7 +81,7 @@ private extension ConversationVC {
     func configureMessageTextView() {
         self.view.addSubview(messageTextView)
         
-        messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         
         NSLayoutConstraint.activate([
             messageTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -166,11 +166,10 @@ extension ConversationVC: ConversationPresenterProtocol {
     
     func keyboardWillShow(height: CGFloat) {
         messageTextViewBottomAnchor?.constant = -height
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         view.layoutSubviews()
     }
     
-    func keyboardWillHide() {
+    func keyboardDidHide() {
         messageTextViewBottomAnchor?.constant = -10
         view.layoutSubviews()
     }

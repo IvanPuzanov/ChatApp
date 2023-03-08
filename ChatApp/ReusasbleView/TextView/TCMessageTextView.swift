@@ -76,13 +76,15 @@ private extension TCMessageTextView {
         containerView.layer.borderWidth     = 0.75
         containerView.layer.borderColor     = UIColor.separator.cgColor
         containerView.layer.cornerRadius    = 22
-        containerView.backgroundColor       = .white.withAlphaComponent(0.7)
+        containerView.backgroundColor       = .white
+        
+        let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
         
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bottomInset ?? 0) - 5),
         ])
     }
     
