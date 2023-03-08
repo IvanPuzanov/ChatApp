@@ -30,9 +30,9 @@ final class ConversationTVCell: UITableViewCell {
         
         configureProfileImageView()
         configureActivityIndicator()
+        configureNameLabel()
         configureDisclosureView()
         configureDateLabel()
-        configureNameLabel()
         configureMessageLabel()
     }
     
@@ -44,15 +44,15 @@ final class ConversationTVCell: UITableViewCell {
 extension ConversationTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ConversationCellModel
     func configure(with model: ConversationCellModel) {
-        self.conversationCellModel = model
+        self.nameLabel.text         = model.name
+        self.dateLebel.text         = model.date?.convert(for: .conversationsList)
+        self.messageLabel.text      = model.message ?? "No messages yet"
+        self.conversationCellModel  = model
         self.profileImageView.setName(model.name)
         self.profileImageView.setImage(model.image)
-        self.nameLabel.text = model.name
-        self.dateLebel.text = model.date?.convert(for: .conversationsList)
-        self.messageLabel.text = model.message ?? "No messages yet"
         
         if model.hasUnreadMessages {
-            self.messageLabel.font      = .systemFont(ofSize: messageLabel.font.pointSize, weight: .semibold)
+            self.messageLabel.font      = .systemFont(ofSize: messageLabel.font.pointSize, weight: .medium)
             self.messageLabel.textColor = .label
         }
         
@@ -102,6 +102,19 @@ private extension ConversationTVCell {
         ])
     }
     
+    func configureNameLabel() {
+        addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        nameLabel.configure(fontSize: 17, fontWeight: .semibold, textColor: .label, textAlignment: .left)
+        nameLabel.setContentCompressionResistancePriority(.init(760), for: .vertical)
+        
+        NSLayoutConstraint.activate([
+            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15)
+        ])
+    }
+    
     func configureDisclosureView() {
         addSubview(disclosureView)
         disclosureView.translatesAutoresizingMaskIntoConstraints = false
@@ -112,10 +125,9 @@ private extension ConversationTVCell {
         
         NSLayoutConstraint.activate([
             disclosureView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            disclosureView.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor),
+            disclosureView.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
             disclosureView.heightAnchor.constraint(equalToConstant: 17),
-            disclosureView.widthAnchor.constraint(equalToConstant: 17),
-            disclosureView.topAnchor.constraint(equalTo: topAnchor, constant: 15)
+            disclosureView.widthAnchor.constraint(equalToConstant: 17)
         ])
     }
     
@@ -127,34 +139,22 @@ private extension ConversationTVCell {
         
         NSLayoutConstraint.activate([
             dateLebel.trailingAnchor.constraint(equalTo: disclosureView.leadingAnchor, constant: -10),
-            dateLebel.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor)
+            dateLebel.centerYAnchor.constraint(equalTo: disclosureView.centerYAnchor),
+            dateLebel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10)
         ])
     }
     
-    func configureNameLabel() {
-        addSubview(nameLabel)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        nameLabel.configure(fontSize: 17, fontWeight: .semibold, textColor: .label, textAlignment: .left)
-        
-        NSLayoutConstraint.activate([
-            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
-            nameLabel.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor),
-            nameLabel.trailingAnchor.constraint(greaterThanOrEqualTo: dateLebel.leadingAnchor)
-        ])
-    }
     
     func configureMessageLabel() {
         addSubview(messageLabel)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        messageLabel.setContentHuggingPriority(.init(240), for: .vertical)
         messageLabel.configure(fontSize: 15, fontWeight: .regular, textColor: .secondaryLabel, textAlignment: .left)
-        messageLabel.numberOfLines = 0
+        messageLabel.numberOfLines = 2
         
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
-            messageLabel.topAnchor.constraint(equalTo: profileImageView.centerYAnchor),
+            messageLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
             messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15)
         ])

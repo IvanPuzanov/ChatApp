@@ -78,8 +78,8 @@ private extension ChatListVC {
         self.view.backgroundColor = .systemBackground
         
         self.tableView.register(ConversationTVCell.self, forCellReuseIdentifier: ConversationTVCell.id)
-        self.tableView.delegate = self
         self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.tableFooterView = UIView()
     }
     
     func configureNavigationBar() {
@@ -136,9 +136,5 @@ extension ChatListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = dataSource.itemIdentifier(for: indexPath)
         coordintor?.showChatVC(for: model)
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
     }
 }

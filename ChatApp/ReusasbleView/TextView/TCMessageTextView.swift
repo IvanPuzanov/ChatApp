@@ -76,7 +76,7 @@ private extension TCMessageTextView {
         containerView.layer.borderWidth     = 0.75
         containerView.layer.borderColor     = UIColor.separator.cgColor
         containerView.layer.cornerRadius    = 22
-        containerView.backgroundColor       = .white.withAlphaComponent(0.9)
+        containerView.backgroundColor       = .white.withAlphaComponent(0.7)
         
         NSLayoutConstraint.activate([
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
