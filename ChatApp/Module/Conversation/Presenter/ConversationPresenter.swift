@@ -10,7 +10,7 @@ import UIKit
 protocol ConversationPresenterProtocol: AnyObject {
     func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]])
     func keyboardWillShow(height: CGFloat)
-    func keyboardDidHide()
+    func keyboardWillHide()
 }
 
 final class ConversationPresenter {
@@ -56,7 +56,7 @@ extension ConversationPresenter {
     
     func addObservers() {
         notificationCenter.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(keyboardDidHide), name: UIResponder.keyboardDidHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func removeObservers() {
@@ -85,7 +85,7 @@ extension ConversationPresenter {
     }
     
     @objc
-    private func keyboardDidHide() {
-        view?.keyboardDidHide()
+    private func keyboardWillHide() {
+        view?.keyboardWillHide()
     }
 }

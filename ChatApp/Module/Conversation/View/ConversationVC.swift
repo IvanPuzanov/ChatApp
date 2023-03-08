@@ -72,6 +72,7 @@ private extension ConversationVC {
     func configure() {
         self.view.backgroundColor = .systemBackground
         self.collectionView.backgroundColor = .systemBackground
+        self.collectionView.keyboardDismissMode = .onDrag
         
         self.collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
         self.collectionView.register(DateCVHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DateCVHeader.id)
@@ -79,7 +80,7 @@ private extension ConversationVC {
     
     func configureMessageTextView() {
         self.view.addSubview(messageTextView)
-
+        
         messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         
         NSLayoutConstraint.activate([
@@ -138,7 +139,7 @@ private extension ConversationVC {
             
             let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
             let section     = NSCollectionLayoutSection(group: group)
-//            section.interGroupSpacing       = 5
+            //            section.interGroupSpacing       = 5
             section.contentInsets.leading   = 16
             section.contentInsets.trailing  = 16
             
@@ -157,7 +158,6 @@ private extension ConversationVC {
     }
 }
 
-
 // MARK: - ChatPresenterProtocol
 extension ConversationVC: ConversationPresenterProtocol {
     func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]]) {
@@ -170,7 +170,7 @@ extension ConversationVC: ConversationPresenterProtocol {
         view.layoutSubviews()
     }
     
-    func keyboardDidHide() {
+    func keyboardWillHide() {
         messageTextViewBottomAnchor?.constant = -10
         view.layoutSubviews()
     }
