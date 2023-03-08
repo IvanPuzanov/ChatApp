@@ -13,6 +13,8 @@ final class MessageCVCell: UICollectionViewCell {
     private var containerTrailing: NSLayoutConstraint!
     
     // MARK: - Views
+    private var leftTailImage   = UIImageView()
+    private var rightTailImage  = UIImageView()
     private var containerView   = UIView()
     private let messageLabel    = UILabel()
     private let dateLabel       = UILabel()
@@ -22,6 +24,8 @@ final class MessageCVCell: UICollectionViewCell {
         super.init(frame: frame)
         
         configureContainerView()
+        configureLeftTailImageView()
+        configureRightTailImageView()
         configureDateLabel()
         configureMessageLabel()
     }
@@ -43,12 +47,20 @@ extension MessageCVCell: ConfigurableViewProtocol {
             self.messageLabel.textColor         = .white
             self.containerView.backgroundColor  = .systemBlue
             
+            self.rightTailImage.image = Project.Image.rightGrayTail
+            self.leftTailImage.isHidden = true
+            self.rightTailImage.isHidden = false
+            
             self.containerLeading.constant = UIScreen.main.bounds.width * 0.33
             self.containerTrailing.constant = 0
         case .conversation:
             self.dateLabel.textColor            = .systemGray2
             self.messageLabel.textColor         = .black
-            self.containerView.backgroundColor  = .quaternarySystemFill
+            self.containerView.backgroundColor  = .systemGray6
+            
+            self.leftTailImage.image = Project.Image.leftGrayTail
+            self.rightTailImage.isHidden = true
+            self.leftTailImage.isHidden = false
             
             self.containerTrailing.constant = -UIScreen.main.bounds.width * 0.33
             self.containerLeading.constant = 0
@@ -71,9 +83,29 @@ private extension MessageCVCell {
         
         NSLayoutConstraint.activate([
             containerLeading,
-            containerView.topAnchor.constraint(equalTo: topAnchor),
+            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             containerTrailing,
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+        ])
+    }
+    
+    func configureLeftTailImageView() {
+        self.addSubview(leftTailImage)
+        leftTailImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            leftTailImage.centerXAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 4),
+            leftTailImage.centerYAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -11)
+        ])
+    }
+    
+    func configureRightTailImageView() {
+        self.addSubview(rightTailImage)
+        rightTailImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            rightTailImage.centerXAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -4),
+            rightTailImage.centerYAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -11)
         ])
     }
     

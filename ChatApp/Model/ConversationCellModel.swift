@@ -5,14 +5,15 @@
 //  Created by Ivan Puzanov on 03.03.2023.
 //
 
-import Foundation
+import UIKit
 
-struct ConversationCellModel: Codable, Hashable {
+struct ConversationCellModel: Hashable {
     let name: String
     let message: String?
     let date: Date?
     let isOnline: Bool
     let hasUnreadMessages: Bool
+    let image: UIImage?
     
     init(conversation: Conversation) {
         self.name               = conversation.name
@@ -20,5 +21,6 @@ struct ConversationCellModel: Codable, Hashable {
         self.date               = conversation.date
         self.isOnline           = conversation.isOnline
         self.hasUnreadMessages  = conversation.hasUnreadMessages
+        self.image              = conversation.image
     }
 }

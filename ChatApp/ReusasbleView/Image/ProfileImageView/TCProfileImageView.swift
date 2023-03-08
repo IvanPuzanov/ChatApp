@@ -24,9 +24,9 @@ final class TCProfileImageView: UIControl {
     private var presenter   = TCProfileImagePresenter()
     
     // MARK: - Views
-    private let stackView = UIStackView()
-    private let imageView = UIImageView()
-    private let nameLabel = UILabel()
+    private let stackView           = UIStackView()
+    private let imageView           = UIImageView()
+    private let nameLabel           = UILabel()
     
     // MARK: - Initialization
     init(size: Size) {
@@ -37,6 +37,7 @@ final class TCProfileImageView: UIControl {
         configureStackView()
         configureImageView()
         configureNameLabel()
+        
         bindToPresenter()
     }
     

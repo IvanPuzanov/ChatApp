@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ConversationPresenterProtocol: AnyObject {
-    func messagesDidFetch(_ messages: [MessageCellModel])
+    func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]])
     func keyboardWillShow(height: CGFloat)
     func keyboardDidHide()
 }
@@ -35,9 +35,22 @@ extension ConversationPresenter {
         guard let conversation else { return }
         guard conversation.message != nil else { return }
         
-        var messages = MessageCellModel.fetchTestMessages(for: conversation.name).sorted {
+        var messages: [DateSection: [MessageCellModel]] = [.today: [], .early: []]
+    
+        let sortedMessages = MessageCellModel.fetchTestMessages(for: conversation.name).sorted {
             return $0.date ?? Date() < $1.date ?? Date()
         }
+        
+        sortedMessages.forEach { message in
+            guard let date = message.date else { return }
+            switch date.isToday() {
+            case true:
+                messages[.today]?.append(message)
+            case false:
+                messages[.early]?.append(message)
+            }
+        }
+        
         self.view?.messagesDidFetch(messages)
     }
     
@@ -56,7 +69,19 @@ extension ConversationPresenter {
         guard let keyboardInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         let keyboardSize = keyboardInfo.cgRectValue.size
         
-        view?.keyboardWillShow(height: keyboardSize.height - 23)
+        let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
+        
+        switch bottomInset {
+        case .some(let value):
+            switch value {
+            case 0:
+                view?.keyboardWillShow(height: keyboardSize.height)
+            default:
+                view?.keyboardWillShow(height: keyboardSize.height - value)
+            }
+        default:
+            break
+        }
     }
     
     @objc

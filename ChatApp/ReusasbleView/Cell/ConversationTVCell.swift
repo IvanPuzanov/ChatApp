@@ -20,6 +20,7 @@ final class ConversationTVCell: UITableViewCell {
     private let disclosureView      = UIImageView()
     private let dateLebel           = UILabel()
     private let profileImageView    = TCProfileImageView(size: .medium)
+    private let activityIndicator   = UIView()
     private let nameLabel           = UILabel()
     private let messageLabel        = UILabel()
     
@@ -28,6 +29,7 @@ final class ConversationTVCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         configureProfileImageView()
+        configureActivityIndicator()
         configureDisclosureView()
         configureDateLabel()
         configureNameLabel()
@@ -44,8 +46,9 @@ extension ConversationTVCell: ConfigurableViewProtocol {
     func configure(with model: ConversationCellModel) {
         self.conversationCellModel = model
         self.profileImageView.setName(model.name)
+        self.profileImageView.setImage(model.image)
         self.nameLabel.text = model.name
-        self.dateLebel.text = model.date?.convertToMonthYearFormat()
+        self.dateLebel.text = model.date?.convert(for: .conversationsList)
         self.messageLabel.text = model.message ?? "No messages yet"
         
         if model.hasUnreadMessages {
@@ -53,42 +56,71 @@ extension ConversationTVCell: ConfigurableViewProtocol {
             self.messageLabel.textColor = .label
         }
         
+        switch model.isOnline {
+        case true:
+            activityIndicator.backgroundColor   = .systemGreen
+            activityIndicator.layer.borderWidth = 3
+        case false:
+            activityIndicator.backgroundColor   = .clear
+            activityIndicator.layer.borderWidth = 0
+        }
+        
         if model.message == nil {
-            
+            self.messageLabel.configureNoMessagesYet(fontSize: 15)
+            self.disclosureView.isHidden = true
+            self.dateLebel.isHidden = true
         }
     }
 }
 
 private extension ConversationTVCell {
     func configureProfileImageView() {
-        contentView.addSubview(profileImageView)
+        addSubview(profileImageView)
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            profileImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            profileImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16)
+            profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
+        ])
+    }
+    
+    func configureActivityIndicator() {
+        self.addSubview(activityIndicator)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        
+        activityIndicator.layer.cornerRadius    = 10
+        activityIndicator.layer.borderWidth     = 3
+        activityIndicator.layer.borderColor     = UIColor.white.cgColor
+        activityIndicator.backgroundColor       = .systemGreen
+        activityIndicator.layer.masksToBounds   = true
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: -4),
+            activityIndicator.centerYAnchor.constraint(equalTo: profileImageView.topAnchor, constant: 4),
+            activityIndicator.heightAnchor.constraint(equalToConstant: 20),
+            activityIndicator.widthAnchor.constraint(equalToConstant: 20)
         ])
     }
     
     func configureDisclosureView() {
-        contentView.addSubview(disclosureView)
+        addSubview(disclosureView)
         disclosureView.translatesAutoresizingMaskIntoConstraints = false
         
         disclosureView.contentMode  = .scaleAspectFit
-        disclosureView.tintColor    = .secondaryLabel
-        disclosureView.image        = UIImage(systemName: "chevron.right")
+        disclosureView.tintColor    = .lightGray
+        disclosureView.image        = Project.Image.chevronRight(configuration: .init(weight: .semibold))
         
         NSLayoutConstraint.activate([
-            disclosureView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            disclosureView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             disclosureView.bottomAnchor.constraint(equalTo: profileImageView.centerYAnchor),
             disclosureView.heightAnchor.constraint(equalToConstant: 17),
             disclosureView.widthAnchor.constraint(equalToConstant: 17),
-            disclosureView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15)
+            disclosureView.topAnchor.constraint(equalTo: topAnchor, constant: 15)
         ])
     }
     
     func configureDateLabel() {
-        contentView.addSubview(dateLebel)
+        addSubview(dateLebel)
         dateLebel.translatesAutoresizingMaskIntoConstraints = false
         
         dateLebel.configure(fontSize: 15, fontWeight: .regular, textColor: .secondaryLabel, textAlignment: .right)
@@ -100,7 +132,7 @@ private extension ConversationTVCell {
     }
     
     func configureNameLabel() {
-        contentView.addSubview(nameLabel)
+        addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         nameLabel.configure(fontSize: 17, fontWeight: .semibold, textColor: .label, textAlignment: .left)
@@ -113,17 +145,18 @@ private extension ConversationTVCell {
     }
     
     func configureMessageLabel() {
-        contentView.addSubview(messageLabel)
+        addSubview(messageLabel)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        messageLabel.setContentHuggingPriority(.init(240), for: .vertical)
         messageLabel.configure(fontSize: 15, fontWeight: .regular, textColor: .secondaryLabel, textAlignment: .left)
         messageLabel.numberOfLines = 0
         
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
             messageLabel.topAnchor.constraint(equalTo: profileImageView.centerYAnchor),
-            messageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-            messageLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15)
+            messageLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            messageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15)
         ])
     }
 }

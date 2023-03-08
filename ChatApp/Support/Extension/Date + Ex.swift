@@ -16,7 +16,28 @@ extension Date {
         return date
     }
     
-    func convertToMonthYearFormat() -> String {
+    enum ConvertCase {
+        case conversationsList
+        case conversationDateSection
+    }
+    func convert(for convertCase: ConvertCase) -> String {
+        switch convertCase {
+        case .conversationsList:
+            return convertToMonthDayFormat()
+        case .conversationDateSection:
+            let calendar = Calendar.current
+            let dateFromatter = DateFormatter()
+            dateFromatter.dateFormat = "MMM, dd, yyyy"
+            
+            if calendar.isDateInToday(self) {
+                return Project.Title.today
+            } else {
+                return dateFromatter.string(from: self)
+            }
+        }
+    }
+    
+    private func convertToMonthDayFormat() -> String {
         let calendar = Calendar.current
         let dateFromatter = DateFormatter()
         var dateFormat: String

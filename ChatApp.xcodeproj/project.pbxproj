@@ -25,6 +25,7 @@
 		2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */; };
 		2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C629B75F1E00311B3F /* String + Ex.swift */; };
 		2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */; };
+		2AA9B0CB29B7BF5A00311B3F /* DateCVHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0CA29B7BF5A00311B3F /* DateCVHeader.swift */; };
 		2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */; };
 		2ABEC56629A4A1C10046CB38 /* ChatListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */; };
 		2ABEC56B29A4A1C50046CB38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */; };
@@ -63,6 +64,7 @@
 		2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Ex.swift"; sourceTree = "<group>"; };
 		2AA9B0C629B75F1E00311B3F /* String + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ex.swift"; sourceTree = "<group>"; };
 		2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCVCell.swift; sourceTree = "<group>"; };
+		2AA9B0CA29B7BF5A00311B3F /* DateCVHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCVHeader.swift; sourceTree = "<group>"; };
 		2ABEC55E29A4A1C10046CB38 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2ABEC56529A4A1C10046CB38 /* ChatListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListVC.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */,
+				2AA9B0CA29B7BF5A00311B3F /* DateCVHeader.swift */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				2AA9B0A829B4A37800311B3F /* ConversationTVHeader.swift in Sources */,
 				2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */,
 				2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */,
+				2AA9B0CB29B7BF5A00311B3F /* DateCVHeader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

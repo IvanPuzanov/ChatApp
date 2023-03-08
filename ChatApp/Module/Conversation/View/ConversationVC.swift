@@ -7,9 +7,9 @@
 
 import UIKit
 
-enum DateSection: Hashable {
-    case early
-    case today
+enum DateSection: Int, Hashable {
+    case early = 0
+    case today = 1
 }
 
 final class ConversationVC: UICollectionViewController {
@@ -43,11 +43,17 @@ extension ConversationVC {
 
 // MARK: -
 private extension ConversationVC {
-    func update(with messages: [MessageCellModel]) {
+    func update(with messages: [DateSection: [MessageCellModel]]) {
         var snapshot = NSDiffableDataSourceSnapshot<DateSection, MessageCellModel>()
         
-        snapshot.appendSections([.today])
-        snapshot.appendItems(messages, toSection: .today)
+        snapshot.appendSections([.early, .today])
+        
+        if let earlyMessages = messages[.early] {
+            snapshot.appendItems(earlyMessages, toSection: .early)
+        }
+        if let todayMessages = messages[.today] {
+            snapshot.appendItems(todayMessages, toSection: .today)
+        }
         
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot)
@@ -68,6 +74,7 @@ private extension ConversationVC {
         self.collectionView.backgroundColor = .systemBackground
         
         self.collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
+        self.collectionView.register(DateCVHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DateCVHeader.id)
     }
     
     func configureMessageTextView() {
@@ -76,9 +83,9 @@ private extension ConversationVC {
         messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         
         NSLayoutConstraint.activate([
-            messageTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            messageTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             messageTextViewBottomAnchor!,
-            messageTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            messageTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
         ])
     }
@@ -95,6 +102,7 @@ private extension ConversationVC {
         self.view.addSubview(chatNavigationBar)
         
         chatNavigationBar.setName(conversation?.name)
+        chatNavigationBar.setImage(conversation?.image)
         
         NSLayoutConstraint.activate([
             chatNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -110,6 +118,17 @@ private extension ConversationVC {
             cell?.configure(with: itemIdentifier)
             return cell
         })
+        
+        dataSource.supplementaryViewProvider = { [unowned self] _, _, indexPath in
+            if let cell = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+                                                                               withReuseIdentifier: DateCVHeader.id,
+                                                                               for: indexPath) as? DateCVHeader {
+                cell.configure(with: DateSection(rawValue: indexPath.section))
+                return cell
+            }
+            return nil
+            
+        }
     }
     
     func configureLayout() {
@@ -119,9 +138,17 @@ private extension ConversationVC {
             
             let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
             let section     = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing       = 10
+//            section.interGroupSpacing       = 5
             section.contentInsets.leading   = 16
             section.contentInsets.trailing  = 16
+            
+            typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem
+            let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(40))
+            let headerElement   = SupplementaryItem(layoutSize: layoutSize,
+                                                    elementKind: UICollectionView.elementKindSectionHeader,
+                                                    alignment: .topLeading)
+            headerElement.pinToVisibleBounds = true
+            section.boundarySupplementaryItems = [headerElement]
             
             return section
         })
@@ -133,17 +160,18 @@ private extension ConversationVC {
 
 // MARK: - ChatPresenterProtocol
 extension ConversationVC: ConversationPresenterProtocol {
-    func messagesDidFetch(_ messages: [MessageCellModel]) {
+    func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]]) {
         update(with: messages)
     }
     
     func keyboardWillShow(height: CGFloat) {
         messageTextViewBottomAnchor?.constant = -height
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
         view.layoutSubviews()
     }
     
     func keyboardDidHide() {
-        messageTextViewBottomAnchor?.constant = 0
+        messageTextViewBottomAnchor?.constant = -10
         view.layoutSubviews()
     }
 }

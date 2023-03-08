@@ -14,6 +14,8 @@ enum Project {
         static let typeMessage = NSLocalizedString("Type message", comment: "")
         static let online      = NSLocalizedString("Online", comment: "")
         static let history     = NSLocalizedString("History", comment: "")
+        static let today       = NSLocalizedString("Today", comment: "")
+        static let early       = NSLocalizedString("Early", comment: "")
     }
     
     enum Button {
@@ -27,8 +29,18 @@ enum Project {
     }
     
     enum Image {
-        static let arrowUp  = UIImage(systemName: "arrow.up.circle.fill")
-        static let profile  = UIImage(systemName: "person.fill")
-        static let settings = UIImage(systemName: "gear")
+        static let arrowUp          = UIImage(systemName: "arrow.up.circle.fill")
+        static let profile          = UIImage(systemName: "person.fill")
+        static let settings         = UIImage(systemName: "gear")
+        static let leftGrayTail     = UIImage(named: "leftGrayTail")
+        static let rightGrayTail    = UIImage(named: "rightBlueTail")
+        static let memoji1          = UIImage(named: "memoji1")
+        static let memoji2          = UIImage(named: "memoji2")
+        static let memoji3          = UIImage(named: "memoji3")
+        
+        static func chevronRight(configuration: UIImage.SymbolConfiguration = .init(weight: .regular)) -> UIImage {
+            guard let image = UIImage(systemName: "chevron.right", withConfiguration: configuration) else { return UIImage() }
+            return image
+        }
     }
 }

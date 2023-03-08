@@ -137,4 +137,8 @@ extension ChatListVC {
         let model = dataSource.itemIdentifier(for: indexPath)
         coordintor?.showChatVC(for: model)
     }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
 }

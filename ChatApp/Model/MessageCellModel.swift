@@ -30,7 +30,12 @@ extension MessageCellModel {
         case "jason":
             return [
                 MessageCellModel(sender: .conversation, text: "My name sounds like JSON, I love it!", date: .createDate(day: 1, month: 1, year: 2023)),
-                MessageCellModel(sender: .user, text: "Ha-ha, it sounds pretty fun!", date: Date())
+                MessageCellModel(sender: .user, text: "Ha-ha, it sounds pretty fun!", date: Date()),
+                MessageCellModel(sender: .conversation, text: "It's true.", date: Date()),
+                MessageCellModel(sender: .conversation, text: "What do you think about Xcode? What about Swift?", date: Date()),
+                MessageCellModel(sender: .conversation, text: "Do you like Tinkoff's course?", date: Date()),
+                MessageCellModel(sender: .user, text: "Yes, I do, absolutely perfect course!", date: Date()),
+                MessageCellModel(sender: .conversation, text: "I also think so", date: Date())
             ]
         default:
             return [
