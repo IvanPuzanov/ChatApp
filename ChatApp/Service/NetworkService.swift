@@ -18,11 +18,11 @@ protocol NetworkProtocol {
 }
 
 final class NetworkService {
-    // MARK: - Parameters
+    // MARK: - Параметры
     var urlSession: URLSession
     var jsonDecoder: JSONDecoder
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     init(urlSession: URLSession = .shared, jsonDecoder: JSONDecoder = .init()) {
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder

@@ -9,13 +9,17 @@ import UIKit
 
 enum Project {
     enum Title {
-        static let chat        = NSLocalizedString("Chat", comment: "")
-        static let myProfile   = NSLocalizedString("My Profile", comment: "")
-        static let typeMessage = NSLocalizedString("Type message", comment: "")
-        static let online      = NSLocalizedString("Online", comment: "")
-        static let history     = NSLocalizedString("History", comment: "")
-        static let today       = NSLocalizedString("Today", comment: "")
-        static let early       = NSLocalizedString("Early", comment: "")
+        static let chat         = NSLocalizedString("Chat", comment: "")
+        static let myProfile    = NSLocalizedString("My Profile", comment: "")
+        static let typeMessage  = NSLocalizedString("Type message", comment: "")
+        static let online       = NSLocalizedString("Online", comment: "")
+        static let history      = NSLocalizedString("History", comment: "")
+        static let today        = NSLocalizedString("Today", comment: "")
+        static let early        = NSLocalizedString("Early", comment: "")
+        static let settings     = NSLocalizedString("Settings", comment: "")
+        static let dark         = NSLocalizedString("Dark", comment: "")
+        static let light        = NSLocalizedString("Light", comment: "")
+        static let system       = NSLocalizedString("System", comment: "")
     }
     
     enum Button {
@@ -37,10 +41,28 @@ enum Project {
         static let memoji1          = UIImage(named: "memoji1")
         static let memoji2          = UIImage(named: "memoji2")
         static let memoji3          = UIImage(named: "memoji3")
+        static let checkmark        = UIImage(systemName: "checkmark.circle.fill")
+        static let circle           = UIImage(systemName: "circle")
+        static let darkTheme        = UIImage(named: "darkTheme")
+        static let lightTheme       = UIImage(named: "lightTheme")
         
         static func chevronRight(configuration: UIImage.SymbolConfiguration = .init(weight: .regular)) -> UIImage {
             guard let image = UIImage(systemName: "chevron.right", withConfiguration: configuration) else { return UIImage() }
             return image
         }
     }
+    
+    enum Color {
+        static let bubbleTextColor      = UIColor(named: "bubleTextColor")
+        static let subviewBackground    = UIColor(named: "subviewBackground")
+    }
+    
+    enum UserDefaultsKeys: String {
+        case settings = "settings"
+    }
+}
+
+enum Theme: Codable {
+    case light
+    case dark
 }

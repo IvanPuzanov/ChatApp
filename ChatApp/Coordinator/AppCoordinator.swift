@@ -15,7 +15,7 @@ final class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = ChatListVC()
+        let viewController = ConversationsListVC()
         viewController.coordintor = self
         navigationController.pushViewController(viewController, animated: false)
     }
@@ -29,8 +29,14 @@ final class AppCoordinator: Coordinator {
     }
     
     func showChatVC(for conversation: ConversationCellModel?) {
-        let conversationVC = ConversationVC(collectionViewLayout: .init())
+        let conversationVC = ConversationVC()
         conversationVC.conversation = conversation
         navigationController.show(conversationVC, sender: nil)
+    }
+    
+    func showSettings(delegate: ThemePresenterProtocol?) {
+        let themeVC = ThemeVC()
+        themeVC.themeDelegate = delegate
+        navigationController.show(themeVC, sender: nil)
     }
 }

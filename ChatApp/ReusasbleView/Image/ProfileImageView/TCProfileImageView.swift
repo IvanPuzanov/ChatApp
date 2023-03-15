@@ -9,7 +9,7 @@ import UIKit
 
 /// Project class for showing image (usually profile image)
 final class TCProfileImageView: UIControl {
-    // MARK: - Parameters
+    // MARK: - Параметры
     enum Size: CGFloat {
         case small  = 30
         case medium = 45
@@ -23,12 +23,12 @@ final class TCProfileImageView: UIControl {
     private var size: Size  = .small
     private var presenter   = TCProfileImagePresenter()
     
-    // MARK: - Views
+    // MARK: - UI
     private let stackView           = UIStackView()
     private let imageView           = UIImageView()
     private let nameLabel           = UILabel()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     init(size: Size) {
         super.init(frame: .zero)
         
@@ -46,7 +46,7 @@ final class TCProfileImageView: UIControl {
     }
 }
 
-// MARK: - Public methods
+// MARK: - Публичные методы
 extension TCProfileImageView {
     override var bounds: CGRect {
         didSet {
@@ -72,7 +72,7 @@ extension TCProfileImageView {
     }
 }
 
-// MARK: - Configure methods
+// MARK: - Методы конфигурации
 private extension TCProfileImageView {
     func configure() {
         clipsToBounds = true
