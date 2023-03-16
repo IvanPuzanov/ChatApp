@@ -22,4 +22,10 @@ extension UILabel {
         self.textColor      = textColor
         self.textAlignment  = textAlignment
     }
+    
+    func configureNoMessagesYet(fontSize: CGFloat) {
+        let italicFont  = UIFont.italicSystemFont(ofSize: fontSize)
+        self.font       = italicFont
+        self.textColor  = .label
+    }
 }

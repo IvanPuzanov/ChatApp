@@ -36,6 +36,7 @@ extension ProfileVC {
         super.viewDidLoad()
         
         bindToPresenter()
+        
         configure()
         configureNavigationBar()
         configureStackView()
@@ -45,19 +46,7 @@ extension ProfileVC {
         configureBioMessageLabel()
         configureImagePicker()
         
-        // MARK: ДОМАШНЕЕ ЗАДАНИЕ
-        // На данном этапе жизненного цикла subviews еще
-        // НЕ РАСПОЛОЖЕНЫ, и поэтому их frame неизвестен
-        print("Frame: \(addPhotoButton.frame), \(#function)")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // MARK: ДОМАШНЕЕ ЗАДАНИЕ
-        // На данном этапе жизненного цикла subviews уже
-        // РАСПОЛОЖЕНЫ, и поэтому их frame уже рассчитан
-        print("Frame: \(addPhotoButton.frame), \(#function)")
+        presenter.fetchUserProfile()
     }
 }
 
@@ -115,7 +104,6 @@ private extension ProfileVC {
     
     func configureProfileImageView() {
         self.stackView.addArrangedSubview(profileImageView)
-        profileImageView.setName("Ivan Puzanov")
     }
     
     func configureAddPhotoButton() {
@@ -132,7 +120,6 @@ private extension ProfileVC {
         self.stackView.setCustomSpacing(24, after: addPhotoButton)
         
         self.profileNameLabel.configure(fontSize: 22, fontWeight: .bold, textColor: .label)
-        self.profileNameLabel.text = "Ivan Puzanov"
     }
     
     func configureBioMessageLabel() {
@@ -140,7 +127,6 @@ private extension ProfileVC {
         self.stackView.setCustomSpacing(10, after: profileNameLabel)
         
         self.bioMessageLabel.configure(fontSize: 17, fontWeight: .regular, textColor: .secondaryLabel)
-        self.bioMessageLabel.text = "Hello! I'm an iOS Developer from Saint-Petersburg!"
         self.bioMessageLabel.numberOfLines = 3
     }
     
@@ -158,5 +144,10 @@ extension ProfileVC: ImagePickerProtocol {
 
 // MARK: -
 extension ProfileVC: ProfilePresenterProtocol {
-    
+    func userDidFetch(_ userProfile: UserProfile) {
+        self.profileNameLabel.text = userProfile.name
+        self.bioMessageLabel.text = userProfile.description
+        self.profileImageView.setName(userProfile.name)
+        self.profileImageView.setImage(userProfile.avatar)
+    }
 }
