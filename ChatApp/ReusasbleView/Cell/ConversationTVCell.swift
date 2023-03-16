@@ -18,11 +18,11 @@ final class ConversationTVCell: UITableViewCell {
     
     // MARK: - UI
     private let disclosureView      = UIImageView()
-    private let dateLebel           = UILabel()
+    private var dateLabel           = UILabel()
     private let profileImageView    = TCProfileImageView(size: .medium)
     private let activityIndicator   = UIView()
-    private let nameLabel           = UILabel()
-    private let messageLabel        = UILabel()
+    private var nameLabel           = UILabel()
+    private var messageLabel        = UILabel()
     
     // MARK: - Инициализация
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -52,7 +52,7 @@ extension ConversationTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ConversationCellModel
     func configure(with model: ConversationCellModel) {
         self.nameLabel.text         = model.name
-        self.dateLebel.text         = model.date?.convert(for: .conversationsList)
+        self.dateLabel.text         = model.date?.convert(for: .conversationsList)
         self.messageLabel.text      = model.message ?? "No messages yet"
         self.conversationCellModel  = model
         self.profileImageView.setName(model.name)
@@ -75,7 +75,7 @@ extension ConversationTVCell: ConfigurableViewProtocol {
         if model.message == nil {
             self.messageLabel.configureNoMessagesYet(fontSize: 15)
             self.disclosureView.isHidden = true
-            self.dateLebel.isHidden = true
+            self.dateLabel.isHidden = true
         }
     }
 }
@@ -112,10 +112,14 @@ private extension ConversationTVCell {
     }
     
     func configureNameLabel() {
-        addSubview(nameLabel)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 17, weight: .semibold))
+            .withTextColor(.label)
+            .withAlignment(.left)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        nameLabel.configure(fontSize: 17, fontWeight: .semibold, textColor: .label, textAlignment: .left)
+        addSubview(nameLabel)
         nameLabel.setContentCompressionResistancePriority(.init(760), for: .vertical)
         
         NSLayoutConstraint.activate([
@@ -141,25 +145,33 @@ private extension ConversationTVCell {
     }
     
     func configureDateLabel() {
-        addSubview(dateLebel)
-        dateLebel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 15, weight: .regular))
+            .withTextColor(.secondaryLabel)
+            .withAlignment(.right)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        dateLebel.configure(fontSize: 15, fontWeight: .regular, textColor: .secondaryLabel, textAlignment: .right)
+        addSubview(dateLabel)
         
         NSLayoutConstraint.activate([
-            dateLebel.trailingAnchor.constraint(equalTo: disclosureView.leadingAnchor, constant: -10),
-            dateLebel.centerYAnchor.constraint(equalTo: disclosureView.centerYAnchor),
-            dateLebel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10)
+            dateLabel.trailingAnchor.constraint(equalTo: disclosureView.leadingAnchor, constant: -10),
+            dateLabel.centerYAnchor.constraint(equalTo: disclosureView.centerYAnchor),
+            dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10)
         ])
     }
     
     
     func configureMessageLabel() {
-        addSubview(messageLabel)
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 15, weight: .regular))
+            .withTextColor(.secondaryLabel)
+            .withAlignment(.left)
+            .withNumberLines(2)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        messageLabel.configure(fontSize: 15, fontWeight: .regular, textColor: .secondaryLabel, textAlignment: .left)
-        messageLabel.numberOfLines = 2
+        addSubview(messageLabel)
         
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
