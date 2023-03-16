@@ -8,10 +8,10 @@
 import UIKit
 
 final class DateCVHeader: UICollectionReusableView {
-    // MARK: - Views
+    // MARK: - UI
     private let titleLabel = UILabel()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -26,40 +26,41 @@ final class DateCVHeader: UICollectionReusableView {
 
 // MARK: -
 extension DateCVHeader: ConfigurableViewProtocol {
-    typealias ConfigurationModel = DateSection?
-    func configure(with model: DateSection?) {
-        guard let model else { return }
-        switch model {
-        case .today:
-            self.titleLabel.text = Project.Title.today
-        case .early:
-            self.titleLabel.text = Project.Title.early
-        }
+//    typealias ConfigurationModel = DateSection?
+//    func configure(with model: DateSection?) {
+//        guard let model else { return }
+//        switch model {
+//        case .today:
+//            self.titleLabel.text = Project.Title.today
+//        case .early:
+//            self.titleLabel.text = Project.Title.early
+//        }
+//    }
+    
+    typealias ConfigurationModel = DateComponents
+    func configure(with model: DateComponents) {
+        let calendar            = Calendar.current
+        let date                = calendar.date(from: model)?.convert(for: .conversationDateSection)
+        self.titleLabel.text    = date
     }
 }
 
-// MARK: - Configuration methods
+// MARK: - Методы конфигурации
 private extension DateCVHeader {
     private func configure() {
-        let blurEffect                  = UIBlurEffect(style: .regular)
-        let blurEffectView              = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame            = self.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        self.addSubview(blurEffectView)
+        backgroundColor = .systemBackground
     }
     
     private func configureTitleLabel() {
         addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.configure(fontSize: 14, fontWeight: .regular, textColor: .secondaryLabel)
+        titleLabel.configure(fontSize: 14, fontWeight: .medium, textColor: .secondaryLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
 }

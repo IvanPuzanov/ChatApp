@@ -29,6 +29,8 @@ extension MessageCellModel {
             ]
         case "jason":
             return [
+                MessageCellModel(sender: .conversation, text: "Hi!", date: .createDate(day: 1, month: 7, year: 2022)),
+                MessageCellModel(sender: .user, text: "Hello", date: .createDate(day: 8, month: 8, year: 2022)),
                 MessageCellModel(sender: .conversation, text: "My name sounds like JSON, I love it!", date: .createDate(day: 1, month: 1, year: 2023)),
                 MessageCellModel(sender: .user, text: "Ha-ha, it sounds pretty fun!", date: Date()),
                 MessageCellModel(sender: .conversation, text: "It's true.", date: Date()),

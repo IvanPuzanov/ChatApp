@@ -13,10 +13,10 @@ protocol ConfigurableViewProtocol {
 }
 
 final class ConversationTVCell: UITableViewCell {
-    // MARK: - Parameters
+    // MARK: - Параметры
     private var conversationCellModel: ConversationCellModel?
     
-    // MARK: - Views
+    // MARK: - UI
     private let disclosureView      = UIImageView()
     private let dateLebel           = UILabel()
     private let profileImageView    = TCProfileImageView(size: .medium)
@@ -24,7 +24,7 @@ final class ConversationTVCell: UITableViewCell {
     private let nameLabel           = UILabel()
     private let messageLabel        = UILabel()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -39,8 +39,15 @@ final class ConversationTVCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.activityIndicator.layer.borderColor = UIColor.systemBackground.cgColor
+    }
 }
 
+// MARK: -
 extension ConversationTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ConversationCellModel
     func configure(with model: ConversationCellModel) {
@@ -73,6 +80,7 @@ extension ConversationTVCell: ConfigurableViewProtocol {
     }
 }
 
+// MARK: -
 private extension ConversationTVCell {
     func configureProfileImageView() {
         addSubview(profileImageView)
@@ -90,9 +98,10 @@ private extension ConversationTVCell {
         
         activityIndicator.layer.cornerRadius    = 10
         activityIndicator.layer.borderWidth     = 3
-        activityIndicator.layer.borderColor     = UIColor.white.cgColor
+        activityIndicator.layer.borderColor     = UIColor.systemBackground.cgColor
         activityIndicator.backgroundColor       = .systemGreen
         activityIndicator.layer.masksToBounds   = true
+        activityIndicator.layer.allowsEdgeAntialiasing = true
         
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: -4),

@@ -12,29 +12,31 @@ enum DateSection: Int, Hashable {
     case today = 1
 }
 
-final class ConversationVC: UICollectionViewController {
-    // MARK: - Parameters
+final class ConversationVC: UIViewController {
+    // MARK: - Параметры
     public var conversation: ConversationCellModel?
     private let presenter = ConversationPresenter()
     private var messageTextViewBottomAnchor: NSLayoutConstraint?
     
-    private var dataSource: UICollectionViewDiffableDataSource<DateSection, MessageCellModel>!
+    private var dataSource: UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>!
     private var layout: UICollectionViewCompositionalLayout!
     
-    // MARK: - Views
+    // MARK: - UI
+    private var collectionView      = UICollectionView(frame: .zero, collectionViewLayout: .init())
     private let chatNavigationBar   = TCChatNavigationBar()
     private let messageTextView     = TCMessageTextView()
     private let tableView           = UITableView()
 }
 
-// MARK: - Lifecycle
+// MARK: - Жизненный цикл
 extension ConversationVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
         bindToPresenter()
-        configure()
+//        configure()
         configureMessageTextView()
+        configureCollectionView()
         configureNavigationBar()
         configureDataSource()
         configureLayout()
@@ -43,16 +45,40 @@ extension ConversationVC {
 
 // MARK: -
 private extension ConversationVC {
-    func update(with messages: [DateSection: [MessageCellModel]]) {
-        var snapshot = NSDiffableDataSourceSnapshot<DateSection, MessageCellModel>()
+    func update(with messages: [DateComponents: [MessageCellModel]]) {
+        var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
         
-        snapshot.appendSections([.early, .today])
-        
-        if let earlyMessages = messages[.early] {
-            snapshot.appendItems(earlyMessages, toSection: .early)
+        for (key, value) in messages {
+            if !snapshot.sectionIdentifiers.contains(key) {
+                snapshot.appendSections([key])
+            }
+            
+            snapshot.appendItems(value, toSection: key)
         }
-        if let todayMessages = messages[.today] {
-            snapshot.appendItems(todayMessages, toSection: .today)
+//
+//        snapshot.appendSections([.early, .today])
+//
+//        if let earlyMessages = messages[.early] {
+//            snapshot.appendItems(earlyMessages, toSection: .early)
+//        }
+//        if let todayMessages = messages[.today] {
+//            snapshot.appendItems(todayMessages, toSection: .today)
+//        }
+//
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot)
+        }
+    }
+    
+    func update(with messages: [MessageSnapshotModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
+        
+        messages.forEach { model in
+            if !snapshot.sectionIdentifiers.contains(model.date) {
+                snapshot.appendSections([model.date])
+            }
+            
+            snapshot.appendItems(model.messages, toSection: model.date)
         }
         
         DispatchQueue.main.async {
@@ -61,21 +87,12 @@ private extension ConversationVC {
     }
 }
 
-// MARK: - Configure methods
+// MARK: - Методы конфигурации
 private extension ConversationVC {
     func bindToPresenter() {
         self.presenter.setDelegate(self)
         self.presenter.fetchMessages(for: conversation)
         self.presenter.addObservers()
-    }
-    
-    func configure() {
-        self.view.backgroundColor = .systemBackground
-        self.collectionView.backgroundColor = .systemBackground
-        self.collectionView.keyboardDismissMode = .onDrag
-        
-        self.collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
-        self.collectionView.register(DateCVHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DateCVHeader.id)
     }
     
     func configureMessageTextView() {
@@ -88,6 +105,25 @@ private extension ConversationVC {
             messageTextViewBottomAnchor!,
             messageTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
+        ])
+    }
+    
+    func configureCollectionView() {
+        self.view.backgroundColor = .systemBackground
+        self.collectionView.backgroundColor = .systemBackground
+        self.collectionView.keyboardDismissMode = .interactive
+        
+        self.collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
+        self.collectionView.register(DateCVHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DateCVHeader.id)
+        
+        self.view.addSubview(collectionView)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: messageTextView.topAnchor, constant: -3)
         ])
     }
     
@@ -113,7 +149,7 @@ private extension ConversationVC {
     }
     
     func configureDataSource() {
-        typealias DataSource = UICollectionViewDiffableDataSource<DateSection, MessageCellModel>
+        typealias DataSource = UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>
         dataSource = DataSource(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageCVCell.id, for: indexPath) as? MessageCVCell
             cell?.configure(with: itemIdentifier)
@@ -124,7 +160,7 @@ private extension ConversationVC {
             if let cell = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                withReuseIdentifier: DateCVHeader.id,
                                                                                for: indexPath) as? DateCVHeader {
-                cell.configure(with: DateSection(rawValue: indexPath.section))
+                cell.configure(with: dataSource.snapshot().sectionIdentifiers[indexPath.section])
                 return cell
             }
             return nil
@@ -133,18 +169,17 @@ private extension ConversationVC {
     }
     
     func configureLayout() {
-        layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
+        layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
             let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
             let item        = NSCollectionLayoutItem(layoutSize: itemSize)
             
             let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+            group.contentInsets.leading = 12
+            group.contentInsets.trailing = 12
             let section     = NSCollectionLayoutSection(group: group)
-            //            section.interGroupSpacing       = 5
-            section.contentInsets.leading   = 16
-            section.contentInsets.trailing  = 16
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem
-            let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(40))
+            let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25))
             let headerElement   = SupplementaryItem(layoutSize: layoutSize,
                                                     elementKind: UICollectionView.elementKindSectionHeader,
                                                     alignment: .topLeading)
@@ -160,13 +195,23 @@ private extension ConversationVC {
 
 // MARK: - ChatPresenterProtocol
 extension ConversationVC: ConversationPresenterProtocol {
-    func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]]) {
+    func messagesDidFetch(_ messages: [DateComponents: [MessageCellModel]]) {
         update(with: messages)
+    }
+    
+    func messagesDidFetch(_ messages: [DateSection : [MessageCellModel]]) {
+//        update(with: messages)
+    }
+    
+    func messagesDidFetch(_ messages: [MessageSnapshotModel]) {
+//        update(with: messages)
     }
     
     func keyboardWillShow(height: CGFloat) {
         messageTextViewBottomAnchor?.constant = -height
         view.layoutSubviews()
+        
+        
     }
     
     func keyboardDidHide() {

@@ -8,13 +8,13 @@
 import UIKit
 
 final class TCChatNavigationBar: UIView {
-    // MARK: - View
+    // MARK: - UI
     private let blurredView         = UIView()
     private let profileImageView    = TCProfileImageView(size: .chat)
     private let nameLabel           = UILabel()
     private let shadowImage         = UIView()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         

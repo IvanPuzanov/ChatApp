@@ -9,24 +9,33 @@ import UIKit
 
 protocol ConversationPresenterProtocol: AnyObject {
     func messagesDidFetch(_ messages: [DateSection: [MessageCellModel]])
+    func messagesDidFetch(_ messages: [DateComponents: [MessageCellModel]])
+    func messagesDidFetch(_ messages: [MessageSnapshotModel])
     func keyboardWillShow(height: CGFloat)
     func keyboardDidHide()
 }
 
+struct MessageSnapshotModel {
+    var messages: [MessageCellModel]
+    var date: DateComponents
+}
+
 final class ConversationPresenter {
-    // MARK: - Parameters
+    // MARK: - Параметры
     private let notificationCenter = NotificationCenter.default
     typealias ChatView = ConversationPresenterProtocol & UIViewController
     private weak var view: ChatView?
+    var dateComponents: [DateComponents] = []
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     deinit {
         removeObservers()
     }
 }
 
-// MARK: - Event methods
-extension ConversationPresenter {
+// MARK: - Методы событий
+extension ConversationPresenter: AnyPresenter {
+    typealias PresenterType = ChatView
     func setDelegate(_ delegate: ChatView) {
         self.view = delegate
     }
@@ -35,23 +44,24 @@ extension ConversationPresenter {
         guard let conversation else { return }
         guard conversation.message != nil else { return }
         
-        var messages: [DateSection: [MessageCellModel]] = [.today: [], .early: []]
-    
         let sortedMessages = MessageCellModel.fetchTestMessages(for: conversation.name).sorted {
             return $0.date ?? Date() < $1.date ?? Date()
         }
         
-        sortedMessages.forEach { message in
-            guard let date = message.date else { return }
-            switch date.isToday() {
-            case true:
-                messages[.today]?.append(message)
-            case false:
-                messages[.early]?.append(message)
-            }
+        let groupDic = Dictionary(grouping: sortedMessages) { (value) -> DateComponents in
+            let date = Calendar.current.dateComponents([.day, .year, .month], from: (value.date)!)
+            return date
         }
         
-        self.view?.messagesDidFetch(messages)
+        self.dateComponents = groupDic.keys.sorted { first, second in
+            if let firstDate = first.date, let secondDate = second.date {
+                return firstDate < secondDate
+            }
+            return false
+        }
+        
+        guard !dateComponents.isEmpty else { return }
+        self.view?.messagesDidFetch(groupDic)
     }
     
     func addObservers() {

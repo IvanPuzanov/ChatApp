@@ -12,7 +12,7 @@ protocol ProfilePresenterProtocol: AnyObject {
 }
 
 final class ProfilePresenter {
-    // MARK: - Parameters
+    // MARK: - Параметры
     typealias ProfilePresenterView = ProfilePresenterProtocol & UIViewController
     private weak var view: ProfilePresenterView?
     
@@ -20,8 +20,9 @@ final class ProfilePresenter {
     private let imagePicker = UIImagePickerController()
 }
 
-// MARK: - Event methods
-extension ProfilePresenter {
+// MARK: - Методы событий
+extension ProfilePresenter: AnyPresenter {
+    typealias PresenterType = ProfilePresenterView
     func setDelegate(_ view: ProfilePresenterView) {
         self.view = view
     }

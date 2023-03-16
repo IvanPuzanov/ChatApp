@@ -8,11 +8,11 @@
 import UIKit
 
 final class ConversationTVHeader: UIControl {
-    // MARK: - View
+    // MARK: - UI
     private let titleLabel      = UILabel()
     private let shadowImage     = UIView()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -36,13 +36,13 @@ extension ConversationTVHeader {
     }
 }
 
-// MARK: - Configure methods
+// MARK: - Методы конфигурации
 private extension ConversationTVHeader {
     func configureTitleLabel() {
         self.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        backgroundColor = .white
+        backgroundColor = .systemBackground
         titleLabel.configure(fontSize: 15, fontWeight: .semibold, textColor: .secondaryLabel, textAlignment: .left)
         
         NSLayoutConstraint.activate([
@@ -57,7 +57,7 @@ private extension ConversationTVHeader {
         self.addSubview(shadowImage)
         shadowImage.translatesAutoresizingMaskIntoConstraints = false
         
-        shadowImage.backgroundColor = .white
+        shadowImage.backgroundColor = .systemBackground
         
         NSLayoutConstraint.activate([
             shadowImage.leadingAnchor.constraint(equalTo: leadingAnchor),

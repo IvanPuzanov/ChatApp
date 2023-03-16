@@ -8,10 +8,10 @@
 import UIKit
 
 final class ProfileVC: UIViewController {
-    // MARK: - Parameters
+    // MARK: - Параметры
     private let presenter = ProfilePresenter()
     
-    // MARK: - Views
+    // MARK: - UI
     private let stackView           = UIStackView()
     private var closeButton         = UIBarButtonItem()
     private var editButton          = UIBarButtonItem()
@@ -22,12 +22,12 @@ final class ProfileVC: UIViewController {
     private var imagePicker: TCImagePicker!
 }
 
-// MARK: - Lifecycle
+// MARK: - Жизненный цикл
 extension ProfileVC {
     convenience init() {
         self.init(nibName: nil, bundle: nil)
         
-        // На данном этапе жизненного цикла subviews еще
+        // На данном этапе жизненного цикла subUI еще
         // НЕ РАСПОЛОЖЕНЫ, и поэтому их frame неизвестен
         print("Frame: \(addPhotoButton.frame), \(#function)")
     }
@@ -65,7 +65,7 @@ private extension ProfileVC {
     }
 }
 
-// MARK: - Configure methods
+// MARK: - Методы конфигурации
 private extension ProfileVC {
     func bindToPresenter() {
         self.presenter.setDelegate(self)

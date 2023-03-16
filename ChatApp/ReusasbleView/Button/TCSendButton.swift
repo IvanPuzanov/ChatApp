@@ -8,15 +8,15 @@
 import UIKit
 
 final class TCSendButton: UIControl {
-    // MARK: - Parameters
+    // MARK: - Параметры
     public var isActive: Bool = false {
         didSet { self.isActiveChanged() }
     }
     
-    // MARK: - Views
+    // MARK: - UI
     private let arrowImageView = UIImageView(image: Project.Image.arrowUp)
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -29,7 +29,7 @@ final class TCSendButton: UIControl {
     }
 }
 
-// MARK: - Event methods
+// MARK: - Методы событий
 private extension TCSendButton {
     func isActiveChanged() {
         switch isActive {
@@ -47,7 +47,7 @@ private extension TCSendButton {
     }
 }
 
-// MARK: - Configure methods
+// MARK: - Методы конфигурации
 private extension TCSendButton {
     func configure() {
         self.translatesAutoresizingMaskIntoConstraints = false

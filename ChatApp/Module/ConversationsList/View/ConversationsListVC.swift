@@ -1,5 +1,5 @@
 //
-//  ChatListVC.swift
+//  ConversationsListVC.swift
 //  ChatApp
 //
 //  Created by Ivan Puzanov on 21.02.2023.
@@ -12,19 +12,19 @@ enum Section: String, CaseIterable {
     case history = "History"
 }
 
-class ChatListVC: UITableViewController {
-    // MARK: - Parameters
+class ConversationsListVC: UITableViewController {
+    // MARK: - Параметры
     public var coordintor: AppCoordinator?
-    private let presenter = ChatListPresenter()
+    private let presenter = ConversationsListPresenter()
     private var dataSource: UITableViewDiffableDataSource<Section, ConversationCellModel>!
     
-    // MARK: - Views
+    // MARK: - UI
     private var profileButton   = TCProfileImageView(size: .small)
     private var settingsButton  = UIBarButtonItem()
 }
 
-// MARK: - Lifecycle
-extension ChatListVC {
+// MARK: - Жизненный цикл
+extension ConversationsListVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,36 +39,36 @@ extension ChatListVC {
     }
 }
 
-// MARK: - Event methods
-private extension ChatListVC {
+// MARK: - Методы событий
+private extension ConversationsListVC {
     @objc
     func buttonTapped(_ button: UIView) {
         switch button {
         case profileButton:
             coordintor?.showProfileVC()
+        case settingsButton:
+            let themeVC = ThemeVC()
+            // Делегирование
+            themeVC.themeDelegate = self
+            // Замыкание
+            themeVC.themeDidSet = { theme in
+                print("Callback result", theme)
+            }
+            self.coordintor?.navigationController.show(themeVC, sender: nil)
         default:
             break
         }
     }
     
-    func update(with conversations: [ConversationCellModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, ConversationCellModel>()
-        
-        snapshot.appendSections([.online, .history])
-        let online  = conversations.filter { $0.isOnline }
-        let history = conversations.filter { !$0.isOnline }
-        
-        snapshot.appendItems(online, toSection: .online)
-        snapshot.appendItems(history, toSection: .history)
-        
+    func update(with snapshot: NSDiffableDataSourceSnapshot<Section, ConversationCellModel>) {
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
 }
 
-// MARK: - Configure methods
-private extension ChatListVC {
+// MARK: - Методы конфигурации
+private extension ConversationsListVC {
     func bindToPresenter() {
         self.presenter.setDelegate(self)
         self.presenter.fetchConversations()
@@ -83,17 +83,17 @@ private extension ChatListVC {
     }
     
     func configureNavigationBar() {
-        // Navigation bar
+        // Строка навигации
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = Project.Title.chat
         navigationItem.backButtonTitle = " "
         
-        // Profile BarButtonItem
+        // Кнопка профиля
         profileButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         let profileNavButton = UIBarButtonItem(customView: profileButton)
         navigationItem.setRightBarButton(profileNavButton, animated: true)
         
-        // Settings BarButtonItem
+        // Кнопка настроек
         settingsButton = UIBarButtonItem(image: Project.Image.settings,
                                          style: .plain,
                                          target: self,
@@ -114,9 +114,9 @@ private extension ChatListVC {
 }
 
 // MARK: - ChatListPresenterProtocol
-extension ChatListVC: ChatListPresenterProtocol {
-    func didFetchConversations(_ conversations: [ConversationCellModel]) {
-        update(with: conversations)
+extension ConversationsListVC: ConversationsListPresenterProtocol {
+    func didFetchConversations(_ snapshot: NSDiffableDataSourceSnapshot<Section, ConversationCellModel>) {
+        update(with: snapshot)
     }
     
     func userProfileDidFetch(_ userProfile: UserProfile) {
@@ -126,7 +126,7 @@ extension ChatListVC: ChatListPresenterProtocol {
 }
 
 // MARK: - UITableViewDelegate
-extension ChatListVC {
+extension ConversationsListVC {
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = ConversationTVHeader()
         header.configure(with: Section.allCases[section])
@@ -138,3 +138,12 @@ extension ChatListVC {
         coordintor?.showChatVC(for: model)
     }
 }
+
+// MARK: - ThemePresenterProtocol
+extension ConversationsListVC: ThemePresenterProtocol {
+    // Делегирование
+    func themeDidSet(_ theme: Theme) {
+//        print("Delegate result", theme)
+    }
+}
+

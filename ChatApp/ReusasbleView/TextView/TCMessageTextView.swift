@@ -8,18 +8,18 @@
 import UIKit
 
 final class TCMessageTextView: UIView {
-    // MARK: - Parameters
+    // MARK: - Параметры
     override var intrinsicContentSize: CGSize {
         return textView.intrinsicContentSize
     }
     
-    // MARK: - Views
+    // MARK: - UI
     private let blurredView     = UIView()
     private var containerView   = UIView()
     public let textView         = UITextView()
     private let sendButton  	= TCSendButton()
     
-    // MARK: Initialization
+    // MARK: Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -35,7 +35,7 @@ final class TCMessageTextView: UIView {
     }
 }
 
-// MARK: - Connfigure methods
+// MARK: - Методы конфигурации
 private extension TCMessageTextView {
     func configure() {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -54,9 +54,9 @@ private extension TCMessageTextView {
         
         layoutSubviews()
         if !UIAccessibility.isReduceTransparencyEnabled {
-            blurredView.backgroundColor = .white.withAlphaComponent(0.9)
+            blurredView.backgroundColor = .systemBackground.withAlphaComponent(0.9)
             
-            let blurEffect = UIBlurEffect(style: .light)
+            let blurEffect = UIBlurEffect(style: .regular)
             let blurEffectView  = UIVisualEffectView(effect: blurEffect)
             
             blurEffectView.frame            = self.blurredView.bounds
@@ -76,7 +76,7 @@ private extension TCMessageTextView {
         containerView.layer.borderWidth     = 0.75
         containerView.layer.borderColor     = UIColor.separator.cgColor
         containerView.layer.cornerRadius    = 22
-        containerView.backgroundColor       = .white
+//        containerView.backgroundColor       = .systemBackground
         
         let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
         
@@ -125,16 +125,16 @@ private extension TCMessageTextView {
 // MARK: - UITextViewDelegate
 extension TCMessageTextView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
+        if textView.textColor == .lightGray {
             textView.text = nil
-            textView.textColor = UIColor.black
+            textView.textColor = .label
         }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = Project.Title.typeMessage
-            textView.textColor = UIColor.lightGray
+            textView.textColor = .lightGray
         }
     }
 }

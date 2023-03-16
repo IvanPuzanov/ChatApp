@@ -8,21 +8,23 @@
 import UIKit
 
 final class MessageCVCell: UICollectionViewCell {
-    // MARK: - Parameters
+    // MARK: - Параметры
     private var containerLeading: NSLayoutConstraint!
     private var containerTrailing: NSLayoutConstraint!
     
-    // MARK: - Views
+    // MARK: - UI
+    private let stackView       = UIStackView()
     private var leftTailImage   = UIImageView()
     private var rightTailImage  = UIImageView()
     private var containerView   = UIView()
     private let messageLabel    = UILabel()
     private let dateLabel       = UILabel()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        configureStackView()
         configureContainerView()
         configureLeftTailImageView()
         configureRightTailImageView()
@@ -50,20 +52,21 @@ extension MessageCVCell: ConfigurableViewProtocol {
             self.rightTailImage.image = Project.Image.rightGrayTail
             self.leftTailImage.isHidden = true
             self.rightTailImage.isHidden = false
+            self.stackView.alignment = .trailing
             
-            self.containerLeading.constant = UIScreen.main.bounds.width * 0.33
-            self.containerTrailing.constant = 0
+//            self.containerLeading.constant = UIScreen.main.bounds.width * 0.33
+//            self.containerTrailing.constant = 0
         case .conversation:
             self.dateLabel.textColor            = .systemGray2
-            self.messageLabel.textColor         = .black
+            self.messageLabel.textColor         = Project.Color.bubbleTextColor
             self.containerView.backgroundColor  = .systemGray6
             
             self.leftTailImage.image = Project.Image.leftGrayTail
             self.rightTailImage.isHidden = true
             self.leftTailImage.isHidden = false
-            
-            self.containerTrailing.constant = -UIScreen.main.bounds.width * 0.33
-            self.containerLeading.constant = 0
+            self.stackView.alignment = .leading
+//            self.containerTrailing.constant = -UIScreen.main.bounds.width * 0.33
+//            self.containerLeading.constant = 0
         }
         self.dateLabel.text = model.date?.showOnlyTime()
     }
@@ -71,22 +74,28 @@ extension MessageCVCell: ConfigurableViewProtocol {
 
 // MARK: -
 private extension MessageCVCell {
-    func configureContainerView() {
-        self.addSubview(containerView)
-        containerView.translatesAutoresizingMaskIntoConstraints = false
+    func configureStackView() {
+        self.addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        containerView.layer.cornerRadius = 20
-        containerView.layer.cornerCurve = .continuous
-        
-        containerLeading = containerView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        containerTrailing = containerView.trailingAnchor.constraint(equalTo: trailingAnchor)
+        stackView.axis = .vertical
         
         NSLayoutConstraint.activate([
-            containerLeading,
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
-            containerTrailing,
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
         ])
+    }
+    
+    func configureContainerView() {
+        stackView.addArrangedSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        containerView.layer.cornerRadius    = 20
+        containerView.layer.cornerCurve     = .continuous
+        
+        containerView.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width * 0.77).isActive = true
     }
     
     func configureLeftTailImageView() {

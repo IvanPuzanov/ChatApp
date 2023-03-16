@@ -13,7 +13,7 @@ class AppDelegate: UIResponder {
     var appCoordinator: AppCoordinator?
 }
 
-// MARK: - App Lifecycle
+// MARK: - App Жизненный цикл
 extension AppDelegate: UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -32,6 +32,21 @@ extension AppDelegate: UIApplicationDelegate {
         // Запускается работа координатора
         appCoordinator?.start()
         
+        // Установка темы приложения
+        setupAppearance()
+        
         return true
+    }
+    
+    func setupAppearance() {
+        let persistenceService = PersistenceService()
+        guard let theme = persistenceService.fetchTheme() else { return }
+        
+        switch theme {
+        case .dark:
+            self.window?.overrideUserInterfaceStyle = .dark
+        case .light:
+            self.window?.overrideUserInterfaceStyle = .light
+        }
     }
 }
