@@ -47,14 +47,7 @@ private extension ConversationsListVC {
         case profileButton:
             coordintor?.showProfileVC()
         case settingsButton:
-            let themeVC = ThemeVC()
-            // Делегирование
-            themeVC.themeDelegate = self
-            // Замыкание
-            themeVC.themeDidSet = { theme in
-                print("Callback result", theme)
-            }
-            self.coordintor?.navigationController.show(themeVC, sender: nil)
+            self.coordintor?.showSettings()
         default:
             break
         }
@@ -136,14 +129,6 @@ extension ConversationsListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = dataSource.itemIdentifier(for: indexPath)
         coordintor?.showChatVC(for: model)
-    }
-}
-
-// MARK: - ThemePresenterProtocol
-extension ConversationsListVC: ThemePresenterProtocol {
-    // Делегирование
-    func themeDidSet(_ theme: Theme) {
-//        print("Delegate result", theme)
     }
 }
 

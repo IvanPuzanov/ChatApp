@@ -7,27 +7,7 @@
 
 import UIKit
 
-/*
-    ДОМАШНЕЕ ЗАДАНИЕ
- 
- 
-    Retain Cycle можно возникнуть, если данный контроллер и
-    другой объект будут сильно ссылаться друг на друга,
-    тем самым не позволяя друг другу высвободиться из памяти.
- 
-    [       Person       ]                [       Laptop        ]
-    [ var laptop: Laptop ] <---STRONG---> [  var owner: Person  ]
-    
-    Например, каждый контроллер в моем приложении имеет свой presenter,
-    который имеет слабую(weak) ссылку на контроллер, чтобы исключить
-    подобный сценарий.
-*/
-
 final class ThemeVC: UIViewController {
-    // MARK: - Делегирование и замыкание
-    public weak var themeDelegate: ThemePresenterProtocol?
-    public var themeDidSet: ((Theme) -> ())?
-    
     // MARK: - Параметры
     private var presenter = ThemePresenter()
     
@@ -69,18 +49,12 @@ private extension ThemeVC {
             lightThemeButton.isSelected(false)
             darkThemeButton.isSelected(true)
     
-            themeDidSet?(.dark)
-            themeDelegate?.themeDidSet(.dark)
-            
             UIView.animate(withDuration: 0.3) {
                 self.view.window?.overrideUserInterfaceStyle = .dark
             }            
         case lightThemeButton:
             lightThemeButton.isSelected(true)
             darkThemeButton.isSelected(false)
-            
-            themeDidSet?(.light)
-            themeDelegate?.themeDidSet(.light)
             
             UIView.animate(withDuration: 0.3) {
                 self.view.window?.overrideUserInterfaceStyle = .light

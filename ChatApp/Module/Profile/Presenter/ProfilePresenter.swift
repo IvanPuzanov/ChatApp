@@ -46,4 +46,11 @@ extension ProfilePresenter: AnyPresenter {
         
         self.view?.present(alertController, animated: true)
     }
+    
+    enum SaveType {
+        case gcd, operation
+    }
+    func save(with type: SaveType, name: String?, bio: String?, image: UIImage?) {
+        
+    }
 }

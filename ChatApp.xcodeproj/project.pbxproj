@@ -10,6 +10,7 @@
 		2A72FA4429C0BB33001172D4 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72FA4329C0BB33001172D4 /* PersistenceService.swift */; };
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
 		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
+		2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523829C460050017BC9C /* TCProfileEditor.swift */; };
 		2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B09D29B1E90500311B3F /* NetworkService.swift */; };
 		2AA9B0A129B1ED1800311B3F /* ConversationCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */; };
 		2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */; };
@@ -53,6 +54,7 @@
 		2A72FA4329C0BB33001172D4 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
 		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
+		2AA8523829C460050017BC9C /* TCProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileEditor.swift; sourceTree = "<group>"; };
 		2AA9B09D29B1E90500311B3F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellModel.swift; sourceTree = "<group>"; };
 		2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVCell.swift; sourceTree = "<group>"; };
@@ -112,6 +114,14 @@
 				2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */,
 			);
 			path = ProfileImageView;
+			sourceTree = "<group>";
+		};
+		2AA8523729C45FF80017BC9C /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				2AA8523829C460050017BC9C /* TCProfileEditor.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 		2AA9B09C29B1E8FB00311B3F /* Service */ = {
@@ -377,6 +387,7 @@
 		2AEC10DB29ACBE77000EF08D /* ReusasbleView */ = {
 			isa = PBXGroup;
 			children = (
+				2AA8523729C45FF80017BC9C /* Container */,
 				2AA9B0BD29B62D7800311B3F /* Button */,
 				2AA9B0BA29B62A4200311B3F /* TextView */,
 				2AA9B0B329B520F200311B3F /* Bar */,
@@ -490,6 +501,7 @@
 				2AA9B0B729B5D65500311B3F /* Reusable.swift in Sources */,
 				2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */,
 				2AEC10DF29ACCF8C000EF08D /* ConversationsListPresenter.swift in Sources */,
+				2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */,
 				2AA9B0C129B7383F00311B3F /* MessageCellModel.swift in Sources */,
 				2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */,
 				2AEB6DEA29BA5FBB004D0A3D /* ThemeVC.swift in Sources */,
