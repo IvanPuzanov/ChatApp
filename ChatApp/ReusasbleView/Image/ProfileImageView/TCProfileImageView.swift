@@ -70,6 +70,10 @@ extension TCProfileImageView {
     func bindToPresenter() {
         self.presenter.setDelegate(self)
     }
+    
+    func setSize(_ size: Size) {
+        layoutSubviews()
+    }
 }
 
 // MARK: - Методы конфигурации

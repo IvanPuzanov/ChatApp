@@ -12,32 +12,25 @@ final class ProfileVC: UIViewController {
     private let presenter = ProfilePresenter()
     
     // MARK: - UI
-    private let stackView           = UIStackView()
+    private let stackView         = UIStackView()
     
-    private var closeButton         = UIBarButtonItem()
-    private var editButton          = UIBarButtonItem()
-    private var cancelButton        = UIBarButtonItem()
-    private var saveButton          = UIBarButtonItem()
+    public var closeButton        = UIBarButtonItem()
+    public var editButton         = UIBarButtonItem()
+    public var cancelButton       = UIBarButtonItem()
+    public var saveButton         = UIBarButtonItem()
+    public var activity           = UIActivityIndicatorView(style: .medium)
     
-    private let profileImageView    = TCProfileImageView(size: .large)
-    private let addPhotoButton      = UIButton()
-    private let profileNameLabel    = UILabel()
-    private let bioMessageLabel     = UILabel()
-    private let profileEditor       = TCProfileEditor()
+    public let profileImageView   = TCProfileImageView(size: .large)
+    public let addPhotoButton     = UIButton()
+    public let profileNameLabel   = UILabel()
+    public let bioMessageLabel    = UILabel()
+    public let profileEditor      = TCProfileEditor()
     
     private var imagePicker: TCImagePicker!
 }
 
 // MARK: - Жизненный цикл
 extension ProfileVC {
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
-        
-        // На данном этапе жизненного цикла subUI еще
-        // НЕ РАСПОЛОЖЕНЫ, и поэтому их frame неизвестен
-        print("Frame: \(addPhotoButton.frame), \(#function)")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,40 +60,10 @@ private extension ProfileVC {
         case addPhotoButton:
             imagePicker.present(from: addPhotoButton)
         case editButton:
-            navigationItem.setRightBarButton(saveButton, animated: true)
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8) {
-                [self.profileNameLabel, self.bioMessageLabel].forEach {
-                    $0.alpha = 0
-                    $0.isHidden = true
-                }
-                
-                [self.profileEditor].forEach {
-                    $0.alpha = 1
-                    $0.isHidden = false
-                }
-    
-                self.view.backgroundColor = .secondarySystemBackground
-            }
-            
-            navigationItem.setLeftBarButton(cancelButton, animated: true)
+            presenter.enableEditing()
         case cancelButton:
-            navigationItem.setLeftBarButton(closeButton, animated: true)
-            navigationItem.setRightBarButton(editButton, animated: true)
-            
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8) {
-                [self.profileNameLabel, self.bioMessageLabel].forEach {
-                    $0.alpha = 1
-                    $0.isHidden = false
-                }
-                
-                [self.profileEditor].forEach {
-                    $0.alpha = 0
-                    $0.isHidden = true
-                }
-            
-                self.view.backgroundColor = .systemBackground
-            }
+            presenter.cancelSaving()
+            presenter.disableEditing()
         default:
             break
         }
@@ -137,23 +100,22 @@ private extension ProfileVC {
                                        target: self,
                                        action: #selector(buttonTapped))
         
-        var saveGCD = UIAction(title: "Save GCD") { _ in
+        let saveGCD = UIAction(title: "Save GCD") { _ in
             self.presenter.save(with: .gcd, name: nil, bio: nil, image: nil)
         }
-        var saveOperation = UIAction(title: "Save Operation") { _ in
+        let saveOperation = UIAction(title: "Save Operation") { _ in
             self.presenter.save(with: .operation, name: nil, bio: nil, image: nil)
         }
         saveButton = UIBarButtonItem(image: .init(systemName: "ellipsis.circle"), menu: UIMenu(children: [saveGCD, saveOperation]))
-        
     }
     
     func configureStackView() {
         self.view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.axis = .vertical
+        stackView.axis      = .vertical
+        stackView.spacing   = 24
         stackView.alignment = .center
-        stackView.spacing = 24
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -205,6 +167,9 @@ private extension ProfileVC {
 extension ProfileVC: ImagePickerProtocol {
     func didSelect(image: UIImage?) {
         self.profileImageView.setImage(image)
+        
+        guard let _ = image else { return }
+        self.presenter.enableEditing()
     }
 }
 

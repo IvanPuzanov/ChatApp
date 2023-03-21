@@ -36,9 +36,30 @@ final class TCProfileEditor: UIView {
     }
 }
 
+// MARK: -
+extension TCProfileEditor {
+    override func resignFirstResponder() -> Bool {
+        super.resignFirstResponder()
+        
+        self.nameTextField.resignFirstResponder()
+        self.bioTextField.resignFirstResponder()
+        
+        return true
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        super.becomeFirstResponder()
+        
+        self.nameTextField.becomeFirstResponder()
+        
+        return true
+    }
+}
+
+// MARK: - Методы конфигурации
 private extension TCProfileEditor {
     func configure() {
-        self.backgroundColor = .white
+        self.backgroundColor = Project.Color.subviewBackground
         self.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -137,4 +158,3 @@ private extension TCProfileEditor {
         ])
     }
 }
-    

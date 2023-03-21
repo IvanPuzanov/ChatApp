@@ -11,6 +11,8 @@
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
 		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
 		2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523829C460050017BC9C /* TCProfileEditor.swift */; };
+		2AA8523B29C4B3470017BC9C /* GCDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523A29C4B3470017BC9C /* GCDService.swift */; };
+		2AA8523D29C4B3520017BC9C /* OperationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523C29C4B3520017BC9C /* OperationService.swift */; };
 		2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B09D29B1E90500311B3F /* NetworkService.swift */; };
 		2AA9B0A129B1ED1800311B3F /* ConversationCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */; };
 		2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */; };
@@ -55,6 +57,8 @@
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
 		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
 		2AA8523829C460050017BC9C /* TCProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileEditor.swift; sourceTree = "<group>"; };
+		2AA8523A29C4B3470017BC9C /* GCDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDService.swift; sourceTree = "<group>"; };
+		2AA8523C29C4B3520017BC9C /* OperationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationService.swift; sourceTree = "<group>"; };
 		2AA9B09D29B1E90500311B3F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellModel.swift; sourceTree = "<group>"; };
 		2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVCell.swift; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 			children = (
 				2AA9B09D29B1E90500311B3F /* NetworkService.swift */,
 				2A72FA4329C0BB33001172D4 /* PersistenceService.swift */,
+				2AA8523A29C4B3470017BC9C /* GCDService.swift */,
+				2AA8523C29C4B3520017BC9C /* OperationService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -491,6 +497,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */,
+				2AA8523D29C4B3520017BC9C /* OperationService.swift in Sources */,
 				2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */,
 				2AA9B0C329B741BF00311B3F /* UserProfile.swift in Sources */,
 				2ABEC56629A4A1C10046CB38 /* ConversationsListVC.swift in Sources */,
@@ -508,6 +515,7 @@
 				2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */,
 				2AEB6DF429BB9831004D0A3D /* TCThemeView.swift in Sources */,
 				2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */,
+				2AA8523B29C4B3470017BC9C /* GCDService.swift in Sources */,
 				2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */,
 				2AA9B0B529B520FF00311B3F /* TCChatNavigationBar.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
