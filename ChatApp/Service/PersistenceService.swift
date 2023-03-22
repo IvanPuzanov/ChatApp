@@ -14,7 +14,10 @@ final class PersistenceService {
             let encodedData = try encoder.encode(value)
             
             let userDefaults = UserDefaults.standard
-            userDefaults.set(encodedData, forKey: key.rawValue)
+            
+            DispatchQueue.global().async {
+                userDefaults.set(encodedData, forKey: key.rawValue)
+            }
         } catch {
             print("fail to save")
         }

@@ -112,9 +112,10 @@ extension ConversationsListVC: ConversationsListPresenterProtocol {
         update(with: snapshot)
     }
     
-    func userProfileDidFetch(_ userProfile: UserProfile) {
-        profileButton.setName(userProfile.name)
-        profileButton.setImage(userProfile.avatar)
+    func userProfileDidFetch(_ user: User) {
+        profileButton.setName(user.name)
+        guard let avatar = user.avatar else { return }
+        profileButton.setImage(UIImage(data: avatar))
     }
 }
 

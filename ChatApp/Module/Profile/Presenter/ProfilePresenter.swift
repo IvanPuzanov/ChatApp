@@ -20,8 +20,10 @@ final class ProfilePresenter {
     private var isSaving: Bool = false
     
     // MARK: - Компоненты
-    private let imagePicker = UIImagePickerController()
-    private var persistenceService: PersistenceProtocol?
+    private var imagePicker: TCImagePicker!
+    private var concurrentService: ConcurrentServiceProtocol?
+    private var fileService = FileService.shared
+    private var userProfile: User?
 }
 
 // MARK: - Методы событий
@@ -37,39 +39,65 @@ extension ProfilePresenter: AnyPresenter {
     
     // MARK: - Сохранение/чтение данных
     enum SaveType { case gcd, operation }
-    func save(with type: SaveType, name: String?, bio: String?, image: UIImage?) {
+    func save(with type: SaveType) {
+        // Установка сервиса
+        switch type {
+        case .gcd:
+            concurrentService = GCDService()
+        case .operation:
+            concurrentService = OperationService()
+        }
+        
+        // Создание модели пользователя
+        guard let userName = view?.profileEditor.enteredName(), !userName.isEmpty,
+              let userBio  = view?.profileEditor.enteredBio()
+        else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.showAlert(title: "Ooops🥲", message: "You can't save user without name", style: .alert) {
+                    let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
+                    return [ok]
+                }
+            }
+            return
+        }
+        let user = User(name: userName, bio: userBio, avatar: view?.profileImageView.image?.pngData())
+        
+        // Начало процесса сохранения
+        guard let concurrentService else { return }
         DispatchQueue.main.async {
             self.savingInProgress()
         }
         
-        switch type {
-        case .gcd:
-            persistenceService = GCDService()
-        case .operation:
-            persistenceService = OperationService()
-        }
-        
-        guard let persistenceService else { return }
-        persistenceService.save { result in
+        concurrentService.save(user: user) { result in
             switch result {
-            case .success:
+                // Успешное сохранение
+            case .success(let userResult):
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
+                    // Отключение режима редактирования
                     self.disableEditing()
-                    self.showAlert(title: "Success🥳", message: "You are breathtaking", style: .alert) {
-                        let ok = AlertActionButton.ok
+                    // Показ уведомления об успешном сохранении
+                    self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
+                        let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
                         return [ok]
                     }
+                    self.set(with: userResult)
                 }
+                // Ошибка при сохранении
             case .failure:
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
+                    // Отключение режима редактирования
                     self.disableEditing()
-                    self.showAlert(title: "Something went worng😢", message: "Could not save profile", style: .alert) {
-                        let ok = AlertActionButton.ok
-                        let tryAgain = UIAlertAction(title: "Try again", style: .default) { _ in
+                    // Показ уведомления об ошибке при сохранении
+                    self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
+                        let ok = UIAlertAction(title: Project.Button.ok, style: .cancel) { _ in
+                            self.cancelSaving()
+                        }
+                        let tryAgain = UIAlertAction(title: Project.Button.tryAgain, style: .default) { _ in
                             self.enableEditing()
-                            self.save(with: type, name: name, bio: bio, image: image)
+                            self.save(with: type)
                         }
                         return [ok, tryAgain]
                     }
@@ -78,13 +106,17 @@ extension ProfilePresenter: AnyPresenter {
         }
     }
     
-    func read() {
-        
+    func fetchUser() {
+        let user = fileService.fetchUserProfile()
+        self.userProfile = user
+        set(with: user)
     }
     
     func cancelSaving() {
-        guard let persistenceService else { return }
-        persistenceService.cancel()
+        set(with: fileService.currentUser)
+        
+        guard let concurrentService else { return }
+        concurrentService.cancel()
         
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
@@ -167,9 +199,6 @@ extension ProfilePresenter {
 
 // MARK: -
 private extension ProfilePresenter {
-    enum AlertActionButton {
-        static let ok = UIAlertAction(title: "Ok", style: .cancel)
-    }
     func showAlert(title: String?, message: String?, style: UIAlertController.Style, actions: () -> [UIAlertAction]) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: style)
         actions().forEach { action in
@@ -179,19 +208,15 @@ private extension ProfilePresenter {
         self.view?.present(alertController, animated: true)
     }
     
-    func showActionSheetController() {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+    func set(with user: User?) {
+        guard let user else { return }
         
-        let takePhotoAction   = UIAlertAction(title: Project.Button.takePhoto, style: .default)
-        let selectFromGallery = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { _ in
-            self.view?.present(self.imagePicker, animated: true)
-        }
-        let cancel              = UIAlertAction(title: Project.Button.cancel, style: .cancel)
+        self.view?.profileNameLabel.text = user.name
+        self.view?.bioMessageLabel.text = user.bio
+        self.view?.profileEditor.set(name: user.name, bio: user.bio)
+        self.view?.profileImageView.setName(user.name)
         
-        alertController.addAction(takePhotoAction)
-        alertController.addAction(selectFromGallery)
-        alertController.addAction(cancel)
-        
-        self.view?.present(alertController, animated: true)
+        guard let avatar = user.avatar else { return }
+        self.view?.profileImageView.setImage(UIImage(data: avatar))
     }
 }

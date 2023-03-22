@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A72FA4429C0BB33001172D4 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72FA4329C0BB33001172D4 /* PersistenceService.swift */; };
+		2A97B22229C97BED00F0FC95 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A97B22129C97BED00F0FC95 /* FileService.swift */; };
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
 		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
 		2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523829C460050017BC9C /* TCProfileEditor.swift */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		2A72FA4329C0BB33001172D4 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
+		2A97B22129C97BED00F0FC95 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
 		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
 		2AA8523829C460050017BC9C /* TCProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileEditor.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 			children = (
 				2AA9B09D29B1E90500311B3F /* NetworkService.swift */,
 				2A72FA4329C0BB33001172D4 /* PersistenceService.swift */,
+				2A97B22129C97BED00F0FC95 /* FileService.swift */,
 				2AA8523A29C4B3470017BC9C /* GCDService.swift */,
 				2AA8523C29C4B3520017BC9C /* OperationService.swift */,
 			);
@@ -525,6 +528,7 @@
 				2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */,
 				2A72FA4429C0BB33001172D4 /* PersistenceService.swift in Sources */,
 				2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */,
+				2A97B22229C97BED00F0FC95 /* FileService.swift in Sources */,
 				2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */,
 				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
 				2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */,

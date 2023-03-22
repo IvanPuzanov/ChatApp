@@ -54,6 +54,19 @@ extension TCProfileEditor {
         
         return true
     }
+    
+    func set(name: String, bio: String) {
+        self.nameTextField.text = name
+        self.bioTextField.text = bio
+    }
+    
+    func enteredName() -> String? {
+        return nameTextField.text
+    }
+    
+    func enteredBio() -> String? {
+        return bioTextField.text
+    }
 }
 
 // MARK: - Методы конфигурации

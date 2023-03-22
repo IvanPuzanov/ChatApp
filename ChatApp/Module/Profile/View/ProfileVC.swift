@@ -47,6 +47,7 @@ extension ProfileVC {
         configureImagePicker()
         
         presenter.fetchUserProfile()
+        presenter.fetchUser()
     }
 }
 
@@ -101,10 +102,10 @@ private extension ProfileVC {
                                        action: #selector(buttonTapped))
         
         let saveGCD = UIAction(title: "Save GCD") { _ in
-            self.presenter.save(with: .gcd, name: nil, bio: nil, image: nil)
+            self.presenter.save(with: .gcd)
         }
         let saveOperation = UIAction(title: "Save Operation") { _ in
-            self.presenter.save(with: .operation, name: nil, bio: nil, image: nil)
+            self.presenter.save(with: .operation)
         }
         saveButton = UIBarButtonItem(image: .init(systemName: "ellipsis.circle"), menu: UIMenu(children: [saveGCD, saveOperation]))
     }

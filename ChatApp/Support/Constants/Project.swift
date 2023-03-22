@@ -23,11 +23,13 @@ enum Project {
     }
     
     enum Button {
+        static let ok                   = NSLocalizedString("Ok", comment: "")
         static let done 	            = NSLocalizedString("Done", comment: "")
         static let edit                 = NSLocalizedString("Edit", comment: "")
         static let close                = NSLocalizedString("Close", comment: "")
         static let cancel               = NSLocalizedString("Cancel", comment: "")
         static let addPhoto             = NSLocalizedString("Add photo", comment: "")
+        static let tryAgain             = NSLocalizedString("Try again", comment: "")
         static let takePhoto            = NSLocalizedString("Take a photo", comment: "")
         static let selectFromGallery    = NSLocalizedString("Select from gallery", comment: "")
     }
@@ -50,6 +52,13 @@ enum Project {
             guard let image = UIImage(systemName: "chevron.right", withConfiguration: configuration) else { return UIImage() }
             return image
         }
+    }
+    
+    enum AlertTitle {
+        static let success          = NSLocalizedString("Success🥳", comment: "")
+        static let successMesssage  = NSLocalizedString("You are breathtaking", comment: "")
+        static let failure          = NSLocalizedString("Something went worng😢", comment: "")
+        static let failureMessage   = NSLocalizedString("Could not save profile", comment: "")
     }
     
     enum Color {
