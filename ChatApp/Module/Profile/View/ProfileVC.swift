@@ -85,6 +85,9 @@ private extension ProfileVC {
     
     func configure() {
         self.view.backgroundColor = .systemBackground
+        
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
     }
     
     func configureNavigationBar() {
@@ -107,13 +110,15 @@ private extension ProfileVC {
                                        target: self,
                                        action: #selector(buttonTapped))
         
-        let saveGCD = UIAction(title: "Save GCD") { _ in
+        let saveGCD = UIAction(title: Project.Button.saveGCD) { [weak self] _ in
+            guard let self else { return }
             self.presenter.save(with: .gcd)
         }
-        let saveOperation = UIAction(title: "Save Operation") { _ in
+        let saveOperation = UIAction(title: Project.Button.saveOperation) { [weak self] _ in
+            guard let self else { return }
             self.presenter.save(with: .operation)
         }
-        saveButton = UIBarButtonItem(image: .init(systemName: "ellipsis.circle"), menu: UIMenu(children: [saveGCD, saveOperation]))
+        saveButton = UIBarButtonItem(image: Project.Image.ellipsis, menu: UIMenu(children: [saveGCD, saveOperation]))
     }
     
     func configureStackView() {

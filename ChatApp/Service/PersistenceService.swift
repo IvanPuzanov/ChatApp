@@ -8,6 +8,10 @@
 import Foundation
 
 final class PersistenceService {
+    /// Сохранение данных
+    /// - Parameters:
+    ///   - value: Данные для сохранения
+    ///   - key: Ключ сохранения
     func save<T: Encodable>(_ value: T, forKey key: Project.UserDefaultsKeys) {
         do {
             let encoder = JSONEncoder()
@@ -15,14 +19,14 @@ final class PersistenceService {
             
             let userDefaults = UserDefaults.standard
             
-            DispatchQueue.global().async {
+            DispatchQueue.global(qos: .utility).async {
                 userDefaults.set(encodedData, forKey: key.rawValue)
             }
-        } catch {
-            print("fail to save")
-        }
+        } catch {}
     }
     
+    /// Запрос сохраненной темы
+    /// - Returns: Тема приложения
     func fetchTheme() -> Theme? {
         let userDefaults = UserDefaults.standard
         guard let data = userDefaults.object(forKey: Project.UserDefaultsKeys.settings.rawValue) as? Data else { return nil }
@@ -33,7 +37,6 @@ final class PersistenceService {
             
             return decodedData
         } catch {
-            print("fail to fetch")
             return nil
         }
     }

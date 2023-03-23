@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ConcurrentServiceProtocol {
+protocol ConcurrentServiceProtocol: AnyObject {
     var fileService: FileService { get set }
     
     func save(user: User, completion: @escaping (Result<User, FileServiceError>) -> Void)
@@ -23,8 +23,9 @@ final class GCDService: ConcurrentServiceProtocol {
     
     // MARK: - Методы
     func save(user: User, completion: @escaping (Result<User, FileServiceError>) -> Void) {
-        workItem = DispatchWorkItem(qos: .userInitiated, flags: .noQoS, block: {
+        workItem = DispatchWorkItem(qos: .userInitiated, flags: .noQoS, block: { [weak self] in
             sleep(2)
+            guard let self else { return }
             guard let isCanceled = self.workItem?.isCancelled, !isCanceled else { return }
             
             self.fileService.save(user: user) { result in
@@ -45,7 +46,8 @@ final class GCDService: ConcurrentServiceProtocol {
     }
     
     func fetchUser(completion: @escaping (Result<User, Error>) -> Void) {
-        workItem = DispatchWorkItem(qos: .userInitiated, block: {
+        workItem = DispatchWorkItem(qos: .userInitiated, block: { [weak self] in
+            guard let self else { return }
             guard let user = self.fileService.fetchUserProfile() else {
                 completion(.success(.defaultUser))
                 return

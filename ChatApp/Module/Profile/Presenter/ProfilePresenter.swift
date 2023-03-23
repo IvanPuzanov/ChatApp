@@ -16,13 +16,9 @@ final class ProfilePresenter {
     typealias ProfilePresenterView = ProfilePresenterProtocol & ProfileVC
     private weak var view: ProfilePresenterView?
     
-    // MARK: - Параметры состояния
-    private var isSaving: Bool = false
-    
     // MARK: - Компоненты
-    private var imagePicker: TCImagePicker!
     private var concurrentService: ConcurrentServiceProtocol?
-    private var fileService = FileService.shared
+    private weak var fileService = FileService.shared
     private var userProfile: User?
 }
 
@@ -43,9 +39,9 @@ extension ProfilePresenter: AnyPresenter {
         // Установка сервиса
         switch type {
         case .gcd:
-            concurrentService = GCDService()
+            self.concurrentService = GCDService()
         case .operation:
-            concurrentService = OperationService()
+            self.concurrentService = OperationService()
         }
         
         // Создание модели пользователя
@@ -54,7 +50,7 @@ extension ProfilePresenter: AnyPresenter {
         else {
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
-                self.showAlert(title: "Ooops🥲", message: "You can't save user without name", style: .alert) {
+                self.showAlert(title: Project.AlertTitle.ooops, message: Project.AlertTitle.noNameMessage, style: .alert) {
                     let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
                     return [ok]
                 }
@@ -69,12 +65,12 @@ extension ProfilePresenter: AnyPresenter {
             self.savingInProgress()
         }
         
-        concurrentService.save(user: user) { result in
+        concurrentService.save(user: user) { [weak self] result in
+            guard let self else { return }
             switch result {
                 // Успешное сохранение
             case .success(let userResult):
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
+                DispatchQueue.main.async {
                     // Отключение режима редактирования
                     self.disableEditing()
                     // Показ уведомления об успешном сохранении
@@ -86,8 +82,7 @@ extension ProfilePresenter: AnyPresenter {
                 }
                 // Ошибка при сохранении
             case .failure:
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
+                DispatchQueue.main.async {
                     // Отключение режима редактирования
                     self.disableEditing()
                     // Показ уведомления об ошибке при сохранении
@@ -107,13 +102,13 @@ extension ProfilePresenter: AnyPresenter {
     }
     
     func fetchUser() {
-        let user = fileService.fetchUserProfile()
+        let user = fileService?.fetchUserProfile()
         self.userProfile = user
         set(with: user)
     }
     
     func cancelSaving() {
-        set(with: fileService.currentUser)
+        set(with: fileService?.currentUser)
         
         guard let concurrentService else { return }
         concurrentService.cancel()
@@ -127,6 +122,7 @@ extension ProfilePresenter: AnyPresenter {
 
 // MARK: - Методы режима редактирования
 extension ProfilePresenter {
+    /// Включение режима редактирования
     func enableEditing() {
         guard let view else { return }
         
@@ -155,6 +151,7 @@ extension ProfilePresenter {
         }
     }
     
+    /// Выключение режима редактирования
     func disableEditing() {
         guard let view else { return }
         view.activity.stopAnimating()
@@ -181,6 +178,7 @@ extension ProfilePresenter {
         }
     }
     
+    /// Показ анимации во время сохранения
     func savingInProgress() {
         guard let view else { return }
         
@@ -199,6 +197,12 @@ extension ProfilePresenter {
 
 // MARK: -
 private extension ProfilePresenter {
+    /// Показ уведомления
+    /// - Parameters:
+    ///   - title: Заголовок уведомления
+    ///   - message: Сообщение уведомления
+    ///   - style: Стиль уведомления
+    ///   - actions: Замыкание для передачи кнопок действия в уведомление
     func showAlert(title: String?, message: String?, style: UIAlertController.Style, actions: () -> [UIAlertAction]) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: style)
         actions().forEach { action in
@@ -208,6 +212,8 @@ private extension ProfilePresenter {
         self.view?.present(alertController, animated: true)
     }
     
+    /// Установка значений профиля
+    /// - Parameter user: Модель пользователя
     func set(with user: User?) {
         guard let user else { return }
         
@@ -217,7 +223,7 @@ private extension ProfilePresenter {
         self.view?.profileImageView.setName(user.name)
         
         guard let avatar = user.avatar else {
-            self.view?.profileImageView.setImage(nil)
+            self.view?.profileImageView.resetImage()
             return
         }
         self.view?.profileImageView.setImage(UIImage(data: avatar))

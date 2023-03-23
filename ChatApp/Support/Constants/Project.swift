@@ -31,6 +31,8 @@ enum Project {
         static let addPhoto             = NSLocalizedString("Add photo", comment: "")
         static let tryAgain             = NSLocalizedString("Try again", comment: "")
         static let takePhoto            = NSLocalizedString("Take a photo", comment: "")
+        static let saveGCD              = NSLocalizedString("Save GCD", comment: "")
+        static let saveOperation        = NSLocalizedString("Save Operation", comment: "")
         static let selectFromGallery    = NSLocalizedString("Select from gallery", comment: "")
     }
     
@@ -47,6 +49,7 @@ enum Project {
         static let circle           = UIImage(systemName: "circle")
         static let darkTheme        = UIImage(named: "darkTheme")
         static let lightTheme       = UIImage(named: "lightTheme")
+        static let ellipsis         = UIImage(systemName: "ellipsis.circle")
         
         static func chevronRight(configuration: UIImage.SymbolConfiguration = .init(weight: .regular)) -> UIImage {
             guard let image = UIImage(systemName: "chevron.right", withConfiguration: configuration) else { return UIImage() }
@@ -59,6 +62,8 @@ enum Project {
         static let successMesssage  = NSLocalizedString("You are breathtaking", comment: "")
         static let failure          = NSLocalizedString("Something went worng😢", comment: "")
         static let failureMessage   = NSLocalizedString("Could not save profile", comment: "")
+        static let ooops            = NSLocalizedString("Ooops🥲", comment: "")
+        static let noNameMessage    = NSLocalizedString("You can't save user without name", comment: "")
     }
     
     enum Color {
