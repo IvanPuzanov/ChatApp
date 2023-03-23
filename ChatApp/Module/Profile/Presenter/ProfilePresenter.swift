@@ -132,7 +132,7 @@ extension ProfilePresenter {
         
         view.navigationItem.setRightBarButton(view.saveButton, animated: true)
         view.navigationItem.setLeftBarButton(view.cancelButton, animated: true)
-        view.profileEditor.becomeFirstResponder()
+        view.profileEditor.showKeyboard(true)
         
         UIView.animate(withDuration: 0.2) {
             [view.profileNameLabel, view.bioMessageLabel].forEach {
@@ -158,7 +158,7 @@ extension ProfilePresenter {
     func disableEditing() {
         guard let view else { return }
         view.activity.stopAnimating()
-        view.profileEditor.resignFirstResponder()
+        view.profileEditor.showKeyboard(false)
         
         view.navigationItem.setLeftBarButton(view.closeButton, animated: true)
         view.navigationItem.setRightBarButton(view.editButton, animated: true)
@@ -216,7 +216,10 @@ private extension ProfilePresenter {
         self.view?.profileEditor.set(name: user.name, bio: user.bio)
         self.view?.profileImageView.setName(user.name)
         
-        guard let avatar = user.avatar else { return }
+        guard let avatar = user.avatar else {
+            self.view?.profileImageView.setImage(nil)
+            return
+        }
         self.view?.profileImageView.setImage(UIImage(data: avatar))
     }
 }

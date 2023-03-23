@@ -38,21 +38,14 @@ final class TCProfileEditor: UIView {
 
 // MARK: -
 extension TCProfileEditor {
-    override func resignFirstResponder() -> Bool {
-        super.resignFirstResponder()
-        
-        self.nameTextField.resignFirstResponder()
-        self.bioTextField.resignFirstResponder()
-        
-        return true
-    }
-    
-    override func becomeFirstResponder() -> Bool {
-        super.becomeFirstResponder()
-        
-        self.nameTextField.becomeFirstResponder()
-        
-        return true
+    func showKeyboard(_ value: Bool) {
+        switch value {
+        case true:
+            self.nameTextField.becomeFirstResponder()
+        case false:
+            self.nameTextField.resignFirstResponder()
+            self.bioTextField.resignFirstResponder()
+        }
     }
     
     func set(name: String, bio: String) {

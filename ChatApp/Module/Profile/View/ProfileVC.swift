@@ -49,6 +49,12 @@ extension ProfileVC {
         presenter.fetchUserProfile()
         presenter.fetchUser()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        presenter.cancelSaving()
+    }
 }
 
 // MARK: -

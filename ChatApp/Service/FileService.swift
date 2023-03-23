@@ -8,7 +8,7 @@
 import Foundation
 
 enum FileServiceError: Error {
-    case failToSave(User)
+    case failToSaveUser(User)
     case failToSaveImage
 }
 
@@ -23,6 +23,8 @@ final class FileService {
 }
 
 private extension FileService {
+    /// Создание стандартного пользователя
+    /// - Returns: Возвращает созданного пользователя
     func makeDefaultUser() -> User? {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -55,6 +57,8 @@ private extension FileService {
 }
 
 extension FileService {
+    /// Запрашивает записанного пользователя
+    /// - Returns: Пользователь
     func fetchUserProfile() -> User? {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -93,6 +97,10 @@ extension FileService {
         
     }
     
+    /// Сохранение пользователя в файл
+    /// - Parameters:
+    ///   - user: Пользователь для сохранения
+    ///   - completion: Блок обработки сохранения
     func save(user: User, completion: @escaping (Result<User?, FileServiceError>) -> Void) {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -102,7 +110,7 @@ extension FileService {
         
         guard let userData else { return }
         guard let currentUser else {
-            completion(.failure(.failToSave(user)))
+            completion(.failure(.failToSaveUser(user)))
             return
         }
         
@@ -115,7 +123,7 @@ extension FileService {
                 try encodedUser.write(to: userData)
                 self.currentUser = user
             } catch {
-                completion(.failure(.failToSave(currentUser)))
+                completion(.failure(.failToSaveUser(currentUser)))
                 return
             }
         }
