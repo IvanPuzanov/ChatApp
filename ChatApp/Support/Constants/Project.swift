@@ -20,6 +20,7 @@ enum Project {
         static let dark         = NSLocalizedString("Dark", comment: "")
         static let light        = NSLocalizedString("Light", comment: "")
         static let system       = NSLocalizedString("System", comment: "")
+        static let editProfile  = NSLocalizedString("Edit Profile", comment: "")
     }
     
     enum Button {

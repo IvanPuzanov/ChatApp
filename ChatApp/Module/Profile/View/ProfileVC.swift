@@ -12,7 +12,7 @@ final class ProfileVC: UIViewController {
     private let presenter = ProfilePresenter()
     
     // MARK: - UI
-    private let stackView         = UIStackView()
+    public let stackView         = UIStackView()
     
     public var closeButton        = UIBarButtonItem()
     public var editButton         = UIBarButtonItem()

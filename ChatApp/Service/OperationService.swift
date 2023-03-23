@@ -36,6 +36,14 @@ final class OperationService: ConcurrentServiceProtocol {
     }
     
     func fetchUser(completion: @escaping (Result<User, Error>) -> Void) {
+        operation = TCOperation { [weak self] in
+            guard let self else { return }
+            guard let user = self.fileService.fetchUserProfile() else {
+                completion(.success(.defaultUser))
+                return
+            }
+            completion(.success(user))
+        }
     }
     
     func cancel() {

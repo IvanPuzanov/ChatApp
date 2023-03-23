@@ -128,6 +128,7 @@ extension ProfilePresenter {
         
         view.navigationItem.setRightBarButton(view.saveButton, animated: true)
         view.navigationItem.setLeftBarButton(view.cancelButton, animated: true)
+        view.navigationItem.title = Project.Title.editProfile
         view.profileEditor.showKeyboard(true)
         
         UIView.animate(withDuration: 0.2) {
@@ -146,6 +147,10 @@ extension ProfilePresenter {
                 $0.isHidden = false
             }
             
+            if UIScreen.main.bounds.height <= 667.0 {
+                view.stackView.spacing = 5
+            }
+            
             guard view.traitCollection.userInterfaceStyle != .dark else { return }
             view.view.backgroundColor = .secondarySystemBackground
         }
@@ -159,6 +164,7 @@ extension ProfilePresenter {
         
         view.navigationItem.setLeftBarButton(view.closeButton, animated: true)
         view.navigationItem.setRightBarButton(view.editButton, animated: true)
+        view.navigationItem.title = Project.Title.myProfile
         
         view.addPhotoButton.isUserInteractionEnabled = true
         view.profileEditor.isUserInteractionEnabled = true
@@ -175,6 +181,7 @@ extension ProfilePresenter {
             }
         
             view.view.backgroundColor = .systemBackground
+            view.stackView.spacing = 24
         }
     }
     
