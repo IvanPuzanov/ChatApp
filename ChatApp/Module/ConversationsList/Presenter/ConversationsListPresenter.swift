@@ -8,12 +8,13 @@
 import UIKit
 
 protocol ConversationsListPresenterProtocol: AnyObject {
-    func userProfileDidFetch(_ userProfile: UserProfile)
+    func userProfileDidFetch(_ user: User)
     func didFetchConversations(_ conversations: NSDiffableDataSourceSnapshot<Section, ConversationCellModel>)
 }
 
 final class ConversationsListPresenter {
     // MARK: - Параметры
+    private let fileService = FileService.shared
     private weak var view: ConversationsListPresenterProtocol?
     private var conversations: [ConversationCellModel] = []
 }
@@ -26,7 +27,8 @@ extension ConversationsListPresenter: AnyPresenter {
     }
     
     func fetchUserProfile() {
-        view?.userProfileDidFetch(UserProfile.fetchUserProfile())
+        guard let user = fileService.fetchUserProfile() else { return }
+        view?.userProfileDidFetch(user)
     }
     
     func fetchConversations() {

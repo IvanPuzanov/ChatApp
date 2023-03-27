@@ -34,9 +34,8 @@ final class AppCoordinator: Coordinator {
         navigationController.show(conversationVC, sender: nil)
     }
     
-    func showSettings(delegate: ThemePresenterProtocol?) {
+    func showSettings() {
         let themeVC = ThemeVC()
-        themeVC.themeDelegate = delegate
         navigationController.show(themeVC, sender: nil)
     }
 }

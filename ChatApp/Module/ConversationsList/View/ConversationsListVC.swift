@@ -47,14 +47,7 @@ private extension ConversationsListVC {
         case profileButton:
             coordintor?.showProfileVC()
         case settingsButton:
-            let themeVC = ThemeVC()
-            // Делегирование
-            themeVC.themeDelegate = self
-            // Замыкание
-            themeVC.themeDidSet = { theme in
-                print("Callback result", theme)
-            }
-            self.coordintor?.navigationController.show(themeVC, sender: nil)
+            self.coordintor?.showSettings()
         default:
             break
         }
@@ -119,9 +112,10 @@ extension ConversationsListVC: ConversationsListPresenterProtocol {
         update(with: snapshot)
     }
     
-    func userProfileDidFetch(_ userProfile: UserProfile) {
-        profileButton.setName(userProfile.name)
-        profileButton.setImage(userProfile.avatar)
+    func userProfileDidFetch(_ user: User) {
+        profileButton.setName(user.name)
+        guard let avatar = user.avatar else { return }
+        profileButton.setImage(UIImage(data: avatar))
     }
 }
 
@@ -136,14 +130,6 @@ extension ConversationsListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let model = dataSource.itemIdentifier(for: indexPath)
         coordintor?.showChatVC(for: model)
-    }
-}
-
-// MARK: - ThemePresenterProtocol
-extension ConversationsListVC: ThemePresenterProtocol {
-    // Делегирование
-    func themeDidSet(_ theme: Theme) {
-//        print("Delegate result", theme)
     }
 }
 

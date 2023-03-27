@@ -21,7 +21,10 @@ final class TCProfileImageView: UIControl {
     /// medium: uses in table/collection cell
     /// large: uses in profile page
     private var size: Size  = .small
-    private var presenter   = TCProfileImagePresenter()
+    private var presenter = TCProfileImagePresenter()
+    public var image: UIImage? {
+        return imageView.image
+    }
     
     // MARK: - UI
     private let stackView           = UIStackView()
@@ -54,8 +57,6 @@ extension TCProfileImageView {
         }
     }
     
-    // MARK: ВРЕМЕННОЕ РЕШЕНИЕ
-    // Этим будет заниматься Presenter, когда будет модель пользователя
     func setImage(_ image: UIImage?) {
         guard let image else { return }
         self.nameLabel.isHidden = true
@@ -65,6 +66,11 @@ extension TCProfileImageView {
     
     func setName(_ name: String) {
         self.presenter.setName(name)
+    }
+    
+    func resetImage() {
+        self.nameLabel.isHidden = false
+        self.imageView.isHidden = true
     }
     
     func bindToPresenter() {
@@ -109,7 +115,6 @@ private extension TCProfileImageView {
         stackView.addArrangedSubview(imageView)
         
         imageView.contentMode = .scaleAspectFill
-        imageView.image = Project.Image.profile
         imageView.tintColor = .white
         imageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         

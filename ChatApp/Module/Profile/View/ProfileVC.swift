@@ -12,26 +12,25 @@ final class ProfileVC: UIViewController {
     private let presenter = ProfilePresenter()
     
     // MARK: - UI
-    private let stackView           = UIStackView()
-    private var closeButton         = UIBarButtonItem()
-    private var editButton          = UIBarButtonItem()
-    private let profileImageView    = TCProfileImageView(size: .large)
-    private let addPhotoButton      = UIButton()
-    private let profileNameLabel    = UILabel()
-    private let bioMessageLabel     = UILabel()
+    public let stackView         = UIStackView()
+    
+    public var closeButton        = UIBarButtonItem()
+    public var editButton         = UIBarButtonItem()
+    public var cancelButton       = UIBarButtonItem()
+    public var saveButton         = UIBarButtonItem()
+    public var activity           = UIActivityIndicatorView(style: .medium)
+    
+    public let profileImageView   = TCProfileImageView(size: .large)
+    public let addPhotoButton     = UIButton()
+    public let profileNameLabel   = UILabel()
+    public let bioMessageLabel    = UILabel()
+    public let profileEditor      = TCProfileEditor()
+    
     private var imagePicker: TCImagePicker!
 }
 
 // MARK: - Жизненный цикл
 extension ProfileVC {
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
-        
-        // На данном этапе жизненного цикла subUI еще
-        // НЕ РАСПОЛОЖЕНЫ, и поэтому их frame неизвестен
-        print("Frame: \(addPhotoButton.frame), \(#function)")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,9 +43,17 @@ extension ProfileVC {
         configureAddPhotoButton()
         configureProfileNameLabel()
         configureBioMessageLabel()
+        configureProfileEditor()
         configureImagePicker()
         
         presenter.fetchUserProfile()
+        presenter.fetchUser()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        presenter.cancelSaving()
     }
 }
 
@@ -59,6 +66,11 @@ private extension ProfileVC {
             self.dismiss(animated: true)
         case addPhotoButton:
             imagePicker.present(from: addPhotoButton)
+        case editButton:
+            presenter.enableEditing()
+        case cancelButton:
+            presenter.cancelSaving()
+            presenter.disableEditing()
         default:
             break
         }
@@ -73,6 +85,9 @@ private extension ProfileVC {
     
     func configure() {
         self.view.backgroundColor = .systemBackground
+        
+        let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
     }
     
     func configureNavigationBar() {
@@ -84,21 +99,40 @@ private extension ProfileVC {
                                       action: #selector(buttonTapped))
         navigationItem.setLeftBarButton(closeButton, animated: true)
         
-        editButton = UIBarButtonItem(title: Project.Button.edit, style: .plain, target: nil, action: nil)
+        editButton = UIBarButtonItem(title: Project.Button.edit,
+                                     style: .plain,
+                                     target: self,
+                                     action: #selector(buttonTapped))
         navigationItem.setRightBarButton(editButton, animated: true)
+        
+        cancelButton = UIBarButtonItem(title: Project.Button.cancel,
+                                       style: .plain,
+                                       target: self,
+                                       action: #selector(buttonTapped))
+        
+        let saveGCD = UIAction(title: Project.Button.saveGCD) { [weak self] _ in
+            guard let self else { return }
+            self.presenter.save(with: .gcd)
+        }
+        let saveOperation = UIAction(title: Project.Button.saveOperation) { [weak self] _ in
+            guard let self else { return }
+            self.presenter.save(with: .operation)
+        }
+        saveButton = UIBarButtonItem(image: Project.Image.ellipsis, menu: UIMenu(children: [saveGCD, saveOperation]))
     }
     
     func configureStackView() {
         self.view.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.axis = .vertical
+        stackView.axis      = .vertical
+        stackView.spacing   = 24
         stackView.alignment = .center
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
@@ -108,7 +142,6 @@ private extension ProfileVC {
     
     func configureAddPhotoButton() {
         self.stackView.addArrangedSubview(addPhotoButton)
-        self.stackView.setCustomSpacing(24, after: profileImageView)
         
         self.addPhotoButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         self.addPhotoButton.configure(title: Project.Button.addPhoto, fontSize: 16,
@@ -117,8 +150,8 @@ private extension ProfileVC {
     
     func configureProfileNameLabel() {
         self.stackView.addArrangedSubview(profileNameLabel)
-        self.stackView.setCustomSpacing(24, after: addPhotoButton)
         
+        profileNameLabel.preferredMaxLayoutWidth = 250
         self.profileNameLabel.configure(fontSize: 22, fontWeight: .bold, textColor: .label)
     }
     
@@ -126,8 +159,15 @@ private extension ProfileVC {
         self.stackView.addArrangedSubview(bioMessageLabel)
         self.stackView.setCustomSpacing(10, after: profileNameLabel)
         
+        self.bioMessageLabel.preferredMaxLayoutWidth = 250
         self.bioMessageLabel.configure(fontSize: 17, fontWeight: .regular, textColor: .secondaryLabel)
         self.bioMessageLabel.numberOfLines = 3
+    }
+    
+    func configureProfileEditor() {
+        self.stackView.addArrangedSubview(profileEditor)
+        profileEditor.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+        profileEditor.isHidden = true
     }
     
     func configureImagePicker() {
@@ -139,6 +179,9 @@ private extension ProfileVC {
 extension ProfileVC: ImagePickerProtocol {
     func didSelect(image: UIImage?) {
         self.profileImageView.setImage(image)
+        
+        guard let _ = image else { return }
+        self.presenter.enableEditing()
     }
 }
 
