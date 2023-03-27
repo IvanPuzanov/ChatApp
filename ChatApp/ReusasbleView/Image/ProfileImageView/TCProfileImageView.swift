@@ -36,6 +36,7 @@ final class TCProfileImageView: UIControl {
         super.init(frame: .zero)
         
         self.size = size
+        
         configure()
         configureStackView()
         configureImageView()
@@ -82,7 +83,7 @@ extension TCProfileImageView {
 private extension TCProfileImageView {
     func configure() {
         clipsToBounds = true
-        backgroundColor = .quaternarySystemFill
+        backgroundColor = .systemGray6
         translatesAutoresizingMaskIntoConstraints = false
         
         // Image size

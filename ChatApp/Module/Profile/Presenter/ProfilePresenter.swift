@@ -148,7 +148,7 @@ extension ProfilePresenter {
             }
             
             if UIScreen.main.bounds.height <= 667.0 {
-                view.stackView.spacing = 5
+                view.stackView.spacing = 24
             }
             
             guard view.traitCollection.userInterfaceStyle != .dark else { return }
