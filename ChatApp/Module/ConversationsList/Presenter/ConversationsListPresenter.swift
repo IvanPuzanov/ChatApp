@@ -17,7 +17,7 @@ final class ConversationsListPresenter {
     // MARK: - Параметры
     private weak var view: ConversationsListPresenterProtocol?
     private var conversations: [ConversationCellModel] = []
-    private let fileService = _FileService.shared
+    private let fileService = FileService.shared
     private var userProfile: User = .defaultUser {
         didSet { self.view?.userProfileDidFetch(userProfile) }
     }
@@ -58,9 +58,7 @@ extension ConversationsListPresenter: AnyPresenter {
     }
     
     func fetchUser() {
-        do {
-            try fileService.fetchUser()
-        } catch {}
+        fileService.fetchUser()
     }
 }
 

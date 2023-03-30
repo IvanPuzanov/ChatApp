@@ -16,14 +16,17 @@ final class ProfilePresenter {
     private weak var view: ProfilePresenterView?
     
     // MARK: - Компоненты
-    private var concurrentService: ConcurrentServiceProtocol?
-    private weak var fileService = _FileService.shared
+    private weak var fileService = FileService.shared
     private var userProfile: User = .defaultUser {
         didSet { set(with: userProfile) }
     }
     
     // MARK: - Подписки
     private weak var userRequest: AnyCancellable?
+    
+    // MARK: - Многопоточность
+    private var userWorkItem: DispatchWorkItem?
+    private var backgroundQueue = DispatchQueue(label: "user.queue", qos: .utility)
 }
 
 // MARK: - Методы событий
@@ -34,14 +37,32 @@ extension ProfilePresenter: AnyPresenter {
     }
     
     // MARK: - Сохранение/чтение данных
-    func cancelSaving() {
-        set(with: fileService?.currentUser)
+    func fetchUser() {
+        fileService?.fetchUser()
+    }
+    
+    func saveUser() {
+        // Создание модели пользователя
+        guard let user = createUser() else { return }
         
-        guard let concurrentService else { return }
-        concurrentService.cancel()
+        savingInProgress()
+        userWorkItem = DispatchWorkItem(block: { [weak self] in
+            sleep(2)
+            guard let isCancelled = self?.userWorkItem?.isCancelled, !isCancelled else { return }
+            self?.save(user: user)
+        })
+        
+        guard let userWorkItem else { return }
+        backgroundQueue.async(execute: userWorkItem)
+    }
+    
+    func cancelSaving() {
+        userWorkItem?.cancel()
+        userWorkItem = nil
         
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            self.set(with: self.fileService?.currentUser)
             self.disableEditing()
         }
     }
@@ -158,12 +179,12 @@ private extension ProfilePresenter {
     }
 }
 
-// MARK: - Combine saving
+// MARK: - Методы подписок
 extension ProfilePresenter {
     func createSubscriptions() {
         userRequest = fileService?
             .userPublisher
-            .subscribe(on: DispatchQueue.global())
+            .subscribe(on: backgroundQueue)
             .receive(on: DispatchQueue.main)
             .decode(type: User.self, decoder: JSONDecoder())
             .catch({ _ in Just(User.defaultUser) })
@@ -175,14 +196,12 @@ extension ProfilePresenter {
         userRequest = nil
     }
     
-    func fetchUser() {
-        do {
-            try fileService?.fetchUser()
-        } catch {}
-    }
     
-    func save() {
-        // Создание модели пользователя
+}
+
+// MARK: - Методы для сохранения пользователя
+private extension ProfilePresenter {
+    func createUser() -> User? {
         guard let userName = view?.profileEditor.enteredName(), !userName.isEmpty,
               let userBio  = view?.profileEditor.enteredBio()
         else {
@@ -193,31 +212,38 @@ extension ProfilePresenter {
                     return [ok]
                 }
             }
-            return
+            return nil
         }
         
-        let user = User(name: userName, bio: userBio, avatar: view?.profileImageView.image?.pngData())
+        return User(name: userName, bio: userBio, avatar: view?.profileImageView.image?.pngData())
+    }
+    
+    func save(user: User) {
         do {
             try fileService?.save(user: user)
             // Отключение режима редактирования
-            self.disableEditing()
-            // Показ уведомления об успешном сохранении
-            self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
-                let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
-                return [ok]
+            DispatchQueue.main.async {
+                self.disableEditing()
+                // Показ уведомления об успешном сохранении
+                self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
+                    let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
+                    return [ok]
+                }
             }
         } catch {
-            self.disableEditing()
-            // Показ уведомления об ошибке при сохранении
-            self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
-                let ok = UIAlertAction(title: Project.Button.ok, style: .cancel) { _ in
-                    self.cancelSaving()
+            DispatchQueue.main.async {
+                self.disableEditing()
+                // Показ уведомления об ошибке при сохранении
+                self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
+                    let ok = UIAlertAction(title: Project.Button.ok, style: .cancel) { _ in
+                        self.cancelSaving()
+                    }
+                    let tryAgain = UIAlertAction(title: Project.Button.tryAgain, style: .default) { _ in
+                        self.enableEditing()
+                        self.saveUser()
+                    }
+                    return [ok, tryAgain]
                 }
-                let tryAgain = UIAlertAction(title: Project.Button.tryAgain, style: .default) { _ in
-                    self.enableEditing()
-                    self.save()
-                }
-                return [ok, tryAgain]
             }
         }
     }

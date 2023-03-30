@@ -2,15 +2,15 @@
 //  FileService.swift
 //  ChatApp
 //
-//  Created by Ivan Puzanov on 21.03.2023.
+//  Created by Ivan Puzanov on 30.03.2023.
 //
 
+import UIKit
 import Combine
-import Foundation
 
-enum FileServiceError: Error {
-    case failToSaveUser(User)
-    case failToSaveImage
+enum _FileServiceError: Error {
+    case failToSave
+    case failToFetch
 }
 
 final class FileService {
@@ -19,15 +19,22 @@ final class FileService {
     private init() {}
     
     // MARK: - Параметры
+    public var currentUser = User.defaultUser
+    private var currentUserData: Data = Data() {
+        didSet { userSubject.send(currentUserData) }
+    }
     private let manager: FileManager = .default
-    public var currentUser: User?
-    public var combineUser: Future<User, Never>?
+    
+    // MARK: - Combine publishers
+    public var userPublisher: AnyPublisher<Data, Never> {
+        userSubject.eraseToAnyPublisher()
+    }
+    public let userSubject = PassthroughSubject<Data, Never>()
+    
 }
 
-private extension FileService {
-    /// Создание стандартного пользователя
-    /// - Returns: Возвращает созданного пользователя
-    func makeDefaultUser() -> User? {
+extension FileService {
+    private func makeDefaultUser() {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         let userDirectory   = url?.appendingPathComponent("user-profile")
@@ -37,7 +44,7 @@ private extension FileService {
         let defaultUser     = User.defaultUser
         
         // Разворачивание ссылок директорий
-        guard let userDirectory, let userData else { return nil }
+        guard let userDirectory, let userData else { return }
         
         // Запись стандартного пользователя
         do {
@@ -51,17 +58,14 @@ private extension FileService {
             
             // Сохранении текущего пользователя в качестве стандратного
             self.currentUser = defaultUser
-            return defaultUser
+            self.currentUserData = encodedDefaultUser
+            return
         } catch {
-            return nil
+            return
         }
     }
-}
-
-extension FileService {
-    /// Запрашивает записанного пользователя
-    /// - Returns: Пользователь
-    func fetchUserProfile() -> User? {
+    
+    func fetchUser() {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         let userDirectory   = url?.appendingPathComponent("user-profile")
@@ -71,8 +75,8 @@ extension FileService {
         // Проверка наличия директории пользователя, иначе
         // создается стандратный пользователь
         guard let userData, let userFile = manager.contents(atPath: userData.path) else {
-            let defaultUser = makeDefaultUser()
-            return defaultUser
+            makeDefaultUser()
+            return
         }
         
         // Получение данных пользователя
@@ -84,25 +88,23 @@ extension FileService {
             // Проверка наличия изображения в директории
             guard let userAvatar, let avatar = manager.contents(atPath: userAvatar.path) else {
                 // Возвращение полученных данных пользователя без картинки
-                self.currentUser = decodedUser
-                return decodedUser
+                userSubject.send(userFile)
+                return
             }
             
             // Сохранение текущей картинки и возврат пользователя с картинкой
             decodedUser.avatar = avatar
-            self.currentUser = decodedUser
             
-            return decodedUser
-        } catch {
-            return nil
-        }
+            let encoder = JSONEncoder()
+            let encodedUser = try encoder.encode(decodedUser)
+            
+            self.currentUser = decodedUser
+            self.currentUserData = encodedUser
+            return
+        } catch {}
     }
     
-    /// Сохранение пользователя в файл
-    /// - Parameters:
-    ///   - user: Пользователь для сохранения
-    ///   - completion: Блок обработки сохранения
-    func save(user: User, completion: @escaping (Result<User?, FileServiceError>) -> Void) {
+    func save(user: User) throws {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         let userDirectory   = url?.appendingPathComponent("user-profile")
@@ -110,22 +112,18 @@ extension FileService {
         let userAvatar      = userDirectory?.appendingPathComponent("avatar.png")
         
         guard let userData else { return }
-        guard let currentUser else {
-            completion(.failure(.failToSaveUser(user)))
-            return
-        }
+        
+        var encodedUser: Data = Data()
         
         // Проверка измененных текстовых данных пользователя
         if user.name != currentUser.name || user.bio != currentUser.bio {
             do {
                 let encoder     = JSONEncoder()
-                let encodedUser = try encoder.encode(user)
+                encodedUser = try encoder.encode(user)
                 
                 try encodedUser.write(to: userData)
-                self.currentUser = user
             } catch {
-                completion(.failure(.failToSaveUser(currentUser)))
-                return
+                throw _FileServiceError.failToSave
             }
         }
         
@@ -134,12 +132,15 @@ extension FileService {
             do {
                 guard let userAvatar else { return }
                 try user.avatar?.write(to: userAvatar)
+                
+                let encoder = JSONEncoder()
+                encodedUser = try encoder.encode(user)
             } catch {
-                completion(.failure(.failToSaveImage))
                 return
             }
         }
         
-        completion(.success(user))
+        self.currentUser = user
+        self.currentUserData = encodedUser
     }
 }

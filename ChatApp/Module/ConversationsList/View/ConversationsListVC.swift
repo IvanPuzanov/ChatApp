@@ -23,7 +23,7 @@ class ConversationsListVC: UITableViewController {
     private var profileButton   = TCProfileImageView(size: .small)
     private var settingsButton  = UIBarButtonItem()
     
-    let fileService = _FileService.shared
+    let fileService = FileService.shared
     var sub: Cancellable?
     var userProfile: User = .defaultUser {
         didSet {

@@ -8,12 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2A72FA4429C0BB33001172D4 /* PersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72FA4329C0BB33001172D4 /* PersistenceService.swift */; };
-		2A97B22229C97BED00F0FC95 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A97B22129C97BED00F0FC95 /* FileService.swift */; };
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
 		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
 		2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523829C460050017BC9C /* TCProfileEditor.swift */; };
-		2AA8523B29C4B3470017BC9C /* GCDService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523A29C4B3470017BC9C /* GCDService.swift */; };
-		2AA8523D29C4B3520017BC9C /* OperationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523C29C4B3520017BC9C /* OperationService.swift */; };
 		2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B09D29B1E90500311B3F /* NetworkService.swift */; };
 		2AA9B0A129B1ED1800311B3F /* ConversationCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */; };
 		2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */; };
@@ -39,8 +36,7 @@
 		2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57929A4A27F0046CB38 /* Coordinator.swift */; };
 		2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */; };
 		2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */; };
-		2ADBF9C829D56968005BD628 /* _FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C729D56968005BD628 /* _FileService.swift */; };
-		2ADBF9CA29D5D4A5005BD628 /* NewFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */; };
+		2ADBF9C829D56968005BD628 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C729D56968005BD628 /* FileService.swift */; };
 		2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB029AC9DC000DBB90E /* Project.swift */; };
 		2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */; };
 		2AEB6DEA29BA5FBB004D0A3D /* ThemeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */; };
@@ -57,12 +53,9 @@
 
 /* Begin PBXFileReference section */
 		2A72FA4329C0BB33001172D4 /* PersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceService.swift; sourceTree = "<group>"; };
-		2A97B22129C97BED00F0FC95 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
 		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
 		2AA8523829C460050017BC9C /* TCProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileEditor.swift; sourceTree = "<group>"; };
-		2AA8523A29C4B3470017BC9C /* GCDService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDService.swift; sourceTree = "<group>"; };
-		2AA8523C29C4B3520017BC9C /* OperationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationService.swift; sourceTree = "<group>"; };
 		2AA9B09D29B1E90500311B3F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCellModel.swift; sourceTree = "<group>"; };
 		2AA9B0A329B2041C00311B3F /* ConversationTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVCell.swift; sourceTree = "<group>"; };
@@ -90,8 +83,7 @@
 		2ABEC57929A4A27F0046CB38 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
-		2ADBF9C729D56968005BD628 /* _FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FileService.swift; sourceTree = "<group>"; };
-		2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileService.swift; sourceTree = "<group>"; };
+		2ADBF9C729D56968005BD628 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		2AE04CB029AC9DC000DBB90E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeVC.swift; sourceTree = "<group>"; };
@@ -139,11 +131,7 @@
 			children = (
 				2AA9B09D29B1E90500311B3F /* NetworkService.swift */,
 				2A72FA4329C0BB33001172D4 /* PersistenceService.swift */,
-				2A97B22129C97BED00F0FC95 /* FileService.swift */,
-				2AA8523A29C4B3470017BC9C /* GCDService.swift */,
-				2AA8523C29C4B3520017BC9C /* OperationService.swift */,
-				2ADBF9C729D56968005BD628 /* _FileService.swift */,
-				2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */,
+				2ADBF9C729D56968005BD628 /* FileService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -506,13 +494,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */,
-				2AA8523D29C4B3520017BC9C /* OperationService.swift in Sources */,
-				2ADBF9CA29D5D4A5005BD628 /* NewFileService.swift in Sources */,
 				2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */,
 				2AA9B0C329B741BF00311B3F /* User.swift in Sources */,
 				2ABEC56629A4A1C10046CB38 /* ConversationsListVC.swift in Sources */,
 				2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */,
-				2ADBF9C829D56968005BD628 /* _FileService.swift in Sources */,
+				2ADBF9C829D56968005BD628 /* FileService.swift in Sources */,
 				2AA9B0B929B6067800311B3F /* Conversation.swift in Sources */,
 				2AEB6DEC29BA5FC6004D0A3D /* ThemePresenter.swift in Sources */,
 				2AA9B0AF29B4DDA900311B3F /* ConversationPresenter.swift in Sources */,
@@ -526,7 +512,6 @@
 				2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */,
 				2AEB6DF429BB9831004D0A3D /* TCThemeView.swift in Sources */,
 				2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */,
-				2AA8523B29C4B3470017BC9C /* GCDService.swift in Sources */,
 				2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */,
 				2AA9B0B529B520FF00311B3F /* TCChatNavigationBar.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
@@ -536,7 +521,6 @@
 				2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */,
 				2A72FA4429C0BB33001172D4 /* PersistenceService.swift in Sources */,
 				2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */,
-				2A97B22229C97BED00F0FC95 /* FileService.swift in Sources */,
 				2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */,
 				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
 				2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */,

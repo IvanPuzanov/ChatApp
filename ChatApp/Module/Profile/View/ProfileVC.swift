@@ -74,7 +74,7 @@ private extension ProfileVC {
             presenter.cancelSaving()
             presenter.disableEditing()
         case saveButton:
-            presenter.save()
+            presenter.saveUser()
         default:
             break
         }
