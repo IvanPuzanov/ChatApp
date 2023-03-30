@@ -47,7 +47,7 @@ extension ProfileVC {
         configureProfileEditor()
         configureImagePicker()
         
-        presenter.fetchUserProfile()
+        presenter.createSubscriptions()
         presenter.fetchUser()
     }
     
@@ -55,6 +55,7 @@ extension ProfileVC {
         super.viewDidDisappear(animated)
         
         presenter.cancelSaving()
+        presenter.removeSubscriptions()
     }
 }
 
@@ -72,6 +73,8 @@ private extension ProfileVC {
         case cancelButton:
             presenter.cancelSaving()
             presenter.disableEditing()
+        case saveButton:
+            presenter.save()
         default:
             break
         }
@@ -111,15 +114,10 @@ private extension ProfileVC {
                                        target: self,
                                        action: #selector(buttonTapped))
         
-        let saveGCD = UIAction(title: Project.Button.saveGCD) { [weak self] _ in
-            guard let self else { return }
-            self.presenter.save(with: .gcd)
-        }
-        let saveOperation = UIAction(title: Project.Button.saveOperation) { [weak self] _ in
-            guard let self else { return }
-            self.presenter.save(with: .operation)
-        }
-        saveButton = UIBarButtonItem(image: Project.Image.ellipsis, menu: UIMenu(children: [saveGCD, saveOperation]))
+        saveButton = UIBarButtonItem(title: Project.Button.save,
+                                       style: .plain,
+                                       target: self,
+                                       action: #selector(buttonTapped))
     }
     
     func configureStackView() {
@@ -186,12 +184,5 @@ extension ProfileVC: ImagePickerProtocol {
     }
 }
 
-// MARK: -
-extension ProfileVC: ProfilePresenterProtocol {
-    func userDidFetch(_ userProfile: UserProfile) {
-        self.profileNameLabel.text = userProfile.name
-        self.bioMessageLabel.text = userProfile.description
-        self.profileImageView.setName(userProfile.name)
-        self.profileImageView.setImage(userProfile.avatar)
-    }
-}
+// MARK: - ProfilePresenterProtocol
+extension ProfileVC: ProfilePresenterProtocol {}

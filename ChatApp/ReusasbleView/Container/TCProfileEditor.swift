@@ -48,7 +48,7 @@ extension TCProfileEditor {
         }
     }
     
-    func set(name: String, bio: String) {
+    func set(name: String?, bio: String?) {
         self.nameTextField.text = name
         self.bioTextField.text = bio
     }

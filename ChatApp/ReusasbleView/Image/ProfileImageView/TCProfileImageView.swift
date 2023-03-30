@@ -21,7 +21,7 @@ final class TCProfileImageView: UIControl {
     /// medium: uses in table/collection cell
     /// large: uses in profile page
     private var size: Size  = .small
-    private var presenter = TCProfileImagePresenter()
+    public var presenter = TCProfileImagePresenter()
     public var image: UIImage? {
         return imageView.image
     }
@@ -58,13 +58,17 @@ extension TCProfileImageView {
         }
     }
     
+    func setUser(user: User?) {
+        self.presenter.user = user
+    }
+
     func setImage(_ image: UIImage?) {
         guard let image else { return }
         self.nameLabel.isHidden = true
         self.imageView.isHidden = false
         presenter.setImage(image)
     }
-    
+
     func setName(_ name: String) {
         self.presenter.setName(name)
     }
@@ -134,11 +138,19 @@ private extension TCProfileImageView {
 
 extension TCProfileImageView: TCProfileImagePresenterProtocol {
     func nameDidSet(name: String) {
-        self.nameLabel.text = name
+        DispatchQueue.main.async {
+            self.imageView.isHidden = true
+            self.nameLabel.isHidden = false
+            
+            self.nameLabel.text = name
+        }
     }
     
     func imageDidSet(image: UIImage) {
         DispatchQueue.main.async {
+            self.imageView.isHidden = false
+            self.nameLabel.isHidden = true
+            
             self.imageView.image        = image
             self.imageView.transform    = .identity
         }

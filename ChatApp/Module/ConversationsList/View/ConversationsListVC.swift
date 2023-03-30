@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 enum Section: String, CaseIterable {
     case online = "Online"
@@ -21,6 +22,14 @@ class ConversationsListVC: UITableViewController {
     // MARK: - UI
     private var profileButton   = TCProfileImageView(size: .small)
     private var settingsButton  = UIBarButtonItem()
+    
+    let fileService = _FileService.shared
+    var sub: Cancellable?
+    var userProfile: User = .defaultUser {
+        didSet {
+            self.profileButton.setUser(user: userProfile)
+        }
+    }
 }
 
 // MARK: - Жизненный цикл
@@ -34,8 +43,9 @@ extension ConversationsListVC {
         configureNavigationBar()
         configureDataSource()
         
-        presenter.fetchUserProfile()
+        presenter.createSubscriptions()
         presenter.fetchConversations()
+        presenter.fetchUser()
     }
 }
 
@@ -45,7 +55,7 @@ private extension ConversationsListVC {
     func buttonTapped(_ button: UIView) {
         switch button {
         case profileButton:
-            coordintor?.showProfileVC()
+            self.coordintor?.showProfileVC()
         case settingsButton:
             self.coordintor?.showSettings()
         default:
@@ -113,9 +123,7 @@ extension ConversationsListVC: ConversationsListPresenterProtocol {
     }
     
     func userProfileDidFetch(_ user: User) {
-        profileButton.setName(user.name)
-        guard let avatar = user.avatar else { return }
-        profileButton.setImage(UIImage(data: avatar))
+        profileButton.setUser(user: user)
     }
 }
 

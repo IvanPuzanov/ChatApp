@@ -5,11 +5,10 @@
 //  Created by Ivan Puzanov on 27.02.2023.
 //
 
+import Combine
 import UIKit
 
-protocol ProfilePresenterProtocol: AnyObject {
-    func userDidFetch(_ userProfile: UserProfile)
-}
+protocol ProfilePresenterProtocol: AnyObject {}
 
 final class ProfilePresenter {
     // MARK: - Параметры
@@ -18,8 +17,13 @@ final class ProfilePresenter {
     
     // MARK: - Компоненты
     private var concurrentService: ConcurrentServiceProtocol?
-    private weak var fileService = FileService.shared
-    private var userProfile: User?
+    private weak var fileService = _FileService.shared
+    private var userProfile: User = .defaultUser {
+        didSet { set(with: userProfile) }
+    }
+    
+    // MARK: - Подписки
+    private weak var userRequest: AnyCancellable?
 }
 
 // MARK: - Методы событий
@@ -29,84 +33,7 @@ extension ProfilePresenter: AnyPresenter {
         self.view = view
     }
     
-    func fetchUserProfile() {
-        view?.userDidFetch(UserProfile.fetchUserProfile())
-    }
-    
     // MARK: - Сохранение/чтение данных
-    enum SaveType { case gcd, operation }
-    func save(with type: SaveType) {
-        // Установка сервиса
-        switch type {
-        case .gcd:
-            self.concurrentService = GCDService()
-        case .operation:
-            self.concurrentService = OperationService()
-        }
-        
-        // Создание модели пользователя
-        guard let userName = view?.profileEditor.enteredName(), !userName.isEmpty,
-              let userBio  = view?.profileEditor.enteredBio()
-        else {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                self.showAlert(title: Project.AlertTitle.ooops, message: Project.AlertTitle.noNameMessage, style: .alert) {
-                    let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
-                    return [ok]
-                }
-            }
-            return
-        }
-        let user = User(name: userName, bio: userBio, avatar: view?.profileImageView.image?.pngData())
-        
-        // Начало процесса сохранения
-        guard let concurrentService else { return }
-        DispatchQueue.main.async {
-            self.savingInProgress()
-        }
-        
-        concurrentService.save(user: user) { [weak self] result in
-            guard let self else { return }
-            switch result {
-                // Успешное сохранение
-            case .success(let userResult):
-                DispatchQueue.main.async {
-                    // Отключение режима редактирования
-                    self.disableEditing()
-                    // Показ уведомления об успешном сохранении
-                    self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
-                        let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
-                        return [ok]
-                    }
-                    self.set(with: userResult)
-                }
-                // Ошибка при сохранении
-            case .failure:
-                DispatchQueue.main.async {
-                    // Отключение режима редактирования
-                    self.disableEditing()
-                    // Показ уведомления об ошибке при сохранении
-                    self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
-                        let ok = UIAlertAction(title: Project.Button.ok, style: .cancel) { _ in
-                            self.cancelSaving()
-                        }
-                        let tryAgain = UIAlertAction(title: Project.Button.tryAgain, style: .default) { _ in
-                            self.enableEditing()
-                            self.save(with: type)
-                        }
-                        return [ok, tryAgain]
-                    }
-                }
-            }
-        }
-    }
-    
-    func fetchUser() {
-        let user = fileService?.fetchUserProfile()
-        self.userProfile = user
-        set(with: user)
-    }
-    
     func cancelSaving() {
         set(with: fileService?.currentUser)
         
@@ -227,12 +154,71 @@ private extension ProfilePresenter {
         self.view?.profileNameLabel.text = user.name
         self.view?.bioMessageLabel.text = user.bio
         self.view?.profileEditor.set(name: user.name, bio: user.bio)
-        self.view?.profileImageView.setName(user.name)
-        
-        guard let avatar = user.avatar else {
-            self.view?.profileImageView.resetImage()
+        self.view?.profileImageView.presenter.user = user
+    }
+}
+
+// MARK: - Combine saving
+extension ProfilePresenter {
+    func createSubscriptions() {
+        userRequest = fileService?
+            .userPublisher
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
+            .decode(type: User.self, decoder: JSONDecoder())
+            .catch({ _ in Just(User.defaultUser) })
+            .assign(to: \.userProfile, on: self)
+    }
+    
+    func removeSubscriptions() {
+        userRequest?.cancel()
+        userRequest = nil
+    }
+    
+    func fetchUser() {
+        do {
+            try fileService?.fetchUser()
+        } catch {}
+    }
+    
+    func save() {
+        // Создание модели пользователя
+        guard let userName = view?.profileEditor.enteredName(), !userName.isEmpty,
+              let userBio  = view?.profileEditor.enteredBio()
+        else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.showAlert(title: Project.AlertTitle.ooops, message: Project.AlertTitle.noNameMessage, style: .alert) {
+                    let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
+                    return [ok]
+                }
+            }
             return
         }
-        self.view?.profileImageView.setImage(UIImage(data: avatar))
+        
+        let user = User(name: userName, bio: userBio, avatar: view?.profileImageView.image?.pngData())
+        do {
+            try fileService?.save(user: user)
+            // Отключение режима редактирования
+            self.disableEditing()
+            // Показ уведомления об успешном сохранении
+            self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
+                let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
+                return [ok]
+            }
+        } catch {
+            self.disableEditing()
+            // Показ уведомления об ошибке при сохранении
+            self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
+                let ok = UIAlertAction(title: Project.Button.ok, style: .cancel) { _ in
+                    self.cancelSaving()
+                }
+                let tryAgain = UIAlertAction(title: Project.Button.tryAgain, style: .default) { _ in
+                    self.enableEditing()
+                    self.save()
+                }
+                return [ok, tryAgain]
+            }
+        }
     }
 }

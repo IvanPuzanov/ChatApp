@@ -17,7 +17,7 @@ final class TCProfileImagePresenter {
     
     private var name: String?
     private var image: UIImage?
-//    private var user: User?
+    public var user: User? { didSet { setUser(user: self.user) } }
 }
 
 extension TCProfileImagePresenter {
@@ -31,6 +31,16 @@ extension TCProfileImagePresenter {
     func setImage(_ image: UIImage) {
         self.image = image
         view?.imageDidSet(image: image)
+    }
+    
+    func setUser(user: User?) {
+        guard let user else { return }
+        guard let imageData = user.avatar, let image = UIImage(data: imageData) else {
+            let preparedName = prepareName(user.name)
+            self.view?.nameDidSet(name: preparedName)
+            return
+        }
+        self.view?.imageDidSet(image: image)
     }
     
     func setDelegate(_ view: TCProfileImagePresenterProtocol) {

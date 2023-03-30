@@ -27,6 +27,7 @@ enum Project {
         static let ok                   = NSLocalizedString("Ok", comment: "")
         static let done 	            = NSLocalizedString("Done", comment: "")
         static let edit                 = NSLocalizedString("Edit", comment: "")
+        static let save                 = NSLocalizedString("Save", comment: "")
         static let close                = NSLocalizedString("Close", comment: "")
         static let cancel               = NSLocalizedString("Cancel", comment: "")
         static let addPhoto             = NSLocalizedString("Add photo", comment: "")

@@ -55,16 +55,7 @@ private extension ConversationVC {
             
             snapshot.appendItems(value, toSection: key)
         }
-//
-//        snapshot.appendSections([.early, .today])
-//
-//        if let earlyMessages = messages[.early] {
-//            snapshot.appendItems(earlyMessages, toSection: .early)
-//        }
-//        if let todayMessages = messages[.today] {
-//            snapshot.appendItems(todayMessages, toSection: .today)
-//        }
-//
+
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot)
         }

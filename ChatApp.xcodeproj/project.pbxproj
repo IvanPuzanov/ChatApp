@@ -26,7 +26,7 @@
 		2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0BB29B62A5200311B3F /* TCMessageTextView.swift */; };
 		2AA9B0BF29B62D8100311B3F /* TCSendButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */; };
 		2AA9B0C129B7383F00311B3F /* MessageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */; };
-		2AA9B0C329B741BF00311B3F /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C229B741BF00311B3F /* UserProfile.swift */; };
+		2AA9B0C329B741BF00311B3F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C229B741BF00311B3F /* User.swift */; };
 		2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */; };
 		2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C629B75F1E00311B3F /* String + Ex.swift */; };
 		2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */; };
@@ -39,6 +39,8 @@
 		2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57929A4A27F0046CB38 /* Coordinator.swift */; };
 		2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */; };
 		2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */; };
+		2ADBF9C829D56968005BD628 /* _FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C729D56968005BD628 /* _FileService.swift */; };
+		2ADBF9CA29D5D4A5005BD628 /* NewFileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */; };
 		2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB029AC9DC000DBB90E /* Project.swift */; };
 		2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */; };
 		2AEB6DEA29BA5FBB004D0A3D /* ThemeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */; };
@@ -73,7 +75,7 @@
 		2AA9B0BB29B62A5200311B3F /* TCMessageTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCMessageTextView.swift; sourceTree = "<group>"; };
 		2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCSendButton.swift; sourceTree = "<group>"; };
 		2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellModel.swift; sourceTree = "<group>"; };
-		2AA9B0C229B741BF00311B3F /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		2AA9B0C229B741BF00311B3F /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2AA9B0C429B75DCB00311B3F /* Date + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date + Ex.swift"; sourceTree = "<group>"; };
 		2AA9B0C629B75F1E00311B3F /* String + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + Ex.swift"; sourceTree = "<group>"; };
 		2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCVCell.swift; sourceTree = "<group>"; };
@@ -88,6 +90,8 @@
 		2ABEC57929A4A27F0046CB38 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		2ABEC57B29A4A2A70046CB38 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		2ADBF9C729D56968005BD628 /* _FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FileService.swift; sourceTree = "<group>"; };
+		2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileService.swift; sourceTree = "<group>"; };
 		2AE04CB029AC9DC000DBB90E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
 		2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeVC.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 				2A97B22129C97BED00F0FC95 /* FileService.swift */,
 				2AA8523A29C4B3470017BC9C /* GCDService.swift */,
 				2AA8523C29C4B3520017BC9C /* OperationService.swift */,
+				2ADBF9C729D56968005BD628 /* _FileService.swift */,
+				2ADBF9C929D5D4A5005BD628 /* NewFileService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -148,7 +154,7 @@
 				2AA9B0B829B6067800311B3F /* Conversation.swift */,
 				2AA9B0A029B1ED1800311B3F /* ConversationCellModel.swift */,
 				2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */,
-				2AA9B0C229B741BF00311B3F /* UserProfile.swift */,
+				2AA9B0C229B741BF00311B3F /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -501,10 +507,12 @@
 			files = (
 				2AA9B0A429B2041C00311B3F /* ConversationTVCell.swift in Sources */,
 				2AA8523D29C4B3520017BC9C /* OperationService.swift in Sources */,
+				2ADBF9CA29D5D4A5005BD628 /* NewFileService.swift in Sources */,
 				2ABEC57C29A4A2A70046CB38 /* AppCoordinator.swift in Sources */,
-				2AA9B0C329B741BF00311B3F /* UserProfile.swift in Sources */,
+				2AA9B0C329B741BF00311B3F /* User.swift in Sources */,
 				2ABEC56629A4A1C10046CB38 /* ConversationsListVC.swift in Sources */,
 				2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */,
+				2ADBF9C829D56968005BD628 /* _FileService.swift in Sources */,
 				2AA9B0B929B6067800311B3F /* Conversation.swift in Sources */,
 				2AEB6DEC29BA5FC6004D0A3D /* ThemePresenter.swift in Sources */,
 				2AA9B0AF29B4DDA900311B3F /* ConversationPresenter.swift in Sources */,
