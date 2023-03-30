@@ -79,14 +79,9 @@ extension ProfilePresenter {
         view.navigationItem.title = Project.Title.editProfile
         view.profileEditor.showKeyboard(true)
         
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.beginFromCurrentState, .allowUserInteraction]) {
             [view.profileNameLabel, view.bioMessageLabel].forEach {
                 $0.alpha = 0
-            }
-        }
-        
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1) {
-            [view.profileNameLabel, view.bioMessageLabel].forEach {
                 $0.isHidden = true
             }
             
@@ -117,7 +112,7 @@ extension ProfilePresenter {
         view.addPhotoButton.isUserInteractionEnabled = true
         view.profileEditor.isUserInteractionEnabled = true
         
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8) {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: [.beginFromCurrentState, .allowUserInteraction]) {
             [view.profileNameLabel, view.bioMessageLabel, view.addPhotoButton].forEach {
                 $0.alpha = 1
                 $0.isHidden = false
