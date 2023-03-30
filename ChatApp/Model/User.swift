@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct User: Codable {
+struct User: Codable, Equatable {
     var name: String
     var bio: String
     var avatar: Data?

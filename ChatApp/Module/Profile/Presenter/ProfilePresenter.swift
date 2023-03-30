@@ -187,6 +187,16 @@ extension ProfilePresenter {
             .catch({ _ in Just(User.defaultUser) })
             .assign(to: \.userProfile, on: self)
 //            .weakAssign(to: \.userProfile, on: self)
+        
+//        var _ = view?
+//            .profileEditor
+//            .enteredBio()
+//            .publisher
+//            .sink(receiveCompletion: { completion in
+//                print(completion)
+//            }, receiveValue: { value in
+//                print(value)
+//            })
     }
     
     func removeSubscriptions() {

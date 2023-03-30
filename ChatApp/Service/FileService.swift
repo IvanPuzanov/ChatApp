@@ -105,6 +105,8 @@ extension FileService {
     }
     
     func save(user: User) throws {
+        guard user != currentUser else { return }
+        
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first
         let userDirectory   = url?.appendingPathComponent("user-profile")
