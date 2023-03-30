@@ -88,7 +88,7 @@ extension FileService {
             // Проверка наличия изображения в директории
             guard let userAvatar, let avatar = manager.contents(atPath: userAvatar.path) else {
                 // Возвращение полученных данных пользователя без картинки
-                userSubject.send(userFile)
+                currentUserData = userFile
                 return
             }
             
@@ -136,7 +136,7 @@ extension FileService {
                 let encoder = JSONEncoder()
                 encodedUser = try encoder.encode(user)
             } catch {
-                return
+                throw _FileServiceError.failToSave
             }
         }
         

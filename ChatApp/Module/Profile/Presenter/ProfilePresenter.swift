@@ -26,7 +26,7 @@ final class ProfilePresenter {
     
     // MARK: - Многопоточность
     private var userWorkItem: DispatchWorkItem?
-    private var backgroundQueue = DispatchQueue(label: "user.queue", qos: .utility)
+    private var backgroundQueue: DispatchQueue? = DispatchQueue(label: "user.queue", qos: .utility)
 }
 
 // MARK: - Методы событий
@@ -53,7 +53,7 @@ extension ProfilePresenter: AnyPresenter {
         })
         
         guard let userWorkItem else { return }
-        backgroundQueue.async(execute: userWorkItem)
+        backgroundQueue?.async(execute: userWorkItem)
     }
     
     func cancelSaving() {
@@ -177,21 +177,22 @@ private extension ProfilePresenter {
 // MARK: - Методы подписок
 extension ProfilePresenter {
     func createSubscriptions() {
+        guard let backgroundQueue else { return }
+        
         userRequest = fileService?
             .userPublisher
-            .subscribe(on: backgroundQueue)
+            .subscribe(on: DispatchQueue.global())
             .receive(on: DispatchQueue.main)
             .decode(type: User.self, decoder: JSONDecoder())
             .catch({ _ in Just(User.defaultUser) })
             .assign(to: \.userProfile, on: self)
+//            .weakAssign(to: \.userProfile, on: self)
     }
     
     func removeSubscriptions() {
         userRequest?.cancel()
         userRequest = nil
     }
-    
-    
 }
 
 // MARK: - Методы для сохранения пользователя
@@ -217,7 +218,8 @@ private extension ProfilePresenter {
         do {
             try fileService?.save(user: user)
             // Отключение режима редактирования
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
                 self.disableEditing()
                 // Показ уведомления об успешном сохранении
                 self.showAlert(title: Project.AlertTitle.success, message: Project.AlertTitle.successMesssage, style: .alert) {
@@ -226,7 +228,8 @@ private extension ProfilePresenter {
                 }
             }
         } catch {
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
                 self.disableEditing()
                 // Показ уведомления об ошибке при сохранении
                 self.showAlert(title: Project.AlertTitle.failure, message: Project.AlertTitle.failureMessage, style: .alert) {
@@ -240,6 +243,17 @@ private extension ProfilePresenter {
                     return [ok, tryAgain]
                 }
             }
+        }
+    }
+}
+
+extension Publisher where Failure == Never {
+    func weakAssign<T: AnyObject>(
+        to keyPath: ReferenceWritableKeyPath<T, Output>,
+        on object: T
+    ) -> AnyCancellable {
+        sink { [weak object] value in
+            object?[keyPath: keyPath] = value
         }
     }
 }
