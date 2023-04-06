@@ -6,22 +6,26 @@
 //
 
 import UIKit
-
-enum DateSection: Int, Hashable {
-    case early = 0
-    case today = 1
-}
+import Combine
+import TFSChatTransport
 
 final class ConversationVC: UIViewController {
     // MARK: - Параметры
-    public var conversation: ConversationCellModel?
-    private let presenter = ConversationPresenter()
-    private var messageTextViewBottomAnchor: NSLayoutConstraint?
+    
+    public var channel: Channel?
+    private var user: User?
+    
+    private let viewModel       = ConversationViewModel()
+    private var input           = PassthroughSubject<ConversationViewModel.Input, Never>()
+    private var cancellables    = Set<AnyCancellable>()
     
     private var dataSource: UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>!
     private var layout: UICollectionViewCompositionalLayout!
+    private var messageTextViewBottomAnchor = NSLayoutConstraint()
     
     // MARK: - UI
+    
+    private var placeholder         = TCPlaceholder()
     private var collectionView      = UICollectionView(frame: .zero, collectionViewLayout: .init())
     private let chatNavigationBar   = TCChatNavigationBar()
     private let messageTextView     = TCMessageTextView()
@@ -29,86 +33,134 @@ final class ConversationVC: UIViewController {
 }
 
 // MARK: - Жизненный цикл
+
 extension ConversationVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        bindToPresenter()
-//        configure()
+        bindViewModel()
+        
+        configurePlaceholder()
         configureMessageTextView()
         configureCollectionView()
         configureNavigationBar()
         configureDataSource()
         configureLayout()
+        
+        input.send(.fetchUser)
+        
+        guard let channel else { return }
+        input.send(.fetchMessages(for: channel))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = true
     }
 }
 
-// MARK: -
+// MARK: - Методы обработки событий
+
 private extension ConversationVC {
-    func update(with messages: [DateComponents: [MessageCellModel]]) {
+//    func update(with messages: [Message]) {
+//        let messageCellModels = messages.map { MessageCellModel(message: $0) }
+//        var snapshot = NSDiffableDataSourceSnapshot<Section, MessageCellModel>()
+//
+//        snapshot.appendSections([.main])
+//        snapshot.appendItems(messageCellModels, toSection: .main)
+//
+//        DispatchQueue.main.async {
+//            self.dataSource.apply(snapshot, animatingDifferences: true)
+//        }
+//    }
+    
+    func update(with messages: [DateComponents: [Message]]) {
         var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
         
-        for (key, value) in messages {
-            if !snapshot.sectionIdentifiers.contains(key) {
-                snapshot.appendSections([key])
-            }
-            
-            snapshot.appendItems(value, toSection: key)
+        for (date, message) in messages {
+            let messageCellModels = message.map { MessageCellModel(message: $0) }
+            snapshot.appendSections([date])
+            snapshot.appendItems(messageCellModels, toSection: date)
         }
-
+        
         DispatchQueue.main.async {
-            self.dataSource.apply(snapshot)
+            self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
     
-    func update(with messages: [MessageSnapshotModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
-        
-        messages.forEach { model in
-            if !snapshot.sectionIdentifiers.contains(model.date) {
-                snapshot.appendSections([model.date])
-            }
-            
-            snapshot.appendItems(model.messages, toSection: model.date)
-        }
-        
-        DispatchQueue.main.async {
-            self.dataSource.apply(snapshot)
-        }
+    @objc
+    func sendButtonTapped() {
+        let text = messageTextView.text
+        guard !text.isEmpty else { return }
+                
+        input.send(.sendMessage(text: text))
     }
 }
 
 // MARK: - Методы конфигурации
+
 private extension ConversationVC {
-    func bindToPresenter() {
-        self.presenter.setDelegate(self)
-        self.presenter.fetchMessages(for: conversation)
-        self.presenter.addObservers()
+    func bindViewModel() {
+        let output = viewModel.transform(input.eraseToAnyPublisher())
+        output
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .fetchMessagesDidFail(let error):
+                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
+                case .fetchMessagesSucceed(let messages):
+                    self?.update(with: messages)
+                    self?.placeholder.isHidden = !messages.isEmpty
+                case .sendMessageDidFail(let error):
+                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
+                case .sendMessageSucceed:
+                    self?.messageTextView.resetText()
+                case .keyboardDidShow(let height):
+                    self?.messageTextViewBottomAnchor.constant = -height
+                case .keyboardDidHide:
+                    self?.messageTextViewBottomAnchor.constant = 0
+                }
+            }.store(in: &cancellables)
+    }
+    
+    func configurePlaceholder() {
+        view.addSubview(placeholder)
+        placeholder.translatesAutoresizingMaskIntoConstraints = false
+        
+        placeholder.set(image: Project.Image.trayFill, message: Project.Title.Error.noMessagesInChat)
+        
+        NSLayoutConstraint.activate([
+            self.placeholder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            self.placeholder.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     func configureMessageTextView() {
         self.view.addSubview(messageTextView)
         
+        messageTextView.sendButton.addTarget(nil, action: #selector(sendButtonTapped), for: .touchUpInside)
         messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         
         NSLayoutConstraint.activate([
             messageTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            messageTextViewBottomAnchor!,
-            messageTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
+            messageTextViewBottomAnchor,
+            messageTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
     
     func configureCollectionView() {
         self.view.backgroundColor = .systemBackground
-        self.collectionView.backgroundColor = .systemBackground
-        self.collectionView.keyboardDismissMode = .interactive
+        collectionView.backgroundColor = .clear
+        collectionView.keyboardDismissMode = .none
         
-        self.collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
-        self.collectionView.register(DateCVHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: DateCVHeader.id)
+        collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
+        collectionView.register(DateCVHeader.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: DateCVHeader.id)
         
-        self.view.addSubview(collectionView)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -121,16 +173,15 @@ private extension ConversationVC {
     func configureNavigationBar() {
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.configureWithTransparentBackground()
-        
+
         navigationItem.scrollEdgeAppearance = navigationBarAppearance
         navigationItem.standardAppearance = navigationBarAppearance
         navigationItem.compactAppearance = navigationBarAppearance
         
-        // Configure chat navigation bar
         self.view.addSubview(chatNavigationBar)
         
-        chatNavigationBar.setName(conversation?.name)
-        chatNavigationBar.setImage(conversation?.image)
+        chatNavigationBar.setName(channel?.name)
+//        chatNavigationBar.setImage(channel?.image)
         
         NSLayoutConstraint.activate([
             chatNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -155,22 +206,25 @@ private extension ConversationVC {
                 return cell
             }
             return nil
-            
+
         }
     }
     
     func configureLayout() {
-        layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
-            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
+        layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
+            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                     heightDimension: .estimated(70))
             let item        = NSCollectionLayoutItem(layoutSize: itemSize)
             
-            let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
+            let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize,
+                                                               subitems: [item])
             group.contentInsets.leading = 12
             group.contentInsets.trailing = 12
-            let section     = NSCollectionLayoutSection(group: group)
+            let section = NSCollectionLayoutSection(group: group)
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem
-            let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(25))
+            let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
+                                                         heightDimension: .estimated(25))
             let headerElement   = SupplementaryItem(layoutSize: layoutSize,
                                                     elementKind: UICollectionView.elementKindSectionHeader,
                                                     alignment: .topLeading)
@@ -181,32 +235,5 @@ private extension ConversationVC {
         })
         
         self.collectionView.setCollectionViewLayout(layout, animated: true)
-    }
-}
-
-// MARK: - ChatPresenterProtocol
-extension ConversationVC: ConversationPresenterProtocol {
-    func messagesDidFetch(_ messages: [DateComponents: [MessageCellModel]]) {
-        update(with: messages)
-    }
-    
-    func messagesDidFetch(_ messages: [DateSection : [MessageCellModel]]) {
-//        update(with: messages)
-    }
-    
-    func messagesDidFetch(_ messages: [MessageSnapshotModel]) {
-//        update(with: messages)
-    }
-    
-    func keyboardWillShow(height: CGFloat) {
-        messageTextViewBottomAnchor?.constant = -height
-        view.layoutSubviews()
-        
-        
-    }
-    
-    func keyboardDidHide() {
-        messageTextViewBottomAnchor?.constant = -10
-        view.layoutSubviews()
     }
 }

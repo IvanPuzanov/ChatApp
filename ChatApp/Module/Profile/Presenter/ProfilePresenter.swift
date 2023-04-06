@@ -12,24 +12,29 @@ protocol ProfilePresenterProtocol: AnyObject {}
 
 final class ProfilePresenter {
     // MARK: - Параметры
+    
     typealias ProfilePresenterView = ProfilePresenterProtocol & ProfileVC
     private weak var view: ProfilePresenterView?
     
     // MARK: - Компоненты
+    
     private weak var fileService = FileService.shared
     private var userProfile: User = .defaultUser {
         didSet { set(with: userProfile) }
     }
     
     // MARK: - Подписки
+    
     private weak var userRequest: AnyCancellable?
     
     // MARK: - Многопоточность
+    
     private var userWorkItem: DispatchWorkItem?
     private var backgroundQueue: DispatchQueue? = DispatchQueue(label: "user.queue", qos: .utility)
 }
 
 // MARK: - Методы событий
+
 extension ProfilePresenter: AnyPresenter {
     typealias PresenterType = ProfilePresenterView
     func setDelegate(_ view: ProfilePresenterView) {
@@ -37,6 +42,7 @@ extension ProfilePresenter: AnyPresenter {
     }
     
     // MARK: - Сохранение/чтение данных
+    
     func fetchUser() {
         fileService?.fetchUser()
     }
@@ -69,6 +75,7 @@ extension ProfilePresenter: AnyPresenter {
 }
 
 // MARK: - Методы режима редактирования
+
 extension ProfilePresenter {
     /// Включение режима редактирования
     func enableEditing() {
@@ -79,7 +86,7 @@ extension ProfilePresenter {
         view.navigationItem.title = Project.Title.editProfile
         view.profileEditor.showKeyboard(true)
         
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.beginFromCurrentState, .allowUserInteraction]) {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: [.allowUserInteraction]) {
             [view.profileNameLabel, view.bioMessageLabel].forEach {
                 $0.alpha = 0
                 $0.isHidden = true
@@ -112,7 +119,7 @@ extension ProfilePresenter {
         view.addPhotoButton.isUserInteractionEnabled = true
         view.profileEditor.isUserInteractionEnabled = true
         
-        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: [.beginFromCurrentState, .allowUserInteraction]) {
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: [.allowUserInteraction]) {
             [view.profileNameLabel, view.bioMessageLabel, view.addPhotoButton].forEach {
                 $0.alpha = 1
                 $0.isHidden = false
@@ -145,7 +152,8 @@ extension ProfilePresenter {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 private extension ProfilePresenter {
     /// Показ уведомления
     /// - Parameters:
@@ -175,10 +183,11 @@ private extension ProfilePresenter {
 }
 
 // MARK: - Методы подписок
+
 extension ProfilePresenter {
     func createSubscriptions() {
-        guard let backgroundQueue else { return }
-        
+//        guard let backgroundQueue else { return }
+//
         userRequest = fileService?
             .userPublisher
             .subscribe(on: DispatchQueue.global())
@@ -187,16 +196,6 @@ extension ProfilePresenter {
             .catch({ _ in Just(User.defaultUser) })
             .assign(to: \.userProfile, on: self)
 //            .weakAssign(to: \.userProfile, on: self)
-        
-//        var _ = view?
-//            .profileEditor
-//            .enteredBio()
-//            .publisher
-//            .sink(receiveCompletion: { completion in
-//                print(completion)
-//            }, receiveValue: { value in
-//                print(value)
-//            })
     }
     
     func removeSubscriptions() {
@@ -206,6 +205,7 @@ extension ProfilePresenter {
 }
 
 // MARK: - Методы для сохранения пользователя
+
 private extension ProfilePresenter {
     func createUser() -> User? {
         guard let userName = view?.profileEditor.enteredName(), !userName.isEmpty,

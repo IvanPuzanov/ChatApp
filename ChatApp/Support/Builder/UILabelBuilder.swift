@@ -8,10 +8,12 @@
 import UIKit
 
 final class UILabelBuilder {
-    // MARK: -
+    // MARK: - Конфигурируемый UILabel
+    
     private let label = UILabel()
     
-    // MARK: -
+    // MARK: - Методы конфигурации
+    
     func withFont(_ font: UIFont) -> UILabelBuilder {
         label.font = font
         return self
@@ -41,4 +43,3 @@ final class UILabelBuilder {
         return label
     }
 }
-

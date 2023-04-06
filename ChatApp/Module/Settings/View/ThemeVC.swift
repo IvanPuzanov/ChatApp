@@ -9,15 +9,18 @@ import UIKit
 
 final class ThemeVC: UIViewController {
     // MARK: - Параметры
+    
     private var presenter = ThemePresenter()
     
     // MARK: - UI
+    
     private let stackView           = UIStackView()
     private let darkThemeButton     = TCThemeView(theme: .dark)
     private let lightThemeButton    = TCThemeView(theme: .light)
 }
 
 // MARK: - Жизненный цикл
+
 extension ThemeVC {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +44,7 @@ extension ThemeVC {
 }
 
 // MARK: - Методы событий
+
 private extension ThemeVC {
     @objc
     func themeButtonTapped(_ sender: TCThemeView) {
@@ -77,6 +81,7 @@ private extension ThemeVC {
 }
 
 // MARK: - Методы конфигурации
+
 private extension ThemeVC {
     func bindToPresenter() {
         self.presenter.setDelegate(self)
@@ -119,6 +124,7 @@ private extension ThemeVC {
 }
 
 // MARK: - ThemePresenterProtocol
+
 extension ThemeVC: ThemePresenterProtocol {
     func themeDidSet(_ theme: Theme) {
         

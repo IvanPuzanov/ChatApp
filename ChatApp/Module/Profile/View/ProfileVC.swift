@@ -10,10 +10,12 @@ import Combine
 
 final class ProfileVC: UIViewController {
     // MARK: - Параметры
+    
     private let presenter = ProfilePresenter()
     
     // MARK: - UI
-    public let stackView         = UIStackView()
+    
+    public let stackView          = UIStackView()
     
     public var closeButton        = UIBarButtonItem()
     public var editButton         = UIBarButtonItem()
@@ -31,6 +33,7 @@ final class ProfileVC: UIViewController {
 }
 
 // MARK: - Жизненный цикл
+
 extension ProfileVC {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +62,8 @@ extension ProfileVC {
     }
 }
 
-// MARK: -
+// MARK: - Методы обработки событий
+
 private extension ProfileVC {
     @objc
     func buttonTapped(_ button: UIControl) {
@@ -81,6 +85,7 @@ private extension ProfileVC {
 }
 
 // MARK: - Методы конфигурации
+
 private extension ProfileVC {
     func bindToPresenter() {
         self.presenter.setDelegate(self)
@@ -173,15 +178,16 @@ private extension ProfileVC {
     }
 }
 
-// MARK: -
+// MARK: - ImagePickerProtocol
+
 extension ProfileVC: ImagePickerProtocol {
     func didSelect(image: UIImage?) {
+        guard let image else { return }
         self.profileImageView.setImage(image)
-        
-        guard let _ = image else { return }
         self.presenter.enableEditing()
     }
 }
 
 // MARK: - ProfilePresenterProtocol
+
 extension ProfileVC: ProfilePresenterProtocol {}

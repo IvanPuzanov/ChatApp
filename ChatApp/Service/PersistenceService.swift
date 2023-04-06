@@ -29,7 +29,7 @@ final class PersistenceService {
     /// - Returns: Тема приложения
     func fetchTheme() -> Theme? {
         let userDefaults = UserDefaults.standard
-        guard let data = userDefaults.object(forKey: Project.UserDefaultsKeys.settings.rawValue) as? Data else { return nil }
+        guard let data = userDefaults.object(forKey: Project.UserDefaultsKeys.themeSettings.rawValue) as? Data else { return nil }
         
         do {
             let decoder = JSONDecoder()

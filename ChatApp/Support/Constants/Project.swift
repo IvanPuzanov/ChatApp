@@ -6,41 +6,63 @@
 //
 
 import UIKit
+import TFSChatTransport
 
 enum Project {
     enum Title {
-        static let chat         = NSLocalizedString("Chat", comment: "")
-        static let myProfile    = NSLocalizedString("My Profile", comment: "")
-        static let typeMessage  = NSLocalizedString("Type message", comment: "")
-        static let online       = NSLocalizedString("Online", comment: "")
-        static let history      = NSLocalizedString("History", comment: "")
-        static let today        = NSLocalizedString("Today", comment: "")
-        static let early        = NSLocalizedString("Early", comment: "")
-        static let settings     = NSLocalizedString("Settings", comment: "")
-        static let dark         = NSLocalizedString("Dark", comment: "")
-        static let light        = NSLocalizedString("Light", comment: "")
-        static let system       = NSLocalizedString("System", comment: "")
-        static let editProfile  = NSLocalizedString("Edit Profile", comment: "")
+        enum Placeholder {
+            static let channelName      = NSLocalizedString("Channel name", comment: "")
+            static let searchChannels   = NSLocalizedString("Search channels", comment: "")
+        }
+        
+        enum Error {
+            static let noMessagesYet         = NSLocalizedString("No messages yet", comment: "")
+            static let noMessagesInChat      = NSLocalizedString("There aren't messages in this chat", comment: "")
+            static let channelDidntCreate    = NSLocalizedString("Channel didn't create. Try later.", comment: "")
+        }
+        
+        enum Date {
+            static let today        = NSLocalizedString("Today", comment: "")
+            static let yesterday    = NSLocalizedString("Yesterday", comment: "")
+        }
+        
+        static let chat             = NSLocalizedString("Chat", comment: "")
+        static let myProfile        = NSLocalizedString("My Profile", comment: "")
+        static let typeMessage      = NSLocalizedString("Type message", comment: "")
+        static let online           = NSLocalizedString("Online", comment: "")
+        static let history          = NSLocalizedString("History", comment: "")
+        static let early            = NSLocalizedString("Early", comment: "")
+        static let settings         = NSLocalizedString("Settings", comment: "")
+        static let dark             = NSLocalizedString("Dark", comment: "")
+        static let light            = NSLocalizedString("Light", comment: "")
+        static let system           = NSLocalizedString("System", comment: "")
+        static let editProfile      = NSLocalizedString("Edit Profile", comment: "")
+        static let channels         = NSLocalizedString("Channels", comment: "")
+        static let profile          = NSLocalizedString("Profile", comment: "")
+        static let newChannel       = NSLocalizedString("New Channel", comment: "")
     }
     
     enum Button {
         static let ok                   = NSLocalizedString("Ok", comment: "")
-        static let done 	            = NSLocalizedString("Done", comment: "")
+        static let done                 = NSLocalizedString("Done", comment: "")
         static let edit                 = NSLocalizedString("Edit", comment: "")
         static let save                 = NSLocalizedString("Save", comment: "")
         static let close                = NSLocalizedString("Close", comment: "")
         static let cancel               = NSLocalizedString("Cancel", comment: "")
+        static let create               = NSLocalizedString("Create", comment: "")
+        static let delete               = NSLocalizedString("Delete", comment: "")
         static let addPhoto             = NSLocalizedString("Add photo", comment: "")
         static let tryAgain             = NSLocalizedString("Try again", comment: "")
         static let takePhoto            = NSLocalizedString("Take a photo", comment: "")
         static let saveGCD              = NSLocalizedString("Save GCD", comment: "")
         static let saveOperation        = NSLocalizedString("Save Operation", comment: "")
+        static let addChannel           = NSLocalizedString("Add Channel", comment: "")
         static let selectFromGallery    = NSLocalizedString("Select from gallery", comment: "")
     }
     
     enum Image {
         static let arrowUp          = UIImage(systemName: "arrow.up.circle.fill")
-        static let profile          = UIImage(systemName: "person.fill")
+        static let profile          = UIImage(systemName: "person.crop.circle")
         static let settings         = UIImage(systemName: "gear")
         static let leftGrayTail     = UIImage(named: "leftGrayTail")
         static let rightGrayTail    = UIImage(named: "rightBlueTail")
@@ -52,6 +74,8 @@ enum Project {
         static let darkTheme        = UIImage(named: "darkTheme")
         static let lightTheme       = UIImage(named: "lightTheme")
         static let ellipsis         = UIImage(systemName: "ellipsis.circle")
+        static let chats            = UIImage(systemName: "bubble.left.and.bubble.right")
+        static let trayFill         = UIImage(systemName: "tray.fill")
         
         static func chevronRight(configuration: UIImage.SymbolConfiguration = .init(weight: .regular)) -> UIImage {
             guard let image = UIImage(systemName: "chevron.right", withConfiguration: configuration) else { return UIImage() }
@@ -66,6 +90,11 @@ enum Project {
         static let failureMessage   = NSLocalizedString("Could not save profile", comment: "")
         static let ooops            = NSLocalizedString("Ooops🥲", comment: "")
         static let noNameMessage    = NSLocalizedString("You can't save user without name", comment: "")
+        static let wait             = NSLocalizedString("Wait!", comment: "")
+        
+        static func deleteChannelQuestion(channel: Channel) -> String {
+            return "Do you want to delete \(channel.name) channel?"
+        }
     }
     
     enum Color {
@@ -74,7 +103,7 @@ enum Project {
     }
     
     enum UserDefaultsKeys: String {
-        case settings = "settings"
+        case themeSettings = "settings"
     }
 }
 

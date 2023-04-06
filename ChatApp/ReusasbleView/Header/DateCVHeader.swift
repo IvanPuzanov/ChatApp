@@ -9,9 +9,11 @@ import UIKit
 
 final class DateCVHeader: UICollectionReusableView {
     // MARK: - UI
+    
     private let titleLabel = UILabel()
     
     // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -24,19 +26,9 @@ final class DateCVHeader: UICollectionReusableView {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 extension DateCVHeader: ConfigurableViewProtocol {
-//    typealias ConfigurationModel = DateSection?
-//    func configure(with model: DateSection?) {
-//        guard let model else { return }
-//        switch model {
-//        case .today:
-//            self.titleLabel.text = Project.Title.today
-//        case .early:
-//            self.titleLabel.text = Project.Title.early
-//        }
-//    }
-    
     typealias ConfigurationModel = DateComponents
     func configure(with model: DateComponents) {
         let calendar            = Calendar.current
@@ -46,6 +38,7 @@ extension DateCVHeader: ConfigurableViewProtocol {
 }
 
 // MARK: - Методы конфигурации
+
 private extension DateCVHeader {
     private func configure() {
         backgroundColor = .systemBackground

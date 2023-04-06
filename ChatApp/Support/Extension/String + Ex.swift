@@ -20,7 +20,7 @@ extension String {
     
     func convertToDisplayFormat() -> String {
         guard let date = self.convertToDate() else { return "N/A" }
-        return date.convert(for: .conversationsList)
+        return date.convert(for: .ChannelsListPresenter)
     }
     
 }

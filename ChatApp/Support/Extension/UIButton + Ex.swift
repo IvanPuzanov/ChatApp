@@ -21,4 +21,3 @@ extension UIButton {
         self.setAttributedTitle(NSAttributedString(string: title, attributes: highlightAttributes), for: .highlighted)
     }
 }
-

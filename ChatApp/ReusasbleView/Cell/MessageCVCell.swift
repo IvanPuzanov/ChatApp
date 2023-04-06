@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import TFSChatTransport
 
 final class MessageCVCell: UICollectionViewCell {
     // MARK: - Параметры
+    
     private var containerLeading: NSLayoutConstraint!
     private var containerTrailing: NSLayoutConstraint!
     
     // MARK: - UI
+    
     private let stackView       = UIStackView()
+    private var senderLabel     = UILabel()
     private var leftTailImage   = UIImageView()
     private var rightTailImage  = UIImageView()
     private var containerView   = UIView()
@@ -21,10 +25,12 @@ final class MessageCVCell: UICollectionViewCell {
     private let dateLabel       = UILabel()
     
     // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         configureStackView()
+        configureSenderNameLabel()
         configureContainerView()
         configureLeftTailImageView()
         configureRightTailImageView()
@@ -37,42 +43,42 @@ final class MessageCVCell: UICollectionViewCell {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 extension MessageCVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = MessageCellModel
     func configure(with model: MessageCellModel) {
-        self.messageLabel.text = model.text
+        self.messageLabel.text  = model.text
+        self.dateLabel.text     = model.date.showOnlyTime()
         
         switch model.sender {
         case .user:
             self.dateLabel.textColor            = .white.withAlphaComponent(0.7)
             self.messageLabel.textColor         = .white
             self.containerView.backgroundColor  = .systemBlue
-            
-            self.rightTailImage.image = Project.Image.rightGrayTail
-            self.leftTailImage.isHidden = true
-            self.rightTailImage.isHidden = false
-            self.stackView.alignment = .trailing
-            
-//            self.containerLeading.constant = UIScreen.main.bounds.width * 0.33
-//            self.containerTrailing.constant = 0
-        case .conversation:
+
+            self.stackView.alignment        = .trailing
+            self.rightTailImage.image       = Project.Image.rightGrayTail
+            self.leftTailImage.isHidden     = true
+            self.rightTailImage.isHidden    = false
+        case .interlocutor:
+            self.senderLabel.text               = model.userName
             self.dateLabel.textColor            = .systemGray2
             self.messageLabel.textColor         = Project.Color.bubbleTextColor
             self.containerView.backgroundColor  = .systemGray6
-            
-            self.leftTailImage.image = Project.Image.leftGrayTail
-            self.rightTailImage.isHidden = true
-            self.leftTailImage.isHidden = false
-            self.stackView.alignment = .leading
-//            self.containerTrailing.constant = -UIScreen.main.bounds.width * 0.33
-//            self.containerLeading.constant = 0
+
+            self.stackView.alignment        = .leading
+            self.leftTailImage.image        = Project.Image.leftGrayTail
+            self.leftTailImage.isHidden     = false
+            self.rightTailImage.isHidden    = true
+        default:
+            break
         }
-        self.dateLabel.text = model.date?.showOnlyTime()
     }
 }
 
-// MARK: -
+// MARK: - Методы конфигурации
+
 private extension MessageCVCell {
     func configureStackView() {
         self.addSubview(stackView)
@@ -86,6 +92,18 @@ private extension MessageCVCell {
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
         ])
+    }
+    
+    func configureSenderNameLabel() {
+        senderLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 13, weight: .regular))
+            .withTextColor(.secondaryLabel)
+            .withAlignment(.left)
+            .withNumberLines(1)
+            .build()
+        
+        stackView.addArrangedSubview(senderLabel)
+        stackView.setCustomSpacing(3, after: senderLabel)
     }
     
     func configureContainerView() {

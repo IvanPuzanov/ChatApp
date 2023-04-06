@@ -6,17 +6,23 @@
 //
 
 import UIKit
+import Combine
+import TFSChatTransport
 
 protocol ConfigurableViewProtocol {
     associatedtype ConfigurationModel
     func configure(with model: ConfigurationModel)
 }
 
-final class ConversationTVCell: UITableViewCell {
+final class ChannelTVCell: UITableViewCell {
     // MARK: - Параметры
-    private var conversationCellModel: ConversationCellModel?
+    
+    private var channelViewModel: ChannelViewModel?
+    private var input           = PassthroughSubject<ChannelViewModel.Input, Never>()
+    private var cancellables    = Set<AnyCancellable>()
     
     // MARK: - UI
+    
     private let disclosureView      = UIImageView()
     private var dateLabel           = UILabel()
     private let profileImageView    = TCProfileImageView(size: .medium)
@@ -25,11 +31,11 @@ final class ConversationTVCell: UITableViewCell {
     private var messageLabel        = UILabel()
     
     // MARK: - Инициализация
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         configureProfileImageView()
-        configureActivityIndicator()
         configureNameLabel()
         configureDisclosureView()
         configureDateLabel()
@@ -47,41 +53,73 @@ final class ConversationTVCell: UITableViewCell {
     }
 }
 
-// MARK: -
-extension ConversationTVCell: ConfigurableViewProtocol {
-    typealias ConfigurationModel = ConversationCellModel
-    func configure(with model: ConversationCellModel) {
-        self.nameLabel.text         = model.name
-        self.dateLabel.text         = model.date?.convert(for: .conversationsList)
-        self.messageLabel.text      = model.message ?? "No messages yet"
-        self.conversationCellModel  = model
-        self.profileImageView.setName(model.name)
-        self.profileImageView.setImage(model.image)
+// MARK: - Методы установки значений
+
+extension ChannelTVCell: ConfigurableViewProtocol {
+    typealias ConfigurationModel = ChannelViewModel
+    func configure(with model: ChannelViewModel) {
+        self.dateLabel.text = model.lastActivity?.convert(for: .ChannelsListPresenter)
+//        self.profileImageView.setName(model.name)
         
-        if model.hasUnreadMessages {
-            self.messageLabel.font      = .systemFont(ofSize: messageLabel.font.pointSize, weight: .medium)
-            self.messageLabel.textColor = .label
-        }
-        
-        switch model.isOnline {
+        switch model.name.isEmpty {
         case true:
-            activityIndicator.backgroundColor   = .systemGreen
-            activityIndicator.layer.borderWidth = 3
+            self.nameLabel.text  = "Channel"
         case false:
-            activityIndicator.backgroundColor   = .clear
-            activityIndicator.layer.borderWidth = 0
+            self.nameLabel.text  = model.name
         }
         
-        if model.message == nil {
-            self.messageLabel.configureNoMessagesYet(fontSize: 15)
-            self.disclosureView.isHidden = true
-            self.dateLabel.isHidden = true
+        switch model.lastMessage {
+        case .some(let message):
+            self.messageLabel.text = (model.logoURL == nil) ? "Нет картинки" : "Есть картинка"
+            self.messageLabel.font = .systemFont(ofSize: 15, weight: .regular)
+            self.messageLabel.textColor = .secondaryLabel
+            
+            self.dateLabel.isHidden         = false
+            self.disclosureView.isHidden    = false
+        case .none:
+            self.messageLabel.text = (model.logoURL == nil) ? "Нет картинки" : "Есть картинка"
+//            self.messageLabel.configureNoMessagesYet(fontSize: 15)
+//            self.messageLabel.text = Project.Title.Error.noMessagesYet
+            
+            self.dateLabel.isHidden         = true
+            self.disclosureView.isHidden    = true
         }
+        
+        self.bindViewModel(viewModel: model)
+        self.input.send(.loadImage)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.messageLabel.text          = nil
+        self.dateLabel.isHidden         = false
+        self.disclosureView.isHidden    = false
+        self.profileImageView.setImage(nil)
+        
+//        self.input.send(.stopLoading)
     }
 }
 
-// MARK: -
-private extension ConversationTVCell {
+// MARK: - Методы конфигурации
+
+private extension ChannelTVCell {
+    func bindViewModel(viewModel: ChannelViewModel) {
+        self.channelViewModel = viewModel
+        
+        channelViewModel?
+            .transform(input.eraseToAnyPublisher())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] event in
+                switch event {
+                case .imageLoadSucceed(let image):
+                    self?.profileImageView.setImage(image)
+                case .imageLoadDidFail:
+                    self?.profileImageView.setImage(nil)
+                }
+            }).store(in: &cancellables)
+    }
+    
     func configureProfileImageView() {
         addSubview(profileImageView)
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -120,7 +158,6 @@ private extension ConversationTVCell {
             .build()
         
         addSubview(nameLabel)
-        nameLabel.setContentCompressionResistancePriority(.init(760), for: .vertical)
         
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 12),
@@ -153,6 +190,7 @@ private extension ConversationTVCell {
             .build()
         
         addSubview(dateLabel)
+        dateLabel.setContentCompressionResistancePriority(.init(760), for: .horizontal)
         
         NSLayoutConstraint.activate([
             dateLabel.trailingAnchor.constraint(equalTo: disclosureView.leadingAnchor, constant: -10),
@@ -160,7 +198,6 @@ private extension ConversationTVCell {
             dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10)
         ])
     }
-    
     
     func configureMessageLabel() {
         messageLabel = UILabelBuilder()

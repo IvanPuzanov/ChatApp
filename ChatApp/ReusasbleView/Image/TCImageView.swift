@@ -1,14 +1,13 @@
 //
-//  TCProfileImageView.swift
+//  TCImageView.swift
 //  ChatApp
 //
-//  Created by Ivan Puzanov on 27.02.2023.
+//  Created by Ivan Puzanov on 05.04.2023.
 //
 
 import UIKit
 
-/// Project class for showing image (usually profile image)
-final class TCProfileImageView: UIControl {
+final class TCImageView: UIControl {
     // MARK: - Параметры
     
     enum Size: CGFloat {
@@ -22,10 +21,9 @@ final class TCProfileImageView: UIControl {
     /// medium: uses in table/collection cell
     /// large: uses in profile page
     private var size: Size = .small
-    public var presenter = TCProfileImagePresenter()
-    public var image: UIImage? {
-        return imageView.image
-    }
+    
+    private var image: UIImage?
+    private var name: String?
     
     // MARK: - UI
     
@@ -35,8 +33,8 @@ final class TCProfileImageView: UIControl {
     
     // MARK: - Инициализация
     
-    init(size: Size) {
-        super.init(frame: .zero)
+    convenience init(size: Size) {
+        self.init(frame: .zero)
         
         self.size = size
         
@@ -44,49 +42,46 @@ final class TCProfileImageView: UIControl {
         configureStackView()
         configureImageView()
         configureNameLabel()
-        
-        bindToPresenter()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
-// MARK: - Публичные методы
-
-extension TCProfileImageView {
-    override var bounds: CGRect {
-        didSet {
-            self.layer.setGradient(with: .systemGray)
+extension TCImageView {
+    func setUser(user: User) {
+        if let avatarData = user.avatar, let image = UIImage(data: avatarData) {
+            self.setImage(image: image)
+        }
+        setName(name: user.name)
+    }
+    
+    func setImage(image: UIImage?) {
+        self.image = image
+        validate()
+    }
+    
+    func setName(name: String?) {
+        self.name = name
+        validate()
+    }
+    
+    private func validate() {
+        switch (image, name) {
+        case (image, _):
+            self.imageView.isHidden = false
+            self.nameLabel.isHidden = true
+        case (_, name):
+            self.imageView.isHidden = true
+            self.nameLabel.isHidden = false
+        case (_, _):
+            break
         }
     }
     
-    func setUser(user: User?) {
-        self.presenter.user = user
-    }
-
-    func setImage(_ image: UIImage?) {
-        presenter.setImage(image)
-    }
-
-    func setName(_ name: String) {
-        self.presenter.setName(name)
-    }
-    
-    func resetImage() {
-        self.nameLabel.isHidden = false
-        self.imageView.isHidden = true
-    }
-    
-    func bindToPresenter() {
-        self.presenter.setDelegate(self)
+    private func prepareName(name: String) {
+        
     }
 }
 
-// MARK: - Методы конфигурации
-
-private extension TCProfileImageView {
+private extension TCImageView {
     func configure() {
         clipsToBounds = true
         backgroundColor = .systemGray6
@@ -133,26 +128,5 @@ private extension TCProfileImageView {
         
         let fontSize: CGFloat = size.rawValue / 2
         nameLabel.configure(fontSize: fontSize, fontWeight: .semibold, textColor: .white, design: .rounded)
-    }
-}
-
-extension TCProfileImageView: TCProfileImagePresenterProtocol {
-    func nameDidSet(name: String) {
-        DispatchQueue.main.async {
-            self.imageView.isHidden = true
-            self.nameLabel.isHidden = false
-            
-            self.nameLabel.text = name
-        }
-    }
-    
-    func imageDidSet(image: UIImage) {
-        DispatchQueue.main.async {
-            self.imageView.isHidden = false
-            self.nameLabel.isHidden = true
-            
-            self.imageView.image        = image
-            self.imageView.transform    = .identity
-        }
     }
 }

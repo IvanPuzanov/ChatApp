@@ -8,14 +8,17 @@
 import UIKit
 
 class MainVC: UIViewController {
-    // MARK: Parameters
+    // MARK: - Parameters
+    
     public var coordintor: AppCoordinator?
     
-    // MARK: Views
+    // MARK: - Views
+    
     private let showDetailButton = UIButton()
 }
 
 // MARK: - Lifecycle
+
 extension MainVC {
     // Данный метод вызывается после того, как view
     // был загружен. По заданию его вызов и print(#function)
@@ -76,6 +79,7 @@ extension MainVC {
 }
 
 // MARK: - Event methods
+
 private extension MainVC {
     @objc
     func buttonTapped(_ sender: UIButton) {
@@ -86,15 +90,10 @@ private extension MainVC {
             break
         }
     }
-    
-    func printLifecycleMethod(_ method: String) {
-        #if DEBUG
-        print("Called method: \(method)")
-        #endif
-    }
 }
 
 // MARK: - Configure methods
+
 private extension MainVC {
     func configure() {
         self.view.backgroundColor = .systemBackground

@@ -10,19 +10,19 @@ import Foundation
 extension Date {
     static func createDate(day: Int, month: Int, year: Int) -> Date? {
         let calendar = Calendar.current
-        let dateComponents = DateComponents(calendar: calendar, timeZone: .current, era: nil, year: year, month: month, day: day, hour: nil, minute: nil, second: nil, nanosecond: nil, weekday: nil, weekdayOrdinal: nil, quarter: nil, weekOfMonth: nil, weekOfYear: nil, yearForWeekOfYear: nil)
+        let dateComponents = DateComponents(calendar: calendar, timeZone: .current, year: year, month: month, day: day)
         let date = calendar.date(from: dateComponents)
         
         return date
     }
     
     enum ConvertCase {
-        case conversationsList
+        case ChannelsListPresenter
         case conversationDateSection
     }
     func convert(for convertCase: ConvertCase) -> String {
         switch convertCase {
-        case .conversationsList:
+        case .ChannelsListPresenter:
             return convertToMonthDayFormat()
         case .conversationDateSection:
             let calendar = Calendar.current
@@ -30,7 +30,9 @@ extension Date {
             dateFromatter.dateFormat = "MMM, dd, yyyy"
             
             if calendar.isDateInToday(self) {
-                return Project.Title.today
+                return Project.Title.Date.today
+            } else if calendar.isDateInYesterday(self) {
+                return Project.Title.Date.yesterday
             } else {
                 return dateFromatter.string(from: self)
             }

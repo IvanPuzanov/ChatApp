@@ -22,15 +22,24 @@ final class TCProfileImagePresenter {
 
 extension TCProfileImagePresenter {
     func setName(_ name: String) {
-        self.name = name
-        
-        let preparedName = prepareName(name)
-        view?.nameDidSet(name: preparedName)
+        let name = prepareName(name)
+        validate()
     }
     
-    func setImage(_ image: UIImage) {
+    func setImage(_ image: UIImage?) {
         self.image = image
-        view?.imageDidSet(image: image)
+        validate()
+    }
+    
+    func validate() {
+        switch (image, name) {
+        case let (image, _):
+            guard let image else { return }
+            self.view?.imageDidSet(image: image)
+        case (_, name):
+            guard let name else { return }
+            self.view?.nameDidSet(name: name)
+        }
     }
     
     func setUser(user: User?) {

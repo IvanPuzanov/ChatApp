@@ -10,12 +10,13 @@ import UIKit
 final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     
-    init(navigationController: UINavigationController) {
+    init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     
     func start() {
         let viewController = ProfileVC()
+        viewController.tabBarItem = UITabBarItem(title: Project.Title.profile, image: Project.Image.profile, selectedImage: nil)
         navigationController.pushViewController(viewController, animated: true)
     }
 }

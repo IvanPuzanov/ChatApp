@@ -6,11 +6,18 @@
 //
 
 import UIKit
+import Combine
 
 final class TCProfileEditor: UIView {
-    // MARK: -
+    // MARK: - Publishers
     
-    // MARK: -
+    public var textFieldsPublisher: AnyPublisher<(name: String, bio: String), Never> {
+        textFieldsSubject.eraseToAnyPublisher()
+    }
+    private var textFieldsSubject = PassthroughSubject<(name: String, bio: String), Never>()
+    
+    // MARK: - UI
+    
     private let stackView       = UIStackView()
     private let topShadow       = UIView()
     private var nameLabel       = UILabel()
@@ -19,7 +26,8 @@ final class TCProfileEditor: UIView {
     private let bioTextField    = UITextField()
     private let bottomShadow    = UIView()
     
-    // MARK: - Initialization
+    // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -36,7 +44,8 @@ final class TCProfileEditor: UIView {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 extension TCProfileEditor {
     func showKeyboard(_ value: Bool) {
         switch value {
@@ -63,6 +72,7 @@ extension TCProfileEditor {
 }
 
 // MARK: - Методы конфигурации
+
 private extension TCProfileEditor {
     func configure() {
         self.backgroundColor = Project.Color.subviewBackground

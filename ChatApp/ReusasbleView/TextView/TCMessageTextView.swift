@@ -9,23 +9,32 @@ import UIKit
 
 final class TCMessageTextView: UIView {
     // MARK: - Параметры
+    
     override var intrinsicContentSize: CGSize {
         return textView.intrinsicContentSize
     }
     
+    public var text: String {
+        return textView.text
+    }
+    
     // MARK: - UI
+    
     private let blurredView     = UIView()
     private var containerView   = UIView()
+    private var placeholder     = UILabel()
     public let textView         = UITextView()
-    private let sendButton  	= TCSendButton()
+    public let sendButton       = TCSendButton()
     
-    // MARK: Инициализация
+    // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         configure()
         configureBlurredView()
         configureContainerView()
+        configurePlaceholder()
         configureSendButton()
         configureTextView()
     }
@@ -35,7 +44,18 @@ final class TCMessageTextView: UIView {
     }
 }
 
+// MARK: - Методы обработки событий
+
+extension TCMessageTextView {
+    func resetText() {
+        self.textView.text      = String()
+        sendButton.isActive     = false
+        placeholder.isHidden    = false
+    }
+}
+
 // MARK: - Методы конфигурации
+
 private extension TCMessageTextView {
     func configure() {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +77,7 @@ private extension TCMessageTextView {
             blurredView.backgroundColor = .systemBackground.withAlphaComponent(0.9)
             
             let blurEffect = UIBlurEffect(style: .regular)
-            let blurEffectView  = UIVisualEffectView(effect: blurEffect)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
             
             blurEffectView.frame            = self.blurredView.bounds
             blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -84,13 +104,31 @@ private extension TCMessageTextView {
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bottomInset ?? 0) - 5),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bottomInset ?? 0) - 5)
+        ])
+    }
+    
+    func configurePlaceholder() {
+        placeholder = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 15, weight: .regular))
+            .withTextColor(.secondaryLabel)
+            .withAlignment(.left)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
+        
+        self.addSubview(placeholder)
+        placeholder.text = Project.Title.typeMessage
+        
+        NSLayoutConstraint.activate([
+            placeholder.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            placeholder.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15)
         ])
     }
     
     func configureSendButton() {
         containerView.addSubview(sendButton)
         sendButton.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.isActive = false
         
         NSLayoutConstraint.activate([
             sendButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
@@ -103,10 +141,9 @@ private extension TCMessageTextView {
     func configureTextView() {
         containerView.addSubview(textView)
         
-        textView.text               = Project.Title.typeMessage
         textView.font               = UIFont.systemFont(ofSize: 15)
         textView.delegate           = self
-        textView.textColor          = UIColor.lightGray
+        textView.textColor          = .label
         textView.isScrollEnabled    = false
         textView.keyboardType       = .default
         textView.backgroundColor    = .clear
@@ -123,18 +160,13 @@ private extension TCMessageTextView {
 }
 
 // MARK: - UITextViewDelegate
+
 extension TCMessageTextView: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == .lightGray {
-            textView.text = nil
-            textView.textColor = .label
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = Project.Title.typeMessage
-            textView.textColor = .lightGray
-        }
+    func textViewDidChange(_ textView: UITextView) {
+        let enteredText = textView.text
+        let isEmpty     = enteredText?.isEmpty ?? true
+        
+        sendButton.isActive = !isEmpty
+        placeholder.isHidden = !isEmpty
     }
 }

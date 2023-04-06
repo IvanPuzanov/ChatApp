@@ -9,10 +9,12 @@ import UIKit
 
 final class ConversationTVHeader: UIControl {
     // MARK: - UI
+    
     private let titleLabel      = UILabel()
     private let shadowImage     = UIView()
     
     // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -25,7 +27,8 @@ final class ConversationTVHeader: UIControl {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 extension ConversationTVHeader {
     func configure(with title: String?) {
         self.titleLabel.text = title
@@ -37,6 +40,7 @@ extension ConversationTVHeader {
 }
 
 // MARK: - Методы конфигурации
+
 private extension ConversationTVHeader {
     func configureTitleLabel() {
         self.addSubview(titleLabel)

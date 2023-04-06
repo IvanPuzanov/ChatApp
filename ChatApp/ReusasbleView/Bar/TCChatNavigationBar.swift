@@ -9,12 +9,14 @@ import UIKit
 
 final class TCChatNavigationBar: UIView {
     // MARK: - UI
+    
     private let blurredView         = UIView()
     private let profileImageView    = TCProfileImageView(size: .chat)
     private let nameLabel           = UILabel()
     private let shadowImage         = UIView()
     
     // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -30,7 +32,8 @@ final class TCChatNavigationBar: UIView {
     }
 }
 
-// MARK: -
+// MARK: - Методы установки значений
+
 extension TCChatNavigationBar {
     func setImage(_ image: UIImage?) {
         self.profileImageView.setImage(image)
@@ -43,7 +46,8 @@ extension TCChatNavigationBar {
     }
 }
 
-// MARK: -
+// MARK: - Методы конфигурации
+
 extension TCChatNavigationBar {
     func configure() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +69,7 @@ extension TCChatNavigationBar {
             blurredView.backgroundColor = .clear
             
             let blurEffect = UIBlurEffect(style: .prominent)
-            let blurEffectView  = UIVisualEffectView(effect: blurEffect)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
             
             blurEffectView.frame            = self.blurredView.bounds
             blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -87,7 +91,7 @@ extension TCChatNavigationBar {
         
         NSLayoutConstraint.activate([
             profileImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: topPadding)
+            profileImageView.topAnchor.constraint(equalTo: topAnchor, constant: topPadding + 7)
         ])
     }
     

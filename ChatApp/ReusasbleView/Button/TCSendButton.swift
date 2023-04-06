@@ -9,14 +9,17 @@ import UIKit
 
 final class TCSendButton: UIControl {
     // MARK: - Параметры
+    
     public var isActive: Bool = false {
         didSet { self.isActiveChanged() }
     }
     
     // MARK: - UI
+    
     private let arrowImageView = UIImageView(image: Project.Image.arrowUp)
     
     // MARK: - Инициализация
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -30,24 +33,26 @@ final class TCSendButton: UIControl {
 }
 
 // MARK: - Методы событий
+
 private extension TCSendButton {
     func isActiveChanged() {
         switch isActive {
         case true:
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: 0.1) {
                 self.arrowImageView.tintColor = .systemBlue
-                self.arrowImageView.isUserInteractionEnabled = true
+                self.isUserInteractionEnabled = true
             }
         case false:
             UIView.animate(withDuration: 0.2) {
                 self.arrowImageView.tintColor = .systemGray
-                self.arrowImageView.isUserInteractionEnabled = false
+                self.isUserInteractionEnabled = false
             }
         }
     }
 }
 
 // MARK: - Методы конфигурации
+
 private extension TCSendButton {
     func configure() {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -58,6 +63,7 @@ private extension TCSendButton {
         arrowImageView.translatesAutoresizingMaskIntoConstraints = false
         
         arrowImageView.contentMode = .scaleAspectFit
+        arrowImageView.isUserInteractionEnabled = false
         
         NSLayoutConstraint.activate([
             arrowImageView.leadingAnchor.constraint(equalTo: leadingAnchor),

@@ -8,17 +8,19 @@
 import UIKit
 import Combine
 
-enum _FileServiceError: Error {
+enum FileServiceError: Error {
     case failToSave
     case failToFetch
 }
 
 final class FileService {
     // MARK: - Singleton
+    
     static let shared = FileService()
     private init() {}
     
     // MARK: - Параметры
+    
     public var currentUser = User.defaultUser
     private var currentUserData: Data = Data() {
         didSet { userSubject.send(currentUserData) }
@@ -26,6 +28,7 @@ final class FileService {
     private let manager: FileManager = .default
     
     // MARK: - Combine publishers
+    
     public var userPublisher: AnyPublisher<Data, Never> {
         userSubject.eraseToAnyPublisher()
     }
@@ -41,7 +44,7 @@ extension FileService {
         let userData        = userDirectory?.appendingPathComponent("data.txt")
         
         // Стандартный пользователь
-        let defaultUser     = User.defaultUser
+        let defaultUser = User.defaultUser
         
         // Разворачивание ссылок директорий
         guard let userDirectory, let userData else { return }
@@ -120,12 +123,12 @@ extension FileService {
         // Проверка измененных текстовых данных пользователя
         if user.name != currentUser.name || user.bio != currentUser.bio {
             do {
-                let encoder     = JSONEncoder()
+                let encoder = JSONEncoder()
                 encodedUser = try encoder.encode(user)
                 
                 try encodedUser.write(to: userData)
             } catch {
-                throw _FileServiceError.failToSave
+                throw FileServiceError.failToSave
             }
         }
         
@@ -138,7 +141,7 @@ extension FileService {
                 let encoder = JSONEncoder()
                 encodedUser = try encoder.encode(user)
             } catch {
-                throw _FileServiceError.failToSave
+                throw FileServiceError.failToSave
             }
         }
         

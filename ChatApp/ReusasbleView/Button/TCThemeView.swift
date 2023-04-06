@@ -5,20 +5,22 @@
 //  Created by Ivan Puzanov on 10.03.2023.
 //
 
-
 import UIKit
 
 final class TCThemeView: UIControl {
     // MARK: - Параметры
+    
     public var theme: Theme
     
     // MARK: - UI
+    
     private let stackView   = UIStackView()
     private let imageView   = UIImageView()
     private let titleLabel  = UILabel()
     private let indicator   = UIImageView()
     
     // MARK: - Инициализация
+    
     init(theme: Theme) {
         self.theme = theme
         super.init(frame: .zero)
@@ -40,7 +42,8 @@ final class TCThemeView: UIControl {
     }
 }
 
-// MARK: -
+// MARK: - Обработка состояний
+
 extension TCThemeView {
     override var isHighlighted: Bool {
         didSet {
@@ -74,6 +77,7 @@ extension TCThemeView {
 }
 
 // MARK: - Методы конфигурации
+
 private extension TCThemeView {
     func configure() {
         translatesAutoresizingMaskIntoConstraints = false

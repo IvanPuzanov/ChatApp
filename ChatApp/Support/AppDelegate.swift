@@ -10,27 +10,17 @@ import UIKit
 @main
 class AppDelegate: UIResponder {
     lazy var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
-    var appCoordinator: AppCoordinator?
 }
 
-// MARK: - App Жизненный цикл
+// MARK: - Жизненный цикл
+
 extension AppDelegate: UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Создаю navigationController, который будет использоваться
-        // координатором
-        let navigationController = UINavigationController()
-        
-        // Создаю координатор приложения
-        appCoordinator = AppCoordinator(navigationController: navigationController)
-        
         // Настраиваю окно приложения
-        window?.rootViewController = navigationController
+        window?.rootViewController = TabBarVC()
         window?.makeKeyAndVisible()
-        
-        // Запускается работа координатора
-        appCoordinator?.start()
         
         // Установка темы приложения
         setupAppearance()

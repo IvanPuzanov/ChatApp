@@ -25,9 +25,9 @@ extension ThemePresenter: AnyPresenter {
     func saveTheme() {
         switch UITraitCollection.current.userInterfaceStyle {
         case .dark:
-            self.persistenceService.save(Theme.dark, forKey: .settings)
+            self.persistenceService.save(Theme.dark, forKey: .themeSettings)
         case .light:
-            self.persistenceService.save(Theme.light, forKey: .settings)
+            self.persistenceService.save(Theme.light, forKey: .themeSettings)
         default:
             break
         }
