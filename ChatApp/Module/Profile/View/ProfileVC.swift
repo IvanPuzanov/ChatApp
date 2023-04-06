@@ -182,9 +182,8 @@ private extension ProfileVC {
 
 extension ProfileVC: ImagePickerProtocol {
     func didSelect(image: UIImage?) {
-        self.profileImageView.setImage(image: image)
-        
         guard let image else { return }
+        self.profileImageView.setImage(image: image)
         self.presenter.enableEditing()
     }
 }

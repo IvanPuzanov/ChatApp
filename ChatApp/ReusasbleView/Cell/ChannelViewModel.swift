@@ -16,7 +16,7 @@ final class ChannelViewModel {
     private let output          = PassthroughSubject<Output, Never>()
     private var cancellabels    = Set<AnyCancellable>()
     private var imageLoadSubscription: AnyCancellable?
-    private var backgroundQueue = DispatchQueue(label: "imageLoad.queue", qos: .utility)
+
     private var logoImage: UIImage?
     
     // MARK: - Инициализация
@@ -74,7 +74,7 @@ extension ChannelViewModel {
         imageLoadSubscription = URLSession
             .shared
             .dataTaskPublisher(for: url)
-            .subscribe(on: backgroundQueue)
+            .subscribe(on: DispatchQueue.global())
             .map { UIImage(data: $0.data) }
             .replaceError(with: nil)
             .receive(on: DispatchQueue.main)

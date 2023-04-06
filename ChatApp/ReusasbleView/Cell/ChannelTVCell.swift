@@ -57,7 +57,9 @@ final class ChannelTVCell: UITableViewCell {
 
 extension ChannelTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ChannelViewModel
+    
     func configure(with model: ChannelViewModel) {
+        self.bindViewModel(viewModel: model)
         self.dateLabel.text = model.lastActivity?.convert(for: .ChannelsListPresenter)
         self.profileImageView.setName(name: model.name)
         
@@ -84,7 +86,6 @@ extension ChannelTVCell: ConfigurableViewProtocol {
             self.disclosureView.isHidden    = true
         }
         
-        self.bindViewModel(viewModel: model)
         self.input.send(.loadImage)
     }
     
@@ -94,6 +95,7 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         self.messageLabel.text          = nil
         self.dateLabel.isHidden         = false
         self.disclosureView.isHidden    = false
+        
         self.profileImageView.setImage(image: nil)
         
 //        self.input.send(.stopLoading)
