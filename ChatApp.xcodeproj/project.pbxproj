@@ -378,8 +378,8 @@
 		2AE04CA829AC9AD400DBB90E /* Module */ = {
 			isa = PBXGroup;
 			children = (
-				2A1A877129DDE02E00317E04 /* ProfileEditor */,
 				2AE04CA929AC9AD700DBB90E /* ChannelsList */,
+				2A1A877129DDE02E00317E04 /* ProfileEditor */,
 				2AE04CAA29AC9ADD00DBB90E /* Profile */,
 				2AA9B0A929B4D73C00311B3F /* Conversation */,
 				2AEB6DE629BA5FA0004D0A3D /* Settings */,

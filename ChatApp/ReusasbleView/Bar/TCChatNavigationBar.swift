@@ -11,7 +11,7 @@ final class TCChatNavigationBar: UIView {
     // MARK: - UI
     
     private let blurredView         = UIView()
-    private let profileImageView    = TCProfileImageView(size: .chat)
+    private let profileImageView    = TCImageView(size: .chat)
     private let nameLabel           = UILabel()
     private let shadowImage         = UIView()
     
@@ -36,12 +36,12 @@ final class TCChatNavigationBar: UIView {
 
 extension TCChatNavigationBar {
     func setImage(_ image: UIImage?) {
-        self.profileImageView.setImage(image)
+        self.profileImageView.setImage(image: image)
     }
     
     func setName(_ name: String?) {
         guard let name else { return }
-        self.profileImageView.setName(name)
+        self.profileImageView.setName(name: name)
         self.nameLabel.text = name
     }
 }

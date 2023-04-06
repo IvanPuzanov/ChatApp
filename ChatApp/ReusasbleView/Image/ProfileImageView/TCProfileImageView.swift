@@ -63,11 +63,11 @@ extension TCProfileImageView {
     }
     
     func setUser(user: User?) {
-        self.presenter.user = user
+        self.presenter.setUser(user: user)
     }
 
     func setImage(_ image: UIImage?) {
-        presenter.setImage(image)
+        self.presenter.setImage(image)
     }
 
     func setName(_ name: String) {

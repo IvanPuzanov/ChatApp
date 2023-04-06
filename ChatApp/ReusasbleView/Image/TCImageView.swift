@@ -22,19 +22,20 @@ final class TCImageView: UIControl {
     /// large: uses in profile page
     private var size: Size = .small
     
-    private var image: UIImage?
-    private var name: String?
+    public var user: User?
+    public var image: UIImage?
+    public var name: String?
     
     // MARK: - UI
     
-    private let stackView           = UIStackView()
-    private let imageView           = UIImageView()
-    private let nameLabel           = UILabel()
+    private let stackView  = UIStackView()
+    private let imageView  = UIImageView()
+    private let nameLabel  = UILabel()
     
     // MARK: - Инициализация
     
-    convenience init(size: Size) {
-        self.init(frame: .zero)
+    init(size: Size) {
+        super.init(frame: .zero)
         
         self.size = size
         
@@ -43,48 +44,74 @@ final class TCImageView: UIControl {
         configureImageView()
         configureNameLabel()
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension TCImageView {
     func setUser(user: User) {
-        if let avatarData = user.avatar, let image = UIImage(data: avatarData) {
-            self.setImage(image: image)
+        if let imageData = user.avatar {
+            self.image = UIImage(data: imageData)
+            self.setImage(image: self.image)
+            validate()
+            return
         }
-        setName(name: user.name)
+        
+        self.name               = user.name
+        self.image              = nil
+        self.imageView.image    = nil
+        self.setName(name: user.name)
+    
+        validate()
     }
     
     func setImage(image: UIImage?) {
         self.image = image
+        self.imageView.image = image
+        
         validate()
     }
     
-    func setName(name: String?) {
-        self.name = name
+    func setName(name: String) {
+        let preparedName = prepareName(name)
+        
+        self.name = preparedName
+        self.nameLabel.text = preparedName
+        
         validate()
     }
     
     private func validate() {
-        switch (image, name) {
-        case (image, _):
-            self.imageView.isHidden = false
-            self.nameLabel.isHidden = true
-        case (_, name):
-            self.imageView.isHidden = true
-            self.nameLabel.isHidden = false
-        case (_, _):
-            break
+        if image != nil {
+            self.nameLabel.isHidden     = true
+            self.imageView.transform    = .identity
+            self.imageView.isHidden     = false
+        } else {
+            self.nameLabel.isHidden     = false
+            self.imageView.transform    = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            self.imageView.isHidden     = true
         }
     }
     
-    private func prepareName(name: String) {
+    private func prepareName(_ name: String) -> String {
+        let splitedName = name.split(separator: " ")
+        var preparedName = String()
         
+        for word in splitedName {
+            guard let firstChar = word.first, preparedName.count < 2 else { continue }
+            preparedName.append(String(firstChar))
+        }
+        
+        return preparedName.uppercased()
     }
 }
 
 private extension TCImageView {
     func configure() {
         clipsToBounds = true
-        backgroundColor = .systemGray6
+        backgroundColor = .systemGray3
         translatesAutoresizingMaskIntoConstraints = false
         
         // Image size

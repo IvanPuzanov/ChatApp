@@ -37,6 +37,7 @@ extension ConversationViewModel: ViewModel {
     enum Input {
         case fetchUser
         case fetchMessages(for: Channel)
+        case loadImage
         case sendMessage(text: String)
     }
     
@@ -44,6 +45,8 @@ extension ConversationViewModel: ViewModel {
         // Запрос сообщений
         case fetchMessagesDidFail(error: ConversationError)
         case fetchMessagesSucceed(messages: [DateComponents: [Message]])
+        
+        case imageLoadSucceed(image: UIImage)
         
         // Отправка сообщений
         case sendMessageDidFail(error: ConversationError)
@@ -59,6 +62,8 @@ extension ConversationViewModel: ViewModel {
             switch event {
             case .fetchMessages(let channel):
                 self?.fetchMessages(for: channel)
+            case .loadImage:
+                self?.loadImage()
             case .fetchUser:
                 self?.fetchUser()
             case .sendMessage(let text):
@@ -83,8 +88,26 @@ private extension ConversationViewModel {
                     self?.output.send(.fetchMessagesDidFail(error: .fetchMessagesDidFail))
                 }
             } receiveValue: { [weak self] messages in
-                guard let groupedMessages = self?.groupMessagesByDate(messages: messages) else { return }
+                let sortedMessages = messages.sorted { $0.date > $1.date }
+                guard let groupedMessages = self?.groupMessagesByDate(messages: sortedMessages) else { return }
                 self?.output.send(.fetchMessagesSucceed(messages: groupedMessages))
+            }.store(in: &subcriptions)
+
+    }
+    
+    func loadImage() {
+        guard let channel else { return }
+        guard let logoURL = channel.logoURL, let url = URL(string: logoURL) else { return }
+        
+        URLSession
+            .shared
+            .dataTaskPublisher(for: url)
+            .map { UIImage(data: $0.data) }
+            .replaceError(with: nil)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] image in
+                guard let image else { return }
+                self?.output.send(.imageLoadSucceed(image: image))
             }.store(in: &subcriptions)
 
     }

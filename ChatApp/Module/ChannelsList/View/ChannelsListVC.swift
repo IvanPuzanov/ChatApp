@@ -65,7 +65,7 @@ private extension ChannelsListVC {
             .sink { [weak self] event in
                 switch event {
                 case .fetchChannelsDidFail(let error):
-                    print(error)
+                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
                 case .fetchChannelsDidSucceed(let channels), .channelsDidFilter(let channels):
                     self?.update(with: channels)
                 case .showAddChanelAlert:

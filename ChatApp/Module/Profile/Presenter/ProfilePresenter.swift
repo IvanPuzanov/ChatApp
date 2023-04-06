@@ -173,12 +173,13 @@ private extension ProfilePresenter {
     /// Установка значений профиля
     /// - Parameter user: Модель пользователя
     func set(with user: User?) {
+        print(user)
         guard let user else { return }
         
         self.view?.profileNameLabel.text = user.name
         self.view?.bioMessageLabel.text = user.bio
         self.view?.profileEditor.set(name: user.name, bio: user.bio)
-        self.view?.profileImageView.presenter.user = user
+        self.view?.profileImageView.setUser(user: user)
     }
 }
 
@@ -194,8 +195,9 @@ extension ProfilePresenter {
             .receive(on: DispatchQueue.main)
             .decode(type: User.self, decoder: JSONDecoder())
             .catch({ _ in Just(User.defaultUser) })
-            .assign(to: \.userProfile, on: self)
-//            .weakAssign(to: \.userProfile, on: self)
+            .sink(receiveValue: { user in
+                self.set(with: user)
+            })
     }
     
     func removeSubscriptions() {
@@ -253,17 +255,6 @@ private extension ProfilePresenter {
                     return [ok, tryAgain]
                 }
             }
-        }
-    }
-}
-
-extension Publisher where Failure == Never {
-    func weakAssign<T: AnyObject>(
-        to keyPath: ReferenceWritableKeyPath<T, Output>,
-        on object: T
-    ) -> AnyCancellable {
-        sink { [weak object] value in
-            object?[keyPath: keyPath] = value
         }
     }
 }

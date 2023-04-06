@@ -51,6 +51,7 @@ extension ConversationVC {
         
         guard let channel else { return }
         input.send(.fetchMessages(for: channel))
+        input.send(.loadImage)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,6 +113,8 @@ private extension ConversationVC {
                 case .fetchMessagesSucceed(let messages):
                     self?.update(with: messages)
                     self?.placeholder.isHidden = !messages.isEmpty
+                case .imageLoadSucceed(let image):
+                    self?.chatNavigationBar.setImage(image)
                 case .sendMessageDidFail(let error):
                     self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
                 case .sendMessageSucceed:

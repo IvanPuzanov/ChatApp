@@ -27,7 +27,3 @@ final class NetworkService {
         self.jsonDecoder = jsonDecoder
     }
 }
-
-extension NetworkService {
-    
-}

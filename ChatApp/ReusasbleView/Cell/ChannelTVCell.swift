@@ -25,7 +25,7 @@ final class ChannelTVCell: UITableViewCell {
     
     private let disclosureView      = UIImageView()
     private var dateLabel           = UILabel()
-    private let profileImageView    = TCProfileImageView(size: .medium)
+    private let profileImageView    = TCImageView(size: .medium)
     private let activityIndicator   = UIView()
     private var nameLabel           = UILabel()
     private var messageLabel        = UILabel()
@@ -59,7 +59,7 @@ extension ChannelTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ChannelViewModel
     func configure(with model: ChannelViewModel) {
         self.dateLabel.text = model.lastActivity?.convert(for: .ChannelsListPresenter)
-        self.profileImageView.setName(model.name)
+        self.profileImageView.setName(name: model.name)
         
         switch model.name.isEmpty {
         case true:
@@ -94,7 +94,7 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         self.messageLabel.text          = nil
         self.dateLabel.isHidden         = false
         self.disclosureView.isHidden    = false
-        self.profileImageView.setImage(nil)
+        self.profileImageView.setImage(image: nil)
         
 //        self.input.send(.stopLoading)
     }
@@ -112,9 +112,9 @@ private extension ChannelTVCell {
             .sink(receiveValue: { [weak self] event in
                 switch event {
                 case .imageLoadSucceed(let image):
-                    self?.profileImageView.setImage(image)
+                    self?.profileImageView.setImage(image: image)
                 case .imageLoadDidFail:
-                    self?.profileImageView.setImage(nil)
+                    self?.profileImageView.setImage(image: nil)
                 }
             }).store(in: &cancellables)
     }

@@ -11,6 +11,7 @@ import TFSChatTransport
 
 enum ChannelError: String, Error {
     case deleteChannelDidFail = "An error occured while deleting channel"
+    case fetchChannelDidFail = "An error occured while loading channels"
 }
 
 protocol ViewModel {
@@ -43,7 +44,7 @@ extension ChannelsListViewModel: ViewModel {
     }
     
     enum Output {
-        case fetchChannelsDidFail(error: Error)
+        case fetchChannelsDidFail(error: ChannelError)
         case fetchChannelsDidSucceed(channels: [ChannelViewModel])
         
         case channelsDidFilter(channels: [ChannelViewModel])
@@ -85,16 +86,16 @@ private extension ChannelsListViewModel {
             .loadChannels()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.output.send(.fetchChannelsDidFail(error: error))
+                if case .failure = completion {
+                    self?.output.send(.fetchChannelsDidFail(error: .fetchChannelDidFail))
                 }
             } receiveValue: { [weak self] channels in
                 let channelViewModels = channels.map { ChannelViewModel(channel: $0) }
                 
                 let sortedChannels = channelViewModels.sorted { lhs, rhs in
-                    guard let firstDate = lhs.lastActivity, let secondDate = rhs.lastActivity else { return false }
-                    return firstDate > secondDate
+                    return lhs.lastActivity ?? Date() < rhs.lastActivity ?? Date()
                 }
+                
                 self?.channels = sortedChannels
                 self?.output.send(.fetchChannelsDidSucceed(channels: sortedChannels))
             }.store(in: &cancellabels)

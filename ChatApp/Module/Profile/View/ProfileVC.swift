@@ -23,7 +23,7 @@ final class ProfileVC: UIViewController {
     public var saveButton         = UIBarButtonItem()
     public var activity           = UIActivityIndicatorView(style: .medium)
     
-    public let profileImageView   = TCProfileImageView(size: .large)
+    public let profileImageView   = TCImageView(size: .large)
     public let addPhotoButton     = UIButton()
     public let profileNameLabel   = UILabel()
     public let bioMessageLabel    = UILabel()
@@ -182,8 +182,9 @@ private extension ProfileVC {
 
 extension ProfileVC: ImagePickerProtocol {
     func didSelect(image: UIImage?) {
+        self.profileImageView.setImage(image: image)
+        
         guard let image else { return }
-        self.profileImageView.setImage(image)
         self.presenter.enableEditing()
     }
 }
