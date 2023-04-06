@@ -59,7 +59,7 @@ extension ChannelTVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = ChannelViewModel
     func configure(with model: ChannelViewModel) {
         self.dateLabel.text = model.lastActivity?.convert(for: .ChannelsListPresenter)
-//        self.profileImageView.setName(model.name)
+        self.profileImageView.setName(model.name)
         
         switch model.name.isEmpty {
         case true:
@@ -70,16 +70,15 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         
         switch model.lastMessage {
         case .some(let message):
-            self.messageLabel.text = (model.logoURL == nil) ? "Нет картинки" : "Есть картинка"
+            self.messageLabel.text = message
             self.messageLabel.font = .systemFont(ofSize: 15, weight: .regular)
             self.messageLabel.textColor = .secondaryLabel
             
             self.dateLabel.isHidden         = false
             self.disclosureView.isHidden    = false
         case .none:
-            self.messageLabel.text = (model.logoURL == nil) ? "Нет картинки" : "Есть картинка"
-//            self.messageLabel.configureNoMessagesYet(fontSize: 15)
-//            self.messageLabel.text = Project.Title.Error.noMessagesYet
+            self.messageLabel.configureNoMessagesYet(fontSize: 15)
+            self.messageLabel.text = Project.Title.Error.noMessagesYet
             
             self.dateLabel.isHidden         = true
             self.disclosureView.isHidden    = true
