@@ -19,7 +19,7 @@ final class ChannelsListVC: UITableViewController {
     private var cancellables    = Set<AnyCancellable>()
     
     public var coordinator: ChannelsCoordinator?
-    private var dataSource: UITableViewDiffableDataSource<Section, ChannelViewModel>!
+    private var dataSource: ChannelsDataSource!
     
     // MARK: - UI
     
@@ -67,8 +67,12 @@ private extension ChannelsListVC {
                 case .fetchChannelsDidFail(let error):
                     self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
                 case .fetchChannelsDidSucceed(let channels), .channelsDidFilter(let channels):
+                    self?.navigationItem.prompt = nil
+//                    channels.forEach { model in
+//                        self?.viewModel.save(with: model)
+//                    }
                     self?.update(with: channels)
-                case .showAddChanelAlert:
+                case .showAddChannelAlert:
                     guard let self else { return }
                     self.present(self.newChannelAlert, animated: true)
                 case .createChannelDidFail:
@@ -100,11 +104,11 @@ private extension ChannelsListVC {
         guard let text = newChannelAlert.textFields?.first?.text,
               !text.isEmpty
         else {
-            newChannelAlert.actions[1].isEnabled = false
+            newChannelAlert.actions.last?.isEnabled = false
             return
         }
         
-        newChannelAlert.actions[1].isEnabled = true
+        newChannelAlert.actions.last?.isEnabled = true
     }
     
     func update(with channels: [ChannelViewModel]) {
@@ -143,7 +147,7 @@ private extension ChannelsListVC {
     }
     
     func configureDataSource() {
-        typealias DataSource = UITableViewDiffableDataSource<Section, ChannelViewModel>
+        typealias DataSource = ChannelsDataSource
         dataSource = DataSource(tableView: self.tableView,
                                 cellProvider: { tableView, _, cellModel in
             let cell = tableView.dequeueReusableCell(withIdentifier: ChannelTVCell.id) as? ChannelTVCell
@@ -189,7 +193,7 @@ private extension ChannelsListVC {
         guard let channel = self.dataSource.itemIdentifier(for: indexPath) else { return }
         
         let alert = UIAlertController(title: Project.AlertTitle.wait,
-                                      message: Project.AlertTitle.deleteChannelQuestion(channel: channel.channel),
+                                      message: Project.AlertTitle.deleteChannelQuestion(channel: channel),
                                       preferredStyle: .actionSheet)
         
         let cancel = UIAlertAction(title: Project.Button.cancel, style: .default)
@@ -207,7 +211,7 @@ private extension ChannelsListVC {
 extension ChannelsListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let channel = dataSource.itemIdentifier(for: indexPath) else { return }
-        coordinator?.showConvesation(for: channel.channel)
+        coordinator?.showConvesation(for: channel)
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

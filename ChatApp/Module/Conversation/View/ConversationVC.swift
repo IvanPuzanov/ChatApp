@@ -12,7 +12,7 @@ import TFSChatTransport
 final class ConversationVC: UIViewController {
     // MARK: - Параметры
     
-    public var channel: Channel?
+    public var channel: ChannelViewModel?
     private var user: User?
     
     private let viewModel       = ConversationViewModel()
@@ -64,25 +64,12 @@ extension ConversationVC {
 // MARK: - Методы обработки событий
 
 private extension ConversationVC {
-//    func update(with messages: [Message]) {
-//        let messageCellModels = messages.map { MessageCellModel(message: $0) }
-//        var snapshot = NSDiffableDataSourceSnapshot<Section, MessageCellModel>()
-//
-//        snapshot.appendSections([.main])
-//        snapshot.appendItems(messageCellModels, toSection: .main)
-//
-//        DispatchQueue.main.async {
-//            self.dataSource.apply(snapshot, animatingDifferences: true)
-//        }
-//    }
-    
-    func update(with messages: [DateComponents: [Message]]) {
+    func update(with messages: [DateComponents: [MessageCellModel]]) {
         var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
         
         for (date, message) in messages {
-            let messageCellModels = message.map { MessageCellModel(message: $0) }
             snapshot.appendSections([date])
-            snapshot.appendItems(messageCellModels, toSection: date)
+            snapshot.appendItems(message, toSection: date)
         }
         
         DispatchQueue.main.async {
@@ -169,7 +156,7 @@ private extension ConversationVC {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: messageTextView.topAnchor, constant: -3)
+            collectionView.bottomAnchor.constraint(equalTo: messageTextView.topAnchor)
         ])
     }
     
@@ -184,7 +171,6 @@ private extension ConversationVC {
         self.view.addSubview(chatNavigationBar)
         
         chatNavigationBar.setName(channel?.name)
-//        chatNavigationBar.setImage(channel?.image)
         
         NSLayoutConstraint.activate([
             chatNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -215,14 +201,13 @@ private extension ConversationVC {
     
     func configureLayout() {
         layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-                                                     heightDimension: .estimated(70))
+            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
             let item        = NSCollectionLayoutItem(layoutSize: itemSize)
+            let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
             
-            let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize,
-                                                               subitems: [item])
-            group.contentInsets.leading = 12
-            group.contentInsets.trailing = 12
+            group.contentInsets.leading     = 12
+            group.contentInsets.trailing    = 12
+            
             let section = NSCollectionLayoutSection(group: group)
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem

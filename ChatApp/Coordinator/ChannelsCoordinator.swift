@@ -22,7 +22,7 @@ final class ChannelsCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: false)
     }
     
-    func showConvesation(for channel: Channel) {
+    func showConvesation(for channel: ChannelViewModel) {
         let viewController = ConversationVC()
         viewController.channel = channel
         navigationController.pushViewController(viewController, animated: true)

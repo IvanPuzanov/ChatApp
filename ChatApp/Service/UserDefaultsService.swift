@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PersistenceService {
+final class UserDefaultsService {
     /// Сохранение данных
     /// - Parameters:
     ///   - value: Данные для сохранения

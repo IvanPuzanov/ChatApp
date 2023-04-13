@@ -7,11 +7,13 @@
 
 import UIKit
 import Combine
+import CoreData
 import TFSChatTransport
 
 enum ChannelError: String, Error {
-    case deleteChannelDidFail = "An error occured while deleting channel"
-    case fetchChannelDidFail = "An error occured while loading channels"
+    case createChannelDidFail   = "An error occured while creating channel"
+    case deleteChannelDidFail   = "An error occured while deleting channel"
+    case fetchChannelDidFail    = "An error occured while loading channels"
 }
 
 protocol ViewModel {
@@ -22,11 +24,14 @@ protocol ViewModel {
 }
 
 final class ChannelsListViewModel {
-    private let chatService     = ChatService(host: "167.235.86.234", port: 8080)
-    private let output          = PassthroughSubject<Output, Never>()
-    private var cancellabels    = Set<AnyCancellable>()
+    private let coreDataService: CoreDataServiceProtocol = CoreDataService.shared
+    private let chatService         = ChatService(host: "167.235.86.234", port: 8080)
+    private let output              = PassthroughSubject<Output, Never>()
+    private var cancellabels        = Set<AnyCancellable>()
     
     private var channels            = [ChannelViewModel]()
+    private var cachedChannels      = Set<ChannelViewModel>()
+    private var actualChannels      = Set<ChannelViewModel>()
     
     private var isFiletered         = false
     private var filteredChannels    = [ChannelViewModel]()
@@ -49,9 +54,9 @@ extension ChannelsListViewModel: ViewModel {
         
         case channelsDidFilter(channels: [ChannelViewModel])
         
-        case showAddChanelAlert
+        case showAddChannelAlert
         
-        case createChannelDidFail(error: Error)
+        case createChannelDidFail(error: ChannelError)
         case createChannelDidSucceed
         
         case deleteChannelDidFail(error: ChannelError)
@@ -64,7 +69,7 @@ extension ChannelsListViewModel: ViewModel {
             case .fetchChannels:
                 self?.fetchChannels()
             case .addChannelTapped:
-                self?.output.send(.showAddChanelAlert)
+                self?.output.send(.showAddChannelAlert)
             case .filterChannels(let filter):
                 self?.sortChannels(with: filter)
             case .createChannel(let name):
@@ -82,6 +87,10 @@ extension ChannelsListViewModel: ViewModel {
 
 private extension ChannelsListViewModel {
     func fetchChannels() {
+        // Запрос кэшированных каналов
+        self.fetchAllCachedChannels()
+        
+        // Запрос актуальных каналов с сервера
         chatService
             .loadChannels()
             .receive(on: DispatchQueue.main)
@@ -93,11 +102,13 @@ private extension ChannelsListViewModel {
                 let channelViewModels = channels.map { ChannelViewModel(channel: $0) }
                 
                 let sortedChannels = channelViewModels.sorted { lhs, rhs in
-                    return lhs.lastActivity ?? Date() < rhs.lastActivity ?? Date()
+                    return lhs.lastActivity ?? Date() > rhs.lastActivity ?? Date()
                 }
                 
                 self?.channels = sortedChannels
+                self?.actualChannels = Set(sortedChannels)
                 self?.output.send(.fetchChannelsDidSucceed(channels: sortedChannels))
+                self?.updateCachedChannels()
             }.store(in: &cancellabels)
 
     }
@@ -107,8 +118,8 @@ private extension ChannelsListViewModel {
             .createChannel(name: name)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.output.send(.createChannelDidFail(error: error))
+                if case .failure = completion {
+                    self?.output.send(.createChannelDidFail(error: .createChannelDidFail))
                 }
             } receiveValue: { [weak self] _ in
                 self?.output.send(.createChannelDidSucceed)
@@ -119,7 +130,7 @@ private extension ChannelsListViewModel {
     
     func deleteChannel(_ channel: ChannelViewModel) {
         chatService
-            .deleteChannel(id: channel.channel.id)
+            .deleteChannel(id: channel.id)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure = completion {
@@ -144,5 +155,46 @@ private extension ChannelsListViewModel {
             return firstDate > secondDate
         }
         self.output.send(.channelsDidFilter(channels: sortedChannels))
+    }
+}
+
+// MARK: - Core Data methods
+
+extension ChannelsListViewModel {
+    /// Запрос кэшированных каналов
+    func fetchAllCachedChannels() {
+        do {
+            let fetchedCachedChannels = try coreDataService.fetchCachedChannels()
+            let channelViewModels = fetchedCachedChannels.map { ChannelViewModel(channel: $0) }
+            
+            self.channels = channelViewModels
+            self.cachedChannels = Set(channelViewModels)
+            self.output.send(.fetchChannelsDidSucceed(channels: channelViewModels))
+        } catch {}
+    }
+    
+    /// Обновление кэшированных каналов
+    func updateCachedChannels() {
+        let channelsToCache = actualChannels.subtracting(cachedChannels)
+        let channelsToDelete = cachedChannels.subtracting(actualChannels)
+        
+        channelsToCache.forEach { model in
+            coreDataService.save { context in
+                let channelMO           = DBChannel(context: context)
+                channelMO.id            = model.id
+                channelMO.name          = model.name
+                channelMO.logoURL       = model.logoURL
+                channelMO.lastMessage   = model.lastMessage
+                channelMO.lastActivity  = model.lastActivity
+            }
+        }
+    
+        channelsToDelete.forEach { channel in
+            coreDataService.delete { context in
+                guard let managedObject = channel.dbChannel else { return }
+                context.delete(managedObject)
+                try context.save()
+            }
+        }
     }
 }

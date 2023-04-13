@@ -11,11 +11,6 @@ struct User: Codable, Equatable {
     var name: String
     var bio: String
     var avatar: Data?
-    
-//    enum CodingKeys: String, CodingKey {
-//        case name  = "name"
-//        case bio   = "bio"
-//    }
 }
 
 extension User {

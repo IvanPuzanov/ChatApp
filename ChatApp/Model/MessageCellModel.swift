@@ -23,10 +23,10 @@ struct MessageCellModel {
     let date: Date
     
     init(message: Message) {
-        self.text = message.text
-        self.date = message.date
-        self.userID = message.userID
-        self.userName = message.userName
+        self.text       = message.text
+        self.date       = message.date
+        self.userID     = message.userID
+        self.userName   = message.userName
         
         guard let selfUserID = UIDevice.current.identifierForVendor?.uuidString else { return }
         switch message.userID == selfUserID {
@@ -35,7 +35,6 @@ struct MessageCellModel {
         case false:
             self.sender = .interlocutor
         }
-        
     }
 }
 

@@ -173,7 +173,6 @@ private extension ProfilePresenter {
     /// Установка значений профиля
     /// - Parameter user: Модель пользователя
     func set(with user: User?) {
-        print(user)
         guard let user else { return }
         
         self.view?.profileNameLabel.text = user.name

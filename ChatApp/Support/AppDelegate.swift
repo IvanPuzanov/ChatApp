@@ -29,7 +29,7 @@ extension AppDelegate: UIApplicationDelegate {
     }
     
     func setupAppearance() {
-        let persistenceService = PersistenceService()
+        let persistenceService = UserDefaultsService()
         guard let theme = persistenceService.fetchTheme() else { return }
         
         switch theme {

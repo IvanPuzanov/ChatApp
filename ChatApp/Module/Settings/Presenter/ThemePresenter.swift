@@ -13,7 +13,7 @@ protocol ThemePresenterProtocol: AnyObject {
 
 final class ThemePresenter {
     private weak var view: ThemePresenterProtocol?
-    private let persistenceService = PersistenceService()
+    private let persistenceService = UserDefaultsService()
 }
 
 extension ThemePresenter: AnyPresenter {

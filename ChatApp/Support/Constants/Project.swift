@@ -92,7 +92,7 @@ enum Project {
         static let noNameMessage    = NSLocalizedString("You can't save user without name", comment: "")
         static let wait             = NSLocalizedString("Wait!", comment: "")
         
-        static func deleteChannelQuestion(channel: Channel) -> String {
+        static func deleteChannelQuestion(channel: ChannelViewModel) -> String {
             return "Do you want to delete \(channel.name) channel?"
         }
     }

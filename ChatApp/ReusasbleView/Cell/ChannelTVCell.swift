@@ -95,6 +95,7 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         self.messageLabel.text          = nil
         self.dateLabel.isHidden         = false
         self.disclosureView.isHidden    = false
+        self.channelViewModel           = nil
         
         self.profileImageView.setImage(image: nil)
         
@@ -153,7 +154,7 @@ private extension ChannelTVCell {
     func configureNameLabel() {
         nameLabel = UILabelBuilder()
             .withFont(.systemFont(ofSize: 17, weight: .semibold))
-            .withTextColor(.label)
+            .withTextColor(.label.withAlphaComponent(0.9))
             .withAlignment(.left)
             .translatesAutoresingMaskIntoConstraints(false)
             .build()

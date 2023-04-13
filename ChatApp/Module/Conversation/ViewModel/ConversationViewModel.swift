@@ -16,13 +16,17 @@ enum ConversationError: String, Error {
 final class ConversationViewModel {
     // MARK: - Параметры
     
+    private let coreDataService: CoreDataServiceProtocol = CoreDataService.shared
     private let chatService     = ChatService(host: "167.235.86.234", port: 8080)
     private let output          = PassthroughSubject<Output, Never>()
     private var subcriptions    = Set<AnyCancellable>()
     
     private var user: User?
     private var userID: String? = UIDevice.current.identifierForVendor?.uuidString
-    private var channel: Channel?
+    private var channel: ChannelViewModel?
+    
+    private var cachedMessages = Set<MessageCellModel>()
+    private var actualMessages = Set<MessageCellModel>()
     
     // MARK: - Инициализация
     
@@ -36,7 +40,7 @@ final class ConversationViewModel {
 extension ConversationViewModel: ViewModel {
     enum Input {
         case fetchUser
-        case fetchMessages(for: Channel)
+        case fetchMessages(for: ChannelViewModel)
         case loadImage
         case sendMessage(text: String)
     }
@@ -44,7 +48,7 @@ extension ConversationViewModel: ViewModel {
     enum Output {
         // Запрос сообщений
         case fetchMessagesDidFail(error: ConversationError)
-        case fetchMessagesSucceed(messages: [DateComponents: [Message]])
+        case fetchMessagesSucceed(messages: [DateComponents: [MessageCellModel]])
         
         case imageLoadSucceed(image: UIImage)
         
@@ -78,7 +82,8 @@ extension ConversationViewModel: ViewModel {
 // MARK: - Методы View Model
 
 private extension ConversationViewModel {
-    func fetchMessages(for channel: Channel) {
+    func fetchMessages(for channel: ChannelViewModel) {
+        self.fetchAllCachedMessages()
         self.channel = channel
         
         chatService
@@ -88,9 +93,13 @@ private extension ConversationViewModel {
                     self?.output.send(.fetchMessagesDidFail(error: .fetchMessagesDidFail))
                 }
             } receiveValue: { [weak self] messages in
-                let sortedMessages = messages.sorted { $0.date > $1.date }
-                guard let groupedMessages = self?.groupMessagesByDate(messages: sortedMessages) else { return }
+                let sortedMessages = messages.sorted { $0.date < $1.date }
+                let messageCellModels = sortedMessages.map { MessageCellModel(message: $0) }
+                guard let groupedMessages = self?.groupMessagesByDate(messages: messageCellModels) else { return }
+                
+                self?.actualMessages = Set(messageCellModels)
                 self?.output.send(.fetchMessagesSucceed(messages: groupedMessages))
+                self?.updateCachedMessages()
             }.store(in: &subcriptions)
 
     }
@@ -143,13 +152,14 @@ private extension ConversationViewModel {
     func setupKeyboardBinding() {
         NotificationCenter.default
             .publisher(for: UIApplication.keyboardWillShowNotification)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] notification in
                 guard let userInfo = notification.userInfo as? NSDictionary else { return }
-                guard let keyboardInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-                let keyboardSize = keyboardInfo.cgRectValue.size
-                
-                let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
-                
+                guard let keyboardFrameInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+
+                let keyboardSize    = keyboardFrameInfo.cgRectValue.size
+                let bottomInset     = UIApplication.shared.windows.first?.safeAreaInsets.bottom
+
                 switch bottomInset {
                 case .some(let value):
                     switch value {
@@ -162,20 +172,32 @@ private extension ConversationViewModel {
                     break
                 }
             }.store(in: &subcriptions)
-        
+
         NotificationCenter.default
             .publisher(for: UIApplication.keyboardWillHideNotification)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.output.send(.keyboardDidHide)
             }.store(in: &subcriptions)
     }
     
-    func groupMessagesByDate(messages: [Message]) -> [DateComponents: [Message]] {
+    func groupMessagesByDate(messages: [MessageCellModel]) -> [DateComponents: [MessageCellModel]] {
         let groupedMessages = Dictionary(grouping: messages) { (value) -> DateComponents in
             let date = Calendar.current.dateComponents([.day, .year, .month], from: (value.date))
             return date
         }
         
         return groupedMessages
+    }
+}
+
+// MARK: - Core Data methods
+
+extension ConversationViewModel {
+    func fetchAllCachedMessages() {
+    }
+    
+    func updateCachedMessages() {
+        
     }
 }

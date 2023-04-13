@@ -21,20 +21,31 @@ final class ChannelViewModel {
     
     // MARK: - Инициализация
     
-    private let id = UUID()
-    public var channel: Channel
+    private let uuid = UUID()
     
+    public var id: String
     public var name: String
     public var lastMessage: String?
     public var lastActivity: Date?
     public var logoURL: String?
     
+    public var dbChannel: DBChannel?
+    
     init(channel: Channel) {
-        self.channel        = channel
+        self.id             = channel.id
         self.name           = channel.name
         self.logoURL        = channel.logoURL
         self.lastMessage    = channel.lastMessage
         self.lastActivity   = channel.lastActivity
+    }
+    
+    init(channel: DBChannel) {
+        self.id             = channel.id ?? UUID().uuidString
+        self.name           = channel.name ?? String()
+        self.logoURL        = channel.logoURL
+        self.lastMessage    = channel.lastMessage
+        self.lastActivity   = channel.lastActivity
+        self.dbChannel      = channel
     }
 }
 
@@ -65,7 +76,7 @@ extension ChannelViewModel: ViewModel {
 
 extension ChannelViewModel {
     private func loadImage() {
-        guard let logoURL = channel.logoURL, let url = URL(string: logoURL) else { return }
+        guard let logoURL, let url = URL(string: logoURL) else { return }
         guard logoImage == nil else {
             self.output.send(.imageLoadSucceed(image: logoImage))
             return

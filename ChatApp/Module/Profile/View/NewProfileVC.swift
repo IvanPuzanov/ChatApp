@@ -43,7 +43,7 @@ extension NewProfileVC {
 
 private extension NewProfileVC {
     func bindViewModel() {
-        var output = viewModel.transform(input.eraseToAnyPublisher())
+        let output = viewModel.transform(input.eraseToAnyPublisher())
         output
             .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
