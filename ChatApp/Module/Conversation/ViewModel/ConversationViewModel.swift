@@ -209,10 +209,7 @@ extension ConversationViewModel {
     func updateCachedMessages() {
         guard let channelID = channel?.id else { return }
         
-        print(actualMessages)
-        print(cachedMessages)
         let messagesToCache = actualMessages.subtracting(cachedMessages)
-        print(messagesToCache)
 
         messagesToCache.forEach { message in
             coreDataService.save { context in
