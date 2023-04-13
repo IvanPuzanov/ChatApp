@@ -10,7 +10,7 @@ import CoreData
 
 protocol CoreDataServiceProtocol: AnyObject {
     func fetchCachedChannels() throws -> [DBChannel]
-    func fetchCachedMessages(for channelID: String)
+    func fetchCachedMessages(for channelID: String) throws -> [DBMessage]
     func save(block: @escaping (NSManagedObjectContext) throws -> Void)
     func delete(block: @escaping (NSManagedObjectContext) throws -> Void)
 }
@@ -47,8 +47,11 @@ extension CoreDataService: CoreDataServiceProtocol {
         return try viewContext.fetch(channelsFetchRequest)
     }
     
-    func fetchCachedMessages(for channelID: String) {
+    func fetchCachedMessages(for channelID: String) throws -> [DBMessage] {
+        let messagesFetchRequest = DBMessage.fetchRequest()
+        messagesFetchRequest.predicate = NSPredicate(format: "", channelID as CVarArg)
         
+        return try viewContext.fetch(messagesFetchRequest)
     }
     
     func save(block: @escaping (NSManagedObjectContext) throws -> Void) {

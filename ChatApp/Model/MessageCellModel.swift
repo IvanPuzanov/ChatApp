@@ -36,6 +36,21 @@ struct MessageCellModel {
             self.sender = .interlocutor
         }
     }
+    
+    init(message: DBMessage) {
+        self.text       = message.text ?? String()
+        self.date       = message.date ?? Date()
+        self.userID     = message.userID ?? UUID().uuidString
+        self.userName   = message.userName ?? String()
+        
+        guard let selfUserID = UIDevice.current.identifierForVendor?.uuidString else { return }
+        switch message.userID == selfUserID {
+        case true:
+            self.sender = .user
+        case false:
+            self.sender = .interlocutor
+        }
+    }
 }
 
 extension MessageCellModel: Hashable {

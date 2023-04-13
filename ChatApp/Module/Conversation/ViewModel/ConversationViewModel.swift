@@ -195,9 +195,40 @@ private extension ConversationViewModel {
 
 extension ConversationViewModel {
     func fetchAllCachedMessages() {
+        guard let channelID = channel?.id else { return }
+        do {
+            let fetchedCachedMessages = try coreDataService.fetchCachedMessages(for: channelID).map { MessageCellModel(message: $0) }
+            print(fetchedCachedMessages)
+        } catch {  }
     }
     
     func updateCachedMessages() {
+        guard let channelID = channel?.id else { return }
         
+        let messagesToCache = actualMessages.subtracting(cachedMessages)
+        let messagesToDelete = cachedMessages.subtracting(actualMessages)
+        
+        print(messagesToCache)
+        
+//        coreDataService.save { context in
+//            let channelFetchRequest = DBChannel.fetchRequest()
+//            channelFetchRequest.predicate = NSPredicate(format: "id == %@", channelID as CVarArg)
+//            let channelMO = try context.fetch(channelFetchRequest).first
+//
+//            guard let channelMO else { return }
+//
+//            var messagesMO = [DBMessage]()
+//            messagesToCache.forEach {
+//                let message = DBMessage(context: context)
+//                message.text        = $0.text
+//                message.date        = $0.date
+//                message.userID      = $0.userID
+//                message.userName    = $0.userName
+//
+//                messagesMO.append(message)
+//            }
+//
+//            channelMO.messages = NSSet(object: messagesMO)
+//        }
     }
 }
