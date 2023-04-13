@@ -166,7 +166,7 @@ extension ChannelsListViewModel {
         do {
             let fetchedCachedChannels = try coreDataService.fetchCachedChannels()
             let channelViewModels = fetchedCachedChannels.map { ChannelViewModel(channel: $0) }
-            
+           
             self.channels = channelViewModels
             self.cachedChannels = Set(channelViewModels)
             self.output.send(.fetchChannelsDidSucceed(channels: channelViewModels))

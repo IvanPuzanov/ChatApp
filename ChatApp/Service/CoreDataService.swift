@@ -43,10 +43,8 @@ extension CoreDataService: CoreDataServiceProtocol {
         let channelsFetchRequest = DBChannel.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "lastActivity", ascending: false)
         channelsFetchRequest.sortDescriptors = [sortDescriptor]
-        
-        #if !DEBUG
-        print("Channels fetched", #function)
-        #endif
+    
+        self.log("Channels fetched", #function)
         
         return try viewContext.fetch(channelsFetchRequest)
     }
@@ -55,10 +53,8 @@ extension CoreDataService: CoreDataServiceProtocol {
         let channelsFetchRequest = DBChannel.fetchRequest()
         channelsFetchRequest.predicate = NSPredicate(format: "channelID == %@", channelID as CVarArg)
         
-        guard let messages = try viewContext.fetch(channelsFetchRequest).first?.messages as? [DBMessage] else {
-            #if !DEBUG
-            print("Messages didn't fetch", #function)
-            #endif
+        guard let messages = try viewContext.fetch(channelsFetchRequest).first?.messages?.allObjects as? [DBMessage] else {
+            self.log("Messages didn't fetch", #function)
             return []
         }
         
@@ -76,14 +72,10 @@ extension CoreDataService: CoreDataServiceProtocol {
                 
                 if backgroundContext.hasChanges {
                     try backgroundContext.save()
-                    #if !DEBUG
-                    print("Data saved", #function)
-                    #endif
+                    self.log("Data saved", #function)
                 }
             } catch {
-                #if !DEBUG
-                print("Data didn't save. Error occured.", #function)
-                #endif
+                self.log("Data didn't save. Error occured.", #function)
                 backgroundContext.rollback()
             }
         }
@@ -92,13 +84,15 @@ extension CoreDataService: CoreDataServiceProtocol {
     func delete(block: @escaping (NSManagedObjectContext) throws -> Void) {
         do {
             try block(viewContext)
-            #if !DEBUG
-            print("Data is deleted.", #function)
-            #endif
+            log("Data is deleted.", #function)
         } catch {
-            #if !DEBUG
-            print("Data didn't delete.", #function)
-            #endif
+            log("Data isn't deleted.", #function)
         }
+    }
+    
+    private func log(_ message: String, _ functionName: String) {
+        #if !DEBUG
+        print(message, functionName)
+        #endif
     }
 }

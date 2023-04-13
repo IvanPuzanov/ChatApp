@@ -199,6 +199,7 @@ extension ConversationViewModel {
         do {
             let fetchedCachedMessages = try coreDataService.fetchCachedMessages(for: channelID).map { MessageCellModel(message: $0) }
             let groupedMessages = self.groupMessagesByDate(messages: fetchedCachedMessages)
+            self.cachedMessages = Set(fetchedCachedMessages)
             self.output.send(.fetchMessagesSucceed(messages: groupedMessages))
         } catch {  }
     }
@@ -207,7 +208,7 @@ extension ConversationViewModel {
         guard let channelID = channel?.id else { return }
         
         let messagesToCache = actualMessages.subtracting(cachedMessages)
-        let messagesToDelete = cachedMessages.subtracting(actualMessages)
+        print(cachedMessages)
         
         messagesToCache.forEach { message in
             coreDataService.save { context in
@@ -217,11 +218,11 @@ extension ConversationViewModel {
 
                 guard let channelMO else { return }
 
-                let messageMO = DBMessage(context: context)
-                messageMO.date = message.date
-                messageMO.text = message.text
-                messageMO.userID = message.userID
-                messageMO.userName = message.userName
+                let messageMO       = DBMessage(context: context)
+                messageMO.date      = message.date
+                messageMO.text      = message.text
+                messageMO.userID    = message.userID
+                messageMO.userName  = message.userName
                 
                 channelMO.addToMessages(messageMO)
             }
