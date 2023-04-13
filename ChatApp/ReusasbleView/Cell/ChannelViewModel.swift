@@ -40,7 +40,7 @@ final class ChannelViewModel {
     }
     
     init(channel: DBChannel) {
-        self.id             = channel.id ?? UUID().uuidString
+        self.id             = channel.channelID ?? UUID().uuidString
         self.name           = channel.name ?? String()
         self.logoURL        = channel.logoURL
         self.lastMessage    = channel.lastMessage

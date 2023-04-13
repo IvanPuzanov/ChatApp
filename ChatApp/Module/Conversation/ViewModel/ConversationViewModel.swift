@@ -83,8 +83,8 @@ extension ConversationViewModel: ViewModel {
 
 private extension ConversationViewModel {
     func fetchMessages(for channel: ChannelViewModel) {
-        self.fetchAllCachedMessages()
         self.channel = channel
+        self.fetchAllCachedMessages()
         
         chatService
             .loadMessages(channelId: channel.id)
@@ -194,11 +194,12 @@ private extension ConversationViewModel {
 // MARK: - Core Data methods
 
 extension ConversationViewModel {
-    func fetchAllCachedMessages() {
+    func fetchAllCachedMessages() {        
         guard let channelID = channel?.id else { return }
         do {
             let fetchedCachedMessages = try coreDataService.fetchCachedMessages(for: channelID).map { MessageCellModel(message: $0) }
-            print(fetchedCachedMessages)
+            let groupedMessages = self.groupMessagesByDate(messages: fetchedCachedMessages)
+            self.output.send(.fetchMessagesSucceed(messages: groupedMessages))
         } catch {  }
     }
     
@@ -208,27 +209,22 @@ extension ConversationViewModel {
         let messagesToCache = actualMessages.subtracting(cachedMessages)
         let messagesToDelete = cachedMessages.subtracting(actualMessages)
         
-        print(messagesToCache)
-        
-//        coreDataService.save { context in
-//            let channelFetchRequest = DBChannel.fetchRequest()
-//            channelFetchRequest.predicate = NSPredicate(format: "id == %@", channelID as CVarArg)
-//            let channelMO = try context.fetch(channelFetchRequest).first
-//
-//            guard let channelMO else { return }
-//
-//            var messagesMO = [DBMessage]()
-//            messagesToCache.forEach {
-//                let message = DBMessage(context: context)
-//                message.text        = $0.text
-//                message.date        = $0.date
-//                message.userID      = $0.userID
-//                message.userName    = $0.userName
-//
-//                messagesMO.append(message)
-//            }
-//
-//            channelMO.messages = NSSet(object: messagesMO)
-//        }
+        messagesToCache.forEach { message in
+            coreDataService.save { context in
+                let fetchRequest = DBChannel.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "channelID == %@", channelID as CVarArg)
+                let channelMO = try context.fetch(fetchRequest).first
+
+                guard let channelMO else { return }
+
+                let messageMO = DBMessage(context: context)
+                messageMO.date = message.date
+                messageMO.text = message.text
+                messageMO.userID = message.userID
+                messageMO.userName = message.userName
+                
+                channelMO.addToMessages(messageMO)
+            }
+        }
     }
 }

@@ -44,18 +44,31 @@ extension CoreDataService: CoreDataServiceProtocol {
         let sortDescriptor = NSSortDescriptor(key: "lastActivity", ascending: false)
         channelsFetchRequest.sortDescriptors = [sortDescriptor]
         
+        #if !DEBUG
+        print("Channels fetched", #function)
+        #endif
+        
         return try viewContext.fetch(channelsFetchRequest)
     }
     
     func fetchCachedMessages(for channelID: String) throws -> [DBMessage] {
-        let messagesFetchRequest = DBMessage.fetchRequest()
-        messagesFetchRequest.predicate = NSPredicate(format: "", channelID as CVarArg)
+        let channelsFetchRequest = DBChannel.fetchRequest()
+        channelsFetchRequest.predicate = NSPredicate(format: "channelID == %@", channelID as CVarArg)
         
-        return try viewContext.fetch(messagesFetchRequest)
+        guard let messages = try viewContext.fetch(channelsFetchRequest).first?.messages as? [DBMessage] else {
+            #if !DEBUG
+            print("Messages didn't fetch", #function)
+            #endif
+            return []
+        }
+        
+        return messages
     }
     
     func save(block: @escaping (NSManagedObjectContext) throws -> Void) {
         let backgroundContext = persistentContainer.newBackgroundContext()
+        
+        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         backgroundContext.perform {
             do {
@@ -63,8 +76,14 @@ extension CoreDataService: CoreDataServiceProtocol {
                 
                 if backgroundContext.hasChanges {
                     try backgroundContext.save()
+                    #if !DEBUG
+                    print("Data saved", #function)
+                    #endif
                 }
             } catch {
+                #if !DEBUG
+                print("Data didn't save. Error occured.", #function)
+                #endif
                 backgroundContext.rollback()
             }
         }
@@ -73,6 +92,13 @@ extension CoreDataService: CoreDataServiceProtocol {
     func delete(block: @escaping (NSManagedObjectContext) throws -> Void) {
         do {
             try block(viewContext)
-        } catch {}
+            #if !DEBUG
+            print("Data is deleted.", #function)
+            #endif
+        } catch {
+            #if !DEBUG
+            print("Data didn't delete.", #function)
+            #endif
+        }
     }
 }

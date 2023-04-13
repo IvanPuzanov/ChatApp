@@ -181,7 +181,7 @@ extension ChannelsListViewModel {
         channelsToCache.forEach { model in
             coreDataService.save { context in
                 let channelMO           = DBChannel(context: context)
-                channelMO.id            = model.id
+                channelMO.channelID     = model.id
                 channelMO.name          = model.name
                 channelMO.logoURL       = model.logoURL
                 channelMO.lastMessage   = model.lastMessage
