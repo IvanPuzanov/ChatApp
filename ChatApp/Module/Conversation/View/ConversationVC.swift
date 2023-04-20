@@ -111,10 +111,6 @@ private extension ConversationVC {
                 case .keyboardDidShow(let height):
                     // Андрей, если ты видишь этот код, пожалуйста знай,
                     // что этого безобразия скоро не будет, я просто пока экспериментирую🥲
-                    guard
-                        let contentSize     = self?.collectionView.contentSize,
-                        let contentOffset   = self?.collectionView.contentOffset
-                    else { return }
                     UIView.animate(withDuration: 0.3) {
                         self?.collectionView.contentInset.bottom += height
                         self?.messageTextViewBottomAnchor.constant = -height

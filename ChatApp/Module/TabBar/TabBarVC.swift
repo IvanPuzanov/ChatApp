@@ -10,9 +10,9 @@ import UIKit
 final class TabBarVC: UITabBarController {
     // MARK: - Координаторы
     
-    private let channelsCoordinator = ChannelsCoordinator(UINavigationController())
-    private let settingsCoordinator = SettingsCoordinator(UINavigationController())
-    private let profileCoordinator  = ProfileCoordinator(UINavigationController())
+    private let channelsCoordinator: Coordinator = ChannelsCoordinator(UINavigationController())
+    private let settingsCoordinator: Coordinator = SettingsCoordinator(UINavigationController())
+    private let profileCoordinator: Coordinator  = ProfileCoordinator(UINavigationController())
 }
 
 // MARK: - Жизненный цикл

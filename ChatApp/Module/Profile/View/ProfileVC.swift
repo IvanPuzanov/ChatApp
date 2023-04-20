@@ -174,8 +174,8 @@ private extension ProfileVC {
             .withTitleColor(.white)
             .withBackgroundColor(.systemBlue)
             .withCorner(radius: 17)
-            .addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             .translatesAutoresizingMaskIntoConstraints(false)
+            .addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             .build()
         
         self.stackView.addArrangedSubview(editButton)
