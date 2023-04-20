@@ -8,14 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		0983D37576DDE4058E00300A /* Pods_ChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BF0A9C5B071EDB105038CB /* Pods_ChatApp.framework */; };
-		2A1A875F29DB4BF000317E04 /* ChannelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A875E29DB4BF000317E04 /* ChannelViewModel.swift */; };
+		2A1A875F29DB4BF000317E04 /* ChannelCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A875E29DB4BF000317E04 /* ChannelCellModel.swift */; };
 		2A1A876129DC671F00317E04 /* UIViewController + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876029DC671F00317E04 /* UIViewController + Ex.swift */; };
 		2A1A876429DD4D0800317E04 /* TCPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876329DD4D0700317E04 /* TCPlaceholder.swift */; };
 		2A1A876929DDBAED00317E04 /* TCImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876829DDBAED00317E04 /* TCImageView.swift */; };
-		2A1A876B29DDD1C300317E04 /* NewProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876A29DDD1C300317E04 /* NewProfileVC.swift */; };
+		2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876A29DDD1C300317E04 /* ProfileVC.swift */; };
 		2A1A876E29DDD1D700317E04 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */; };
 		2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD3E29E3208500579201 /* CoreDataService.swift */; };
 		2A30CD4F29E3F75700579201 /* ChannelsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */; };
+		2A44330929F162EF00F3BED1 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44330829F162EF00F3BED1 /* ViewModel.swift */; };
 		2A58C3B829D98E1000780504 /* SettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58C3B729D98E1000780504 /* SettingsCoordinator.swift */; };
 		2A58C3BA29D98E2200780504 /* ChannelsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58C3B929D98E2200780504 /* ChannelsCoordinator.swift */; };
 		2A58C3BC29D98F7E00780504 /* TabBarVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A58C3BB29D98F7E00780504 /* TabBarVC.swift */; };
@@ -26,9 +27,7 @@
 		2A72FA4429C0BB33001172D4 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A72FA4329C0BB33001172D4 /* UserDefaultsService.swift */; };
 		2A7BEEF529E6AF7300798C08 /* Chat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2A7BEEF329E6AF7300798C08 /* Chat.xcdatamodeld */; };
 		2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */; };
-		2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */; };
 		2AA8523929C460050017BC9C /* TCProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA8523829C460050017BC9C /* TCProfileEditor.swift */; };
-		2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B09D29B1E90500311B3F /* NetworkService.swift */; };
 		2AA9B0A429B2041C00311B3F /* ChannelTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A329B2041C00311B3F /* ChannelTVCell.swift */; };
 		2AA9B0A829B4A37800311B3F /* ConversationTVHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */; };
 		2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9B0AC29B4D76700311B3F /* ConversationVC.swift */; };
@@ -47,30 +46,32 @@
 		2ABEC56B29A4A1C50046CB38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */; };
 		2ABEC56E29A4A1C50046CB38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56C29A4A1C50046CB38 /* LaunchScreen.storyboard */; };
 		2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57929A4A27F0046CB38 /* Coordinator.swift */; };
-		2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */; };
+		2AD5807229E983E400EC47B2 /* UIStackViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5807129E983E400EC47B2 /* UIStackViewBuilder.swift */; };
+		2AD5807429E9879A00EC47B2 /* TCButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5807329E9879A00EC47B2 /* TCButton.swift */; };
+		2AD5807629E99DD500EC47B2 /* UIButtonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5807529E99DD500EC47B2 /* UIButtonBuilder.swift */; };
+		2AD5807E29EE61FE00EC47B2 /* ProfileEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5807D29EE61FE00EC47B2 /* ProfileEditorVC.swift */; };
+		2AD5808029EE634000EC47B2 /* ProfileEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5807F29EE633F00EC47B2 /* ProfileEditorViewModel.swift */; };
+		2AD5808329EFD07A00EC47B2 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD5808229EFD07A00EC47B2 /* SettingsViewModel.swift */; };
 		2ADBF9C829D56968005BD628 /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ADBF9C729D56968005BD628 /* FileService.swift */; };
 		2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB029AC9DC000DBB90E /* Project.swift */; };
 		2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */; };
-		2AEB6DEA29BA5FBB004D0A3D /* ThemeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */; };
-		2AEB6DEC29BA5FC6004D0A3D /* ThemePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DEB29BA5FC6004D0A3D /* ThemePresenter.swift */; };
-		2AEB6DF129BA60CF004D0A3D /* Presenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DF029BA60CF004D0A3D /* Presenter.swift */; };
+		2AEB6DEA29BA5FBB004D0A3D /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DE929BA5FBB004D0A3D /* SettingsVC.swift */; };
 		2AEB6DF429BB9831004D0A3D /* TCThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEB6DF329BB9831004D0A3D /* TCThemeView.swift */; };
-		2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */; };
 		2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */; };
 		2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */; };
-		2AEC10E629ACE1C1000EF08D /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */; };
 		2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A1A875E29DB4BF000317E04 /* ChannelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelViewModel.swift; sourceTree = "<group>"; };
+		2A1A875E29DB4BF000317E04 /* ChannelCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelCellModel.swift; sourceTree = "<group>"; };
 		2A1A876029DC671F00317E04 /* UIViewController + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Ex.swift"; sourceTree = "<group>"; };
 		2A1A876329DD4D0700317E04 /* TCPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPlaceholder.swift; sourceTree = "<group>"; };
 		2A1A876829DDBAED00317E04 /* TCImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCImageView.swift; sourceTree = "<group>"; };
-		2A1A876A29DDD1C300317E04 /* NewProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProfileVC.swift; sourceTree = "<group>"; };
+		2A1A876A29DDD1C300317E04 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		2A30CD3E29E3208500579201 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsDataSource.swift; sourceTree = "<group>"; };
+		2A44330829F162EF00F3BED1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		2A58C3B729D98E1000780504 /* SettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
 		2A58C3B929D98E2200780504 /* ChannelsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsCoordinator.swift; sourceTree = "<group>"; };
 		2A58C3BB29D98F7E00780504 /* TabBarVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVC.swift; sourceTree = "<group>"; };
@@ -81,9 +82,7 @@
 		2A72FA4329C0BB33001172D4 /* UserDefaultsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		2A7BEEF429E6AF7300798C08 /* Chat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Chat.xcdatamodel; sourceTree = "<group>"; };
 		2AA6ACD429ADC609002BB019 /* CALayer + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer + Ex.swift"; sourceTree = "<group>"; };
-		2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImagePresenter.swift; sourceTree = "<group>"; };
 		2AA8523829C460050017BC9C /* TCProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileEditor.swift; sourceTree = "<group>"; };
-		2AA9B09D29B1E90500311B3F /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		2AA9B0A329B2041C00311B3F /* ChannelTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTVCell.swift; sourceTree = "<group>"; };
 		2AA9B0A729B4A37800311B3F /* ConversationTVHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTVHeader.swift; sourceTree = "<group>"; };
 		2AA9B0AC29B4D76700311B3F /* ConversationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationVC.swift; sourceTree = "<group>"; };
@@ -104,18 +103,19 @@
 		2ABEC56D29A4A1C50046CB38 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2ABEC56F29A4A1C50046CB38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2ABEC57929A4A27F0046CB38 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		2AD5807129E983E400EC47B2 /* UIStackViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackViewBuilder.swift; sourceTree = "<group>"; };
+		2AD5807329E9879A00EC47B2 /* TCButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCButton.swift; sourceTree = "<group>"; };
+		2AD5807529E99DD500EC47B2 /* UIButtonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButtonBuilder.swift; sourceTree = "<group>"; };
+		2AD5807D29EE61FE00EC47B2 /* ProfileEditorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditorVC.swift; sourceTree = "<group>"; };
+		2AD5807F29EE633F00EC47B2 /* ProfileEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditorViewModel.swift; sourceTree = "<group>"; };
+		2AD5808229EFD07A00EC47B2 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		2ADBF9C729D56968005BD628 /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		2AE04CB029AC9DC000DBB90E /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
-		2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeVC.swift; sourceTree = "<group>"; };
-		2AEB6DEB29BA5FC6004D0A3D /* ThemePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePresenter.swift; sourceTree = "<group>"; };
-		2AEB6DF029BA60CF004D0A3D /* Presenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presenter.swift; sourceTree = "<group>"; };
+		2AEB6DE929BA5FBB004D0A3D /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		2AEB6DF329BB9831004D0A3D /* TCThemeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCThemeView.swift; sourceTree = "<group>"; };
-		2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImageView.swift; sourceTree = "<group>"; };
 		2AEC10E129ACD94C000EF08D /* UILabel + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel + Ex.swift"; sourceTree = "<group>"; };
 		2AEC10E329ACDFA6000EF08D /* UIButton + Ex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton + Ex.swift"; sourceTree = "<group>"; };
-		2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		2AEC10E929ACEAE9000EF08D /* TCImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCImagePicker.swift; sourceTree = "<group>"; };
 		D13256A161005F5551D6C186 /* Pods-ChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatApp.release.xcconfig"; path = "Target Support Files/Pods-ChatApp/Pods-ChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		D1BF0A9C5B071EDB105038CB /* Pods_ChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,20 +143,20 @@
 			path = Placeholder;
 			sourceTree = "<group>";
 		};
-		2A1A876C29DDD1C700317E04 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		2A30CD4D29E3F74300579201 /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
 				2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */,
 			);
 			path = DataSource;
+			sourceTree = "<group>";
+		};
+		2A44330729F0F91200F3BED1 /* ProfileImageView */ = {
+			isa = PBXGroup;
+			children = (
+				2A1A876829DDBAED00317E04 /* TCImageView.swift */,
+			);
+			path = ProfileImageView;
 			sourceTree = "<group>";
 		};
 		2A58C3BD29D9B6F200780504 /* ViewModel */ = {
@@ -175,13 +175,29 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		2AA6ACD829ADCC47002BB019 /* ProfileImageView */ = {
+		2A725EAC29E9781100D5771F /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				2AEC10DC29ACBE91000EF08D /* TCProfileImageView.swift */,
-				2AA6ACD629ADCA0D002BB019 /* TCProfileImagePresenter.swift */,
+				2A725EAD29E9781A00D5771F /* View */,
+				2A725EAE29E9781D00D5771F /* ViewModel */,
 			);
-			path = ProfileImageView;
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		2A725EAD29E9781A00D5771F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2A1A876A29DDD1C300317E04 /* ProfileVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2A725EAE29E9781D00D5771F /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		2AA8523729C45FF80017BC9C /* Container */ = {
@@ -196,7 +212,6 @@
 			isa = PBXGroup;
 			children = (
 				2A30CD4D29E3F74300579201 /* DataSource */,
-				2AA9B09D29B1E90500311B3F /* NetworkService.swift */,
 				2ADBF9C729D56968005BD628 /* FileService.swift */,
 				2A72FA4329C0BB33001172D4 /* UserDefaultsService.swift */,
 				2A30CD3E29E3208500579201 /* CoreDataService.swift */,
@@ -208,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA9B0C029B7383F00311B3F /* MessageCellModel.swift */,
+				2A1A875E29DB4BF000317E04 /* ChannelCellModel.swift */,
 				2AA9B0C229B741BF00311B3F /* User.swift */,
 			);
 			path = Model;
@@ -218,7 +234,6 @@
 			children = (
 				2AA9B0A329B2041C00311B3F /* ChannelTVCell.swift */,
 				2AA9B0C829B7747C00311B3F /* MessageCVCell.swift */,
-				2A1A875E29DB4BF000317E04 /* ChannelViewModel.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -278,6 +293,7 @@
 			children = (
 				2AA9B0BE29B62D8100311B3F /* TCSendButton.swift */,
 				2AEB6DF329BB9831004D0A3D /* TCThemeView.swift */,
+				2AD5807329E9879A00EC47B2 /* TCButton.swift */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -286,6 +302,8 @@
 			isa = PBXGroup;
 			children = (
 				2AB4C7FE29C352170067BAF5 /* UILabelBuilder.swift */,
+				2AD5807129E983E400EC47B2 /* UIStackViewBuilder.swift */,
+				2AD5807529E99DD500EC47B2 /* UIButtonBuilder.swift */,
 			);
 			path = Builder;
 			sourceTree = "<group>";
@@ -349,7 +367,6 @@
 			isa = PBXGroup;
 			children = (
 				2ABEC57929A4A27F0046CB38 /* Coordinator.swift */,
-				2A58C3BB29D98F7E00780504 /* TabBarVC.swift */,
 				2A58C3B929D98E2200780504 /* ChannelsCoordinator.swift */,
 				2A58C3B729D98E1000780504 /* SettingsCoordinator.swift */,
 				2AE04CB229AC9EDC00DBB90E /* ProfileCoordinator.swift */,
@@ -357,12 +374,55 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		2AD5807929EE5F8100EC47B2 /* ProfileEditor */ = {
+			isa = PBXGroup;
+			children = (
+				2AD5807A29EE61CA00EC47B2 /* View */,
+				2AD5807B29EE61D100EC47B2 /* ViewModel */,
+			);
+			path = ProfileEditor;
+			sourceTree = "<group>";
+		};
+		2AD5807A29EE61CA00EC47B2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2AD5807D29EE61FE00EC47B2 /* ProfileEditorVC.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2AD5807B29EE61D100EC47B2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2AD5807F29EE633F00EC47B2 /* ProfileEditorViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2AD5808129EFD06B00EC47B2 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2AD5808229EFD07A00EC47B2 /* SettingsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2AD5808429F0481300EC47B2 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				2A58C3BB29D98F7E00780504 /* TabBarVC.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
 		2AE04CA829AC9AD400DBB90E /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				2AD5808429F0481300EC47B2 /* TabBar */,
 				2AE04CA929AC9AD700DBB90E /* ChannelsList */,
-				2AE04CAA29AC9ADD00DBB90E /* Profile */,
 				2AA9B0A929B4D73C00311B3F /* Conversation */,
+				2A725EAC29E9781100D5771F /* Profile */,
+				2AD5807929EE5F8100EC47B2 /* ProfileEditor */,
 				2AEB6DE629BA5FA0004D0A3D /* Settings */,
 			);
 			path = Module;
@@ -377,33 +437,6 @@
 			path = ChannelsList;
 			sourceTree = "<group>";
 		};
-		2AE04CAA29AC9ADD00DBB90E /* Profile */ = {
-			isa = PBXGroup;
-			children = (
-				2AE04CAC29AC9AE900DBB90E /* View */,
-				2AE04CAB29AC9AE400DBB90E /* Presenter */,
-				2A1A876C29DDD1C700317E04 /* ViewModel */,
-			);
-			path = Profile;
-			sourceTree = "<group>";
-		};
-		2AE04CAB29AC9AE400DBB90E /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				2AEC10E529ACE1C1000EF08D /* ProfilePresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		2AE04CAC29AC9AE900DBB90E /* View */ = {
-			isa = PBXGroup;
-			children = (
-				2ABEC57F29A4B5EF0046CB38 /* ProfileVC.swift */,
-				2A1A876A29DDD1C300317E04 /* NewProfileVC.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		2AE04CAF29AC9B1400DBB90E /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,7 +449,7 @@
 			isa = PBXGroup;
 			children = (
 				2AEB6DE729BA5FAA004D0A3D /* View */,
-				2AEB6DE829BA5FAD004D0A3D /* Presenter */,
+				2AD5808129EFD06B00EC47B2 /* ViewModel */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -424,23 +457,15 @@
 		2AEB6DE729BA5FAA004D0A3D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				2AEB6DE929BA5FBB004D0A3D /* ThemeVC.swift */,
+				2AEB6DE929BA5FBB004D0A3D /* SettingsVC.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		2AEB6DE829BA5FAD004D0A3D /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				2AEB6DEB29BA5FC6004D0A3D /* ThemePresenter.swift */,
-			);
-			path = Presenter;
 			sourceTree = "<group>";
 		};
 		2AEB6DEF29BA60C1004D0A3D /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				2AEB6DF029BA60CF004D0A3D /* Presenter.swift */,
+				2A44330829F162EF00F3BED1 /* ViewModel.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -479,8 +504,7 @@
 			isa = PBXGroup;
 			children = (
 				2AA9B0A529B2311900311B3F /* ImagePicker */,
-				2AA6ACD829ADCC47002BB019 /* ProfileImageView */,
-				2A1A876829DDBAED00317E04 /* TCImageView.swift */,
+				2A44330729F0F91200F3BED1 /* ProfileImageView */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -636,12 +660,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AD5808029EE634000EC47B2 /* ProfileEditorViewModel.swift in Sources */,
 				2AA9B0A429B2041C00311B3F /* ChannelTVCell.swift in Sources */,
 				2AA9B0C329B741BF00311B3F /* User.swift in Sources */,
 				2AA9B0C529B75DCB00311B3F /* Date + Ex.swift in Sources */,
 				2A66835C29DAD5A200AEB87B /* ConversationViewModel.swift in Sources */,
 				2ADBF9C829D56968005BD628 /* FileService.swift in Sources */,
-				2AEB6DEC29BA5FC6004D0A3D /* ThemePresenter.swift in Sources */,
 				2AA9B0B729B5D65500311B3F /* Reusable.swift in Sources */,
 				2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */,
 				2A58C3BA29D98E2200780504 /* ChannelsCoordinator.swift in Sources */,
@@ -649,12 +673,12 @@
 				2AA9B0C129B7383F00311B3F /* MessageCellModel.swift in Sources */,
 				2A1A876429DD4D0800317E04 /* TCPlaceholder.swift in Sources */,
 				2AA9B0C729B75F1E00311B3F /* String + Ex.swift in Sources */,
-				2AEB6DEA29BA5FBB004D0A3D /* ThemeVC.swift in Sources */,
+				2AEB6DEA29BA5FBB004D0A3D /* SettingsVC.swift in Sources */,
 				2A1A876129DC671F00317E04 /* UIViewController + Ex.swift in Sources */,
 				2A58C3B829D98E1000780504 /* SettingsCoordinator.swift in Sources */,
 				2A58C3BF29D9B70200780504 /* ChannelsListViewModel.swift in Sources */,
-				2AA9B09E29B1E90500311B3F /* NetworkService.swift in Sources */,
 				2AEB6DF429BB9831004D0A3D /* TCThemeView.swift in Sources */,
+				2AD5807629E99DD500EC47B2 /* UIButtonBuilder.swift in Sources */,
 				2AA9B0C929B7747C00311B3F /* MessageCVCell.swift in Sources */,
 				2A30CD4F29E3F75700579201 /* ChannelsDataSource.swift in Sources */,
 				2AA9B0AD29B4D76700311B3F /* ConversationVC.swift in Sources */,
@@ -662,30 +686,30 @@
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
 				2A1A876929DDBAED00317E04 /* TCImageView.swift in Sources */,
 				2AB4C7FF29C352170067BAF5 /* UILabelBuilder.swift in Sources */,
-				2AEB6DF129BA60CF004D0A3D /* Presenter.swift in Sources */,
 				2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */,
 				2AA9B0BC29B62A5200311B3F /* TCMessageTextView.swift in Sources */,
 				2A72FA4429C0BB33001172D4 /* UserDefaultsService.swift in Sources */,
 				2AEC10EA29ACEAE9000EF08D /* TCImagePicker.swift in Sources */,
+				2A44330929F162EF00F3BED1 /* ViewModel.swift in Sources */,
 				2A7BEEF529E6AF7300798C08 /* Chat.xcdatamodeld in Sources */,
-				2AA6ACD729ADCA0D002BB019 /* TCProfileImagePresenter.swift in Sources */,
 				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
-				2A1A876B29DDD1C300317E04 /* NewProfileVC.swift in Sources */,
+				2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */,
 				2A66835729DAC06C00AEB87B /* ChannelsListVC.swift in Sources */,
-				2ABEC58029A4B5EF0046CB38 /* ProfileVC.swift in Sources */,
+				2AD5807429E9879A00EC47B2 /* TCButton.swift in Sources */,
+				2AD5807229E983E400EC47B2 /* UIStackViewBuilder.swift in Sources */,
 				2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */,
 				2AA9B0BF29B62D8100311B3F /* TCSendButton.swift in Sources */,
 				2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */,
-				2AEC10E629ACE1C1000EF08D /* ProfilePresenter.swift in Sources */,
 				2AE04CB129AC9DC000DBB90E /* Project.swift in Sources */,
 				2A1A876E29DDD1D700317E04 /* ProfileViewModel.swift in Sources */,
 				2AA9B0A829B4A37800311B3F /* ConversationTVHeader.swift in Sources */,
-				2A1A875F29DB4BF000317E04 /* ChannelViewModel.swift in Sources */,
+				2A1A875F29DB4BF000317E04 /* ChannelCellModel.swift in Sources */,
 				2A58C3BC29D98F7E00780504 /* TabBarVC.swift in Sources */,
 				2AEC10E229ACD94C000EF08D /* UILabel + Ex.swift in Sources */,
-				2AEC10DD29ACBE91000EF08D /* TCProfileImageView.swift in Sources */,
 				2A66835929DACE1200AEB87B /* Channel + Ex.swift in Sources */,
 				2AA9B0CB29B7BF5A00311B3F /* DateCVHeader.swift in Sources */,
+				2AD5807E29EE61FE00EC47B2 /* ProfileEditorVC.swift in Sources */,
+				2AD5808329EFD07A00EC47B2 /* SettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

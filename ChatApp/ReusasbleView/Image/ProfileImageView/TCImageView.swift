@@ -1,14 +1,13 @@
 //
-//  TCProfileImageView.swift
+//  TCImageView.swift
 //  ChatApp
 //
-//  Created by Ivan Puzanov on 27.02.2023.
+//  Created by Ivan Puzanov on 05.04.2023.
 //
 
 import UIKit
 
-/// Project class for showing image (usually profile image)
-final class TCProfileImageView: UIControl {
+final class TCImageView: UIControl {
     // MARK: - Параметры
     
     enum Size: CGFloat {
@@ -22,16 +21,16 @@ final class TCProfileImageView: UIControl {
     /// medium: uses in table/collection cell
     /// large: uses in profile page
     private var size: Size = .small
-    public var presenter = TCProfileImagePresenter()
-    public var image: UIImage? {
-        return imageView.image
-    }
+    
+    public var user: User?
+    public var image: UIImage?
+    public var name: String?
     
     // MARK: - UI
     
-    private let stackView           = UIStackView()
-    private let imageView           = UIImageView()
-    private let nameLabel           = UILabel()
+    private let stackView  = UIStackView()
+    private let imageView  = UIImageView()
+    private let nameLabel  = UILabel()
     
     // MARK: - Инициализация
     
@@ -44,8 +43,6 @@ final class TCProfileImageView: UIControl {
         configureStackView()
         configureImageView()
         configureNameLabel()
-        
-        bindToPresenter()
     }
     
     required init?(coder: NSCoder) {
@@ -53,43 +50,84 @@ final class TCProfileImageView: UIControl {
     }
 }
 
-// MARK: - Публичные методы
-
-extension TCProfileImageView {
-    override var bounds: CGRect {
-        didSet {
-            self.layer.setGradient(with: .systemGray)
+extension TCImageView {
+    func setUser(user: User) {
+        if let imageData = user.avatar {
+            self.image = UIImage(data: imageData)
+            self.setImage(image: self.image)
+            validate()
+            return
+        }
+        
+        self.name               = user.name
+        self.image              = nil
+        self.imageView.image    = nil
+        self.setName(name: user.name)
+    
+        validate()
+    }
+    
+    func setImage(image: UIImage?) {
+        self.image = image
+        self.imageView.image = image
+        
+        validate()
+    }
+    
+    func setName(name: String) {
+        let preparedName = prepareName(name)
+        
+        self.name = preparedName
+        self.nameLabel.text = preparedName
+        
+        validate()
+    }
+    
+    func loadImage(for urlString: String?) {
+        guard let urlString,
+              let url = URL(string: urlString)
+        else { return }
+        
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.setImage(image: image)
+                    }
+                }
+            }
         }
     }
     
-    func setUser(user: User?) {
-        self.presenter.setUser(user: user)
-    }
-
-    func setImage(_ image: UIImage?) {
-        self.presenter.setImage(image)
-    }
-
-    func setName(_ name: String) {
-        self.presenter.setName(name)
-    }
-    
-    func resetImage() {
-        self.nameLabel.isHidden = false
-        self.imageView.isHidden = true
+    private func validate() {
+        if image != nil {
+            self.nameLabel.isHidden     = true
+            self.imageView.transform    = .identity
+            self.imageView.isHidden     = false
+        } else {
+            self.nameLabel.isHidden     = false
+            self.imageView.transform    = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            self.imageView.isHidden     = true
+        }
     }
     
-    func bindToPresenter() {
-        self.presenter.setDelegate(self)
+    private func prepareName(_ name: String) -> String {
+        let splitedName = name.split(separator: " ")
+        var preparedName = String()
+        
+        for word in splitedName {
+            guard let firstChar = word.first, preparedName.count < 2 else { continue }
+            preparedName.append(String(firstChar))
+        }
+        
+        return preparedName.uppercased()
     }
 }
 
-// MARK: - Методы конфигурации
-
-private extension TCProfileImageView {
+private extension TCImageView {
     func configure() {
         clipsToBounds = true
-        backgroundColor = .systemGray6
+        backgroundColor = .systemGray3
         translatesAutoresizingMaskIntoConstraints = false
         
         // Image size
@@ -133,26 +171,5 @@ private extension TCProfileImageView {
         
         let fontSize: CGFloat = size.rawValue / 2
         nameLabel.configure(fontSize: fontSize, fontWeight: .semibold, textColor: .white, design: .rounded)
-    }
-}
-
-extension TCProfileImageView: TCProfileImagePresenterProtocol {
-    func nameDidSet(name: String) {
-        DispatchQueue.main.async {
-            self.imageView.isHidden = true
-            self.nameLabel.isHidden = false
-            
-            self.nameLabel.text = name
-        }
-    }
-    
-    func imageDidSet(image: UIImage) {
-        DispatchQueue.main.async {
-            self.imageView.isHidden = false
-            self.nameLabel.isHidden = true
-            
-            self.imageView.image        = image
-            self.imageView.transform    = .identity
-        }
     }
 }

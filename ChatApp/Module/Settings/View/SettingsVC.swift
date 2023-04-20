@@ -6,24 +6,30 @@
 //
 
 import UIKit
+import Combine
 
-final class ThemeVC: UIViewController {
+final class SettingsVC: UIViewController {
     // MARK: - Параметры
     
-    private var presenter = ThemePresenter()
+    private let input            = PassthroughSubject<SettingsViewModel.Input, Never>()
+    private let viewModel        = SettingsViewModel()
+    private var disposeBag       = Set<AnyCancellable>()
     
     // MARK: - UI
     
-    private let stackView           = UIStackView()
-    private let darkThemeButton     = TCThemeView(theme: .dark)
-    private let lightThemeButton    = TCThemeView(theme: .light)
+    private var stackView        = UIStackView()
+    private let darkThemeButton  = TCThemeView(theme: .dark)
+    private let lightThemeButton = TCThemeView(theme: .light)
+    
 }
 
 // MARK: - Жизненный цикл
 
-extension ThemeVC {
+extension SettingsVC {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        bindViewModel()
         
         configure()
         configureNavigationBar()
@@ -34,18 +40,14 @@ extension ThemeVC {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Сохранение выбранной темы происходит при
-        // исчезновении контроллера, чтобы избежать
-        // частой перезаписи в память, если пользователь
-        // несколько раз переключает темы 'за один раз'
-        presenter.saveTheme()
+
+        input.send(.save)
     }
 }
 
 // MARK: - Методы событий
 
-private extension ThemeVC {
+private extension SettingsVC {
     @objc
     func themeButtonTapped(_ sender: TCThemeView) {
         switch sender {
@@ -82,9 +84,12 @@ private extension ThemeVC {
 
 // MARK: - Методы конфигурации
 
-private extension ThemeVC {
-    func bindToPresenter() {
-        self.presenter.setDelegate(self)
+private extension SettingsVC {
+    func bindViewModel() {
+        let output = viewModel.transform(input.eraseToAnyPublisher())
+        
+        output.sink { _ in
+        }.store(in: &disposeBag)
     }
     
     func configure() {
@@ -97,14 +102,16 @@ private extension ThemeVC {
     }
     
     func configureStackView() {
-        self.view.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView = UIStackViewBuilder()
+            .withAxis(.horizontal)
+            .withCorner(radius: 18)
+            .withMargins(top: 20, bottom: 20)
+            .withDistribution(.fillEqually)
+            .withBackgroundColor(Project.Color.subviewBackground)
+            .translatesAutoresizingMaskIntoConstraints(false)
+            .build()
         
-        stackView.distribution                          = .fillEqually
-        stackView.backgroundColor                       = Project.Color.subviewBackground
-        stackView.layer.cornerRadius                    = 18
-        stackView.layoutMargins                         = UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0)
-        stackView.isLayoutMarginsRelativeArrangement    = true
+        self.view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -120,13 +127,5 @@ private extension ThemeVC {
         [darkThemeButton, lightThemeButton].forEach {
             $0.addTarget(self, action: #selector(themeButtonTapped), for: .touchUpInside)
         }
-    }
-}
-
-// MARK: - ThemePresenterProtocol
-
-extension ThemeVC: ThemePresenterProtocol {
-    func themeDidSet(_ theme: Theme) {
-        
     }
 }

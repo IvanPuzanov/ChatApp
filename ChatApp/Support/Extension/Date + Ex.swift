@@ -17,14 +17,14 @@ extension Date {
     }
     
     enum ConvertCase {
-        case ChannelsListPresenter
-        case conversationDateSection
+        case channel
+        case conversation
     }
     func convert(for convertCase: ConvertCase) -> String {
         switch convertCase {
-        case .ChannelsListPresenter:
+        case .channel:
             return convertToMonthDayFormat()
-        case .conversationDateSection:
+        case .conversation:
             let calendar = Calendar.current
             let dateFromatter = DateFormatter()
             dateFromatter.dateFormat = "MMM, dd, yyyy"
@@ -65,5 +65,15 @@ extension Date {
     func isToday() -> Bool {
         let calendar = Calendar.current
         return calendar.isDateInToday(self)
+    }
+}
+
+extension DateComponents: Comparable {
+    public static func < (lhs: DateComponents, rhs: DateComponents) -> Bool {
+        if let firstDate = Calendar.current.date(from: lhs), let secondDate = Calendar.current.date(from: rhs) {
+            return firstDate < secondDate
+        }
+        
+        return false
     }
 }

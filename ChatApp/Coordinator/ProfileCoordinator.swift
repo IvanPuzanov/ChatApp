@@ -17,6 +17,14 @@ final class ProfileCoordinator: Coordinator {
     func start() {
         let viewController = ProfileVC()
         viewController.tabBarItem = UITabBarItem(title: Project.Title.profile, image: Project.Image.profile, selectedImage: nil)
+        viewController.coordinator = self
         navigationController.pushViewController(viewController, animated: true)
+    }
+    
+    func showUserEditor(for user: User) {
+        let viewController  = ProfileEditorVC()
+        viewController.user = user
+        
+        navigationController.present(UINavigationController(rootViewController: viewController), animated: true)
     }
 }

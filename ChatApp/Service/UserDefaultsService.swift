@@ -7,7 +7,12 @@
 
 import Foundation
 
-final class UserDefaultsService {
+protocol UserDefaultsServiceProtocol: AnyObject {
+    func save<T: Encodable>(_ value: T, forKey key: Project.UserDefaultsKeys)
+    func fetchTheme() -> Theme?
+}
+
+final class UserDefaultsService: UserDefaultsServiceProtocol {
     /// Сохранение данных
     /// - Parameters:
     ///   - value: Данные для сохранения

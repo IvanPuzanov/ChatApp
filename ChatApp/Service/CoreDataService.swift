@@ -92,7 +92,7 @@ extension CoreDataService: CoreDataServiceProtocol {
     
     private func log(_ message: String, _ functionName: String) {
         #if !DEBUG
-        print(message, functionName)
+        print("isMainThread: \(Thread.isMainThread)", message, functionName)
         #endif
     }
 }

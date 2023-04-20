@@ -12,14 +12,14 @@ import TFSChatTransport
 final class ConversationVC: UIViewController {
     // MARK: - Параметры
     
-    public var channel: ChannelViewModel?
+    public var channel: ChannelCellModel?
     private var user: User?
     
-    private let viewModel       = ConversationViewModel()
-    private var input           = PassthroughSubject<ConversationViewModel.Input, Never>()
-    private var cancellables    = Set<AnyCancellable>()
+    private var input         = PassthroughSubject<ConversationViewModel.Input, Never>()
+    private let viewModel     = ConversationViewModel()
+    private var disposeBag    = Set<AnyCancellable>()
     
-    private var dataSource: UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>!
+    private var dataSource: UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>?
     private var layout: UICollectionViewCompositionalLayout!
     private var messageTextViewBottomAnchor = NSLayoutConstraint()
     
@@ -29,7 +29,6 @@ final class ConversationVC: UIViewController {
     private var collectionView      = UICollectionView(frame: .zero, collectionViewLayout: .init())
     private let chatNavigationBar   = TCChatNavigationBar()
     private let messageTextView     = TCMessageTextView()
-    private let tableView           = UITableView()
 }
 
 // MARK: - Жизненный цикл
@@ -41,8 +40,8 @@ extension ConversationVC {
         bindViewModel()
         
         configurePlaceholder()
-        configureMessageTextView()
         configureCollectionView()
+        configureMessageTextView()
         configureNavigationBar()
         configureDataSource()
         configureLayout()
@@ -66,14 +65,17 @@ extension ConversationVC {
 private extension ConversationVC {
     func update(with messages: [DateComponents: [MessageCellModel]]) {
         var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
+        let sortedMessages = messages.sorted { first, second in
+            return Calendar.current.date(from: first.key) ?? Date() < Calendar.current.date(from: second.key) ?? Date()
+        }
         
-        for (date, message) in messages {
+        for (date, message) in sortedMessages {
             snapshot.appendSections([date])
             snapshot.appendItems(message, toSection: date)
         }
         
         DispatchQueue.main.async {
-            self.dataSource.apply(snapshot, animatingDifferences: true)
+            self.dataSource?.apply(snapshot, animatingDifferences: true)
         }
     }
     
@@ -107,11 +109,25 @@ private extension ConversationVC {
                 case .sendMessageSucceed:
                     self?.messageTextView.resetText()
                 case .keyboardDidShow(let height):
-                    self?.messageTextViewBottomAnchor.constant = -height
+                    // Андрей, если ты видишь этот код, пожалуйста знай,
+                    // что этого безобразия скоро не будет, я просто пока экспериментирую🥲
+                    guard
+                        let contentSize     = self?.collectionView.contentSize,
+                        let contentOffset   = self?.collectionView.contentOffset
+                    else { return }
+                    UIView.animate(withDuration: 0.3) {
+                        self?.collectionView.contentInset.bottom += height
+                        self?.messageTextViewBottomAnchor.constant = -height
+                    }
+                    self?.view.layoutIfNeeded()
                 case .keyboardDidHide:
-                    self?.messageTextViewBottomAnchor.constant = 0
+                    UIView.animate(withDuration: 0.3) {
+                        self?.messageTextViewBottomAnchor.constant = 0
+                        self?.collectionView.contentInset.bottom = 60
+                    }
+                    self?.view.layoutIfNeeded()
                 }
-            }.store(in: &cancellables)
+            }.store(in: &disposeBag)
     }
     
     func configurePlaceholder() {
@@ -140,9 +156,9 @@ private extension ConversationVC {
     }
     
     func configureCollectionView() {
-        self.view.backgroundColor = .systemBackground
-        collectionView.backgroundColor = .clear
-        collectionView.keyboardDismissMode = .none
+        self.view.backgroundColor           = .systemBackground
+        collectionView.backgroundColor      = .clear
+        collectionView.keyboardDismissMode  = .interactive
         
         collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
         collectionView.register(DateCVHeader.self,
@@ -156,8 +172,10 @@ private extension ConversationVC {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: messageTextView.topAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        collectionView.contentInset.bottom = 60
     }
     
     func configureNavigationBar() {
@@ -187,6 +205,7 @@ private extension ConversationVC {
             return cell
         })
         
+        guard let dataSource else { return }
         dataSource.supplementaryViewProvider = { [unowned self] _, _, indexPath in
             if let cell = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                withReuseIdentifier: DateCVHeader.id,
@@ -216,7 +235,7 @@ private extension ConversationVC {
             let headerElement   = SupplementaryItem(layoutSize: layoutSize,
                                                     elementKind: UICollectionView.elementKindSectionHeader,
                                                     alignment: .topLeading)
-            headerElement.pinToVisibleBounds = true
+            headerElement.pinToVisibleBounds = false
             section.boundarySupplementaryItems = [headerElement]
             
             return section

@@ -14,9 +14,7 @@ final class TCMessageTextView: UIView {
         return textView.intrinsicContentSize
     }
     
-    public var text: String {
-        return textView.text
-    }
+    public var text: String { textView.text }
     
     // MARK: - UI
     
@@ -48,7 +46,7 @@ final class TCMessageTextView: UIView {
 
 extension TCMessageTextView {
     func resetText() {
-        self.textView.text      = String()
+        textView.text           = String()
         sendButton.isActive     = false
         placeholder.isHidden    = false
     }
@@ -74,7 +72,7 @@ private extension TCMessageTextView {
         
         layoutSubviews()
         if !UIAccessibility.isReduceTransparencyEnabled {
-            blurredView.backgroundColor = .systemBackground.withAlphaComponent(0.9)
+            blurredView.backgroundColor = .clear
             
             let blurEffect = UIBlurEffect(style: .regular)
             let blurEffectView = UIVisualEffectView(effect: blurEffect)

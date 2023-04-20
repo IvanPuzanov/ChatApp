@@ -9,11 +9,6 @@ import UIKit
 import TFSChatTransport
 
 final class MessageCVCell: UICollectionViewCell {
-    // MARK: - Параметры
-    
-    private var containerLeading: NSLayoutConstraint!
-    private var containerTrailing: NSLayoutConstraint!
-    
     // MARK: - UI
     
     private let stackView       = UIStackView()

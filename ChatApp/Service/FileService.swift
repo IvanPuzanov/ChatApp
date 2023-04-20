@@ -13,6 +13,14 @@ enum FileServiceError: Error {
     case failToFetch
 }
 
+protocol FileServiceProtocol: AnyObject {
+    var currentUser: User { get }
+    var userPublisher: AnyPublisher<Data, Never> { get }
+    
+    func fetchUser()
+    func save(user: User) throws
+}
+
 final class FileService {
     // MARK: - Singleton
     
@@ -36,7 +44,7 @@ final class FileService {
     
 }
 
-extension FileService {
+extension FileService: FileServiceProtocol {
     private func makeDefaultUser() {
         // Ссылки на директории
         let url             = manager.urls(for: .documentDirectory, in: .userDomainMask).first

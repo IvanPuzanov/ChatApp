@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ChannelsDataSource: UITableViewDiffableDataSource<Section, ChannelViewModel> {    
+final class ChannelsDataSource: UITableViewDiffableDataSource<Section, ChannelCellModel> {    
     // MARK: - Методы
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

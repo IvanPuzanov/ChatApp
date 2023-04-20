@@ -16,10 +16,10 @@ final class ChannelsListVC: UITableViewController {
     
     private var viewModel       = ChannelsListViewModel()
     private var input           = PassthroughSubject<ChannelsListViewModel.Input, Never>()
-    private var cancellables    = Set<AnyCancellable>()
+    private var disposeBag      = Set<AnyCancellable>()
     
     public var coordinator: ChannelsCoordinator?
-    private var dataSource: ChannelsDataSource!
+    private var dataSource: ChannelsDataSource?
     
     // MARK: - UI
     
@@ -83,8 +83,10 @@ private extension ChannelsListVC {
                     self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
                 case .deleteChannelDidSucceed:
                     self?.input.send(.fetchChannels)
+                case .connectionIsBroken:
+                    self?.showErrorAlert(title: Project.AlertTitle.noConnection, message: nil)
                 }
-            }.store(in: &cancellables)
+            }.store(in: &disposeBag)
     }
     
     @objc
@@ -111,14 +113,14 @@ private extension ChannelsListVC {
         newChannelAlert.actions.last?.isEnabled = true
     }
     
-    func update(with channels: [ChannelViewModel]) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, ChannelViewModel>()
+    func update(with channels: [ChannelCellModel]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, ChannelCellModel>()
         
         snapshot.appendSections([.main])
         snapshot.appendItems(channels, toSection: .main)
         
         DispatchQueue.main.async {
-            self.dataSource.apply(snapshot)
+            self.dataSource?.apply(snapshot)
             self.tableView.refreshControl?.endRefreshing()
         }
     }
@@ -155,7 +157,7 @@ private extension ChannelsListVC {
             return cell
         })
         
-        dataSource.defaultRowAnimation = .fade
+        dataSource?.defaultRowAnimation = .fade
     }
     
     func configureRefreshController() {
@@ -190,7 +192,7 @@ private extension ChannelsListVC {
     }
     
     func configureDeleteChannelAlert(for indexPath: IndexPath) {
-        guard let channel = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let channel = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         
         let alert = UIAlertController(title: Project.AlertTitle.wait,
                                       message: Project.AlertTitle.deleteChannelQuestion(channel: channel),
@@ -210,7 +212,7 @@ private extension ChannelsListVC {
 
 extension ChannelsListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let channel = dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
         coordinator?.showConvesation(for: channel)
     }
     

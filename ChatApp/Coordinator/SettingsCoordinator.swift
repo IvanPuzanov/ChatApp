@@ -15,7 +15,7 @@ final class SettingsCoordinator: Coordinator {
     }
     
     func start() {
-        let viewController = ThemeVC()
+        let viewController = SettingsVC()
         viewController.tabBarItem = UITabBarItem(title: Project.Title.settings, image: Project.Image.settings, selectedImage: nil)
         navigationController.pushViewController(viewController, animated: false)
     }

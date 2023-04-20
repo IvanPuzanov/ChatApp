@@ -17,9 +17,7 @@ protocol ConfigurableViewProtocol {
 final class ChannelTVCell: UITableViewCell {
     // MARK: - Параметры
     
-    private var channelViewModel: ChannelViewModel?
-    private var input           = PassthroughSubject<ChannelViewModel.Input, Never>()
-    private var cancellables    = Set<AnyCancellable>()
+    private var channelViewModel: ChannelCellModel?
     
     // MARK: - UI
     
@@ -56,12 +54,13 @@ final class ChannelTVCell: UITableViewCell {
 // MARK: - Методы установки значений
 
 extension ChannelTVCell: ConfigurableViewProtocol {
-    typealias ConfigurationModel = ChannelViewModel
+    typealias ConfigurationModel = ChannelCellModel
     
-    func configure(with model: ChannelViewModel) {
+    func configure(with model: ChannelCellModel) {
         self.bindViewModel(viewModel: model)
-        self.dateLabel.text = model.lastActivity?.convert(for: .ChannelsListPresenter)
+        self.dateLabel.text = model.lastActivity?.convert(for: .channel)
         self.profileImageView.setName(name: model.name)
+        self.profileImageView.loadImage(for: model.logoURL)
         
         switch model.name.isEmpty {
         case true:
@@ -85,8 +84,6 @@ extension ChannelTVCell: ConfigurableViewProtocol {
             self.dateLabel.isHidden         = true
             self.disclosureView.isHidden    = true
         }
-        
-        self.input.send(.loadImage)
     }
     
     override func prepareForReuse() {
@@ -98,28 +95,14 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         self.channelViewModel           = nil
         
         self.profileImageView.setImage(image: nil)
-        
-//        self.input.send(.stopLoading)
     }
 }
 
 // MARK: - Методы конфигурации
 
 private extension ChannelTVCell {
-    func bindViewModel(viewModel: ChannelViewModel) {
+    func bindViewModel(viewModel: ChannelCellModel) {
         self.channelViewModel = viewModel
-        
-        channelViewModel?
-            .transform(input.eraseToAnyPublisher())
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] event in
-                switch event {
-                case .imageLoadSucceed(let image):
-                    self?.profileImageView.setImage(image: image)
-                case .imageLoadDidFail:
-                    self?.profileImageView.setImage(image: nil)
-                }
-            }).store(in: &cancellables)
     }
     
     func configureProfileImageView() {

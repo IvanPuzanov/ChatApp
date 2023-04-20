@@ -10,7 +10,7 @@ import UIKit
 final class DateCVHeader: UICollectionReusableView {
     // MARK: - UI
     
-    private let titleLabel = UILabel()
+    private var titleLabel = UILabel()
     
     // MARK: - Инициализация
     
@@ -32,7 +32,7 @@ extension DateCVHeader: ConfigurableViewProtocol {
     typealias ConfigurationModel = DateComponents
     func configure(with model: DateComponents) {
         let calendar            = Calendar.current
-        let date                = calendar.date(from: model)?.convert(for: .conversationDateSection)
+        let date                = calendar.date(from: model)?.convert(for: .conversation)
         self.titleLabel.text    = date
     }
 }
@@ -45,10 +45,13 @@ private extension DateCVHeader {
     }
     
     private func configureTitleLabel() {
-        addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 13, weight: .medium))
+            .withTextColor(.secondaryLabel)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        titleLabel.configure(fontSize: 14, fontWeight: .medium, textColor: .secondaryLabel)
+        addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),

@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import CoreData
+import Network
 import TFSChatTransport
 
 enum ChannelError: String, Error {
@@ -16,25 +17,35 @@ enum ChannelError: String, Error {
     case fetchChannelDidFail    = "An error occured while loading channels"
 }
 
-protocol ViewModel {
-    associatedtype Input
-    associatedtype Output
-    
-    func transform(_ input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never>
-}
-
 final class ChannelsListViewModel {
-    private let coreDataService: CoreDataServiceProtocol = CoreDataService.shared
-    private let chatService         = ChatService(host: "167.235.86.234", port: 8080)
+    // MARK: - Сервисы
+    
+    private let chatService = ChatService(host: "167.235.86.234", port: 8080)
+    private let coreDataService: CoreDataServiceProtocol
+    
+    // MARK: - Combine
+    
     private let output              = PassthroughSubject<Output, Never>()
     private var cancellabels        = Set<AnyCancellable>()
     
-    private var channels            = [ChannelViewModel]()
-    private var cachedChannels      = Set<ChannelViewModel>()
-    private var actualChannels      = Set<ChannelViewModel>()
+    // MARK: - Параметры
+    
+    private var channels            = [ChannelCellModel]()
+    private var cachedChannels      = Set<ChannelCellModel>()
+    private var actualChannels      = Set<ChannelCellModel>()
     
     private var isFiletered         = false
-    private var filteredChannels    = [ChannelViewModel]()
+    private var filteredChannels    = [ChannelCellModel]()
+    
+    private let monitor             = NWPathMonitor()
+    private let monitorQueue        = DispatchQueue(label: "monitorQueue")
+    
+    // MARK: - Инициализация
+    
+    init(coreDataService: CoreDataServiceProtocol = CoreDataService.shared) {
+        self.coreDataService = coreDataService
+        runMonitor()
+    }
 }
 
 // MARK: - View Model
@@ -45,14 +56,14 @@ extension ChannelsListViewModel: ViewModel {
         case addChannelTapped
         case filterChannels(filter: String?)
         case createChannel(name: String)
-        case delete(channel: ChannelViewModel)
+        case delete(channel: ChannelCellModel)
     }
     
     enum Output {
         case fetchChannelsDidFail(error: ChannelError)
-        case fetchChannelsDidSucceed(channels: [ChannelViewModel])
+        case fetchChannelsDidSucceed(channels: [ChannelCellModel])
         
-        case channelsDidFilter(channels: [ChannelViewModel])
+        case channelsDidFilter(channels: [ChannelCellModel])
         
         case showAddChannelAlert
         
@@ -61,6 +72,8 @@ extension ChannelsListViewModel: ViewModel {
         
         case deleteChannelDidFail(error: ChannelError)
         case deleteChannelDidSucceed
+        
+        case connectionIsBroken
     }
     
     func transform(_ input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
@@ -99,7 +112,7 @@ private extension ChannelsListViewModel {
                     self?.output.send(.fetchChannelsDidFail(error: .fetchChannelDidFail))
                 }
             } receiveValue: { [weak self] channels in
-                let channelViewModels = channels.map { ChannelViewModel(channel: $0) }
+                let channelViewModels = channels.map { ChannelCellModel(channel: $0) }
                 
                 let sortedChannels = channelViewModels.sorted { lhs, rhs in
                     return lhs.lastActivity ?? Date() > rhs.lastActivity ?? Date()
@@ -128,7 +141,7 @@ private extension ChannelsListViewModel {
 
     }
     
-    func deleteChannel(_ channel: ChannelViewModel) {
+    func deleteChannel(_ channel: ChannelCellModel) {
         chatService
             .deleteChannel(id: channel.id)
             .receive(on: DispatchQueue.main)
@@ -156,6 +169,18 @@ private extension ChannelsListViewModel {
         }
         self.output.send(.channelsDidFilter(channels: sortedChannels))
     }
+    
+    func runMonitor() {
+        monitor.pathUpdateHandler = { [weak self] path in
+            if path.status == .satisfied {
+                self?.fetchChannels()
+            } else {
+                self?.output.send(.connectionIsBroken)
+            }
+        }
+        
+        monitor.start(queue: monitorQueue)
+    }
 }
 
 // MARK: - Core Data methods
@@ -165,7 +190,7 @@ extension ChannelsListViewModel {
     func fetchAllCachedChannels() {
         do {
             let fetchedCachedChannels = try coreDataService.fetchCachedChannels()
-            let channelViewModels = fetchedCachedChannels.map { ChannelViewModel(channel: $0) }
+            let channelViewModels = fetchedCachedChannels.map { ChannelCellModel(channel: $0) }
            
             self.channels = channelViewModels
             self.cachedChannels = Set(channelViewModels)

@@ -9,28 +9,32 @@ import Combine
 import TFSChatTransport
 
 enum ConversationError: String, Error {
-    case fetchMessagesDidFail = "An error occured while loading messages"
-    case sendMessageDidFail = "An error occured while sendind the message"
+    case sendMessageDidFail     = "An error occured while sendind the message"
+    case fetchMessagesDidFail   = "An error occured while loading messages"
 }
 
 final class ConversationViewModel {
+    // MARK: - Сервисы
+    
+    private let chatService = ChatService(host: "167.235.86.234", port: 8080)
+    private let coreDataService: CoreDataServiceProtocol
+    
     // MARK: - Параметры
     
-    private let coreDataService: CoreDataServiceProtocol = CoreDataService.shared
-    private let chatService     = ChatService(host: "167.235.86.234", port: 8080)
     private let output          = PassthroughSubject<Output, Never>()
     private var subcriptions    = Set<AnyCancellable>()
     
     private var user: User?
     private var userID: String? = UIDevice.current.identifierForVendor?.uuidString
-    private var channel: ChannelViewModel?
+    private var channel: ChannelCellModel?
     
     private var cachedMessages = Set<MessageCellModel>()
     private var actualMessages = Set<MessageCellModel>()
     
     // MARK: - Инициализация
     
-    init() {
+    init(coreDataService: CoreDataServiceProtocol = CoreDataService.shared) {
+        self.coreDataService = coreDataService
         setupKeyboardBinding()
     }
 }
@@ -40,7 +44,7 @@ final class ConversationViewModel {
 extension ConversationViewModel: ViewModel {
     enum Input {
         case fetchUser
-        case fetchMessages(for: ChannelViewModel)
+        case fetchMessages(for: ChannelCellModel)
         case loadImage
         case sendMessage(text: String)
     }
@@ -82,7 +86,7 @@ extension ConversationViewModel: ViewModel {
 // MARK: - Методы View Model
 
 private extension ConversationViewModel {
-    func fetchMessages(for channel: ChannelViewModel) {
+    func fetchMessages(for channel: ChannelCellModel) {
         self.channel = channel
         self.fetchAllCachedMessages()
         
@@ -93,9 +97,8 @@ private extension ConversationViewModel {
                     self?.output.send(.fetchMessagesDidFail(error: .fetchMessagesDidFail))
                 }
             } receiveValue: { [weak self] messages in
-                let sortedMessages = messages.sorted { $0.date < $1.date }
-                let messageCellModels = sortedMessages.map { MessageCellModel(message: $0) }
-                guard let groupedMessages = self?.groupMessagesByDate(messages: messageCellModels) else { return }
+                let messageCellModels       = messages.map { MessageCellModel(message: $0) }
+                guard let groupedMessages   = self?.groupMessagesByDate(messages: messageCellModels) else { return }
                 
                 self?.actualMessages = Set(messageCellModels)
                 self?.output.send(.fetchMessagesSucceed(messages: groupedMessages))
