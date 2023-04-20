@@ -47,9 +47,9 @@ extension SettingsVC {
 
 // MARK: - Методы событий
 
-private extension SettingsVC {
+extension SettingsVC {
     @objc
-    func themeButtonTapped(_ sender: TCThemeView) {
+    private func themeButtonTapped(_ sender: TCThemeView) {
         switch sender {
         case darkThemeButton:
             lightThemeButton.isSelected(false)
@@ -70,7 +70,7 @@ private extension SettingsVC {
         }
     }
     
-    func validateAppearance() {
+    private func validateAppearance() {
         switch traitCollection.userInterfaceStyle {
         case .light:
             lightThemeButton.isSelected(true)
@@ -79,6 +79,12 @@ private extension SettingsVC {
         default:
             lightThemeButton.isSelected(true)
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        configure()
     }
 }
 
@@ -93,7 +99,12 @@ private extension SettingsVC {
     }
     
     func configure() {
-        self.view.backgroundColor = .secondarySystemBackground
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            self.view.backgroundColor = .systemBackground
+        default:
+            self.view.backgroundColor = .secondarySystemBackground
+        }
     }
     
     func configureNavigationBar() {

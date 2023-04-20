@@ -136,7 +136,12 @@ private extension ProfileEditorVC {
     }
     
     func configure() {
-        self.view.backgroundColor = .secondarySystemBackground
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            self.view.backgroundColor = .systemBackground
+        default:
+            self.view.backgroundColor = .secondarySystemBackground
+        }
         
         let tap = UITapGestureRecognizer(target: self.view, action: #selector(UIView.endEditing))
         view.addGestureRecognizer(tap)

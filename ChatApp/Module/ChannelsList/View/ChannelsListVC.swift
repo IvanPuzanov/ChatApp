@@ -18,7 +18,7 @@ final class ChannelsListVC: UITableViewController {
     private var input           = PassthroughSubject<ChannelsListViewModel.Input, Never>()
     private var disposeBag      = Set<AnyCancellable>()
     
-    public var coordinator: ChannelsCoordinator?
+    public var coordinator: ChannelsCoordinatorProtocol?
     private var dataSource: ChannelsDataSource?
     
     // MARK: - UI

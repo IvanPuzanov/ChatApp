@@ -11,7 +11,7 @@ import Combine
 final class ProfileVC: UIViewController {
     // MARK: - Параметры
     
-    public var coordinator: ProfileCoordinator?
+    public var coordinator: ProfileCoordinatorProtocol?
     private var viewModel       = ProfileViewModel()
     private var input           = PassthroughSubject<ProfileViewModel.Input, Never>()
     private var disposeBag      = Set<AnyCancellable>()
@@ -51,8 +51,8 @@ extension ProfileVC {
 
 // MARK: - Методы событий
 
-private extension ProfileVC {
-    func bindViewModel() {
+extension ProfileVC {
+    private func bindViewModel() {
         let output = viewModel.transform(input.eraseToAnyPublisher())
         output
             .receive(on: DispatchQueue.main)
@@ -66,7 +66,7 @@ private extension ProfileVC {
             }.store(in: &disposeBag)
     }
     
-    func setup(with user: User) {
+    private func setup(with user: User) {
         self.nameLabel.text = user.name
         self.bioLabel.text  = user.bio
         self.profileImageView.setName(name: user.name)
@@ -76,7 +76,7 @@ private extension ProfileVC {
     }
     
     @objc
-    func buttonTapped(_ sender: UIButton) {
+    private func buttonTapped(_ sender: UIButton) {
         switch sender {
         case addPhotoButton:
             self.imagePicker?.present(from: addPhotoButton)
@@ -86,13 +86,24 @@ private extension ProfileVC {
             break
         }
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        configure()
+    }
 }
 
 // MARK: - Методы конфигурации
 
 private extension ProfileVC {
     func configure() {
-        self.view.backgroundColor = .secondarySystemBackground
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            self.view.backgroundColor = .systemBackground
+        default:
+            self.view.backgroundColor = .secondarySystemBackground
+        }
     }
     
     func configureNavigationBar() {

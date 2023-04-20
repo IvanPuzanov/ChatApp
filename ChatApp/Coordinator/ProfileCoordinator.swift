@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol ProfileCoordinatorProtocol {
+    func showUserEditor(for user: User)
+}
+
 final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     
@@ -20,7 +24,9 @@ final class ProfileCoordinator: Coordinator {
         viewController.coordinator = self
         navigationController.pushViewController(viewController, animated: true)
     }
-    
+}
+
+extension ProfileCoordinator: ProfileCoordinatorProtocol {
     func showUserEditor(for user: User) {
         let viewController  = ProfileEditorVC()
         viewController.user = user

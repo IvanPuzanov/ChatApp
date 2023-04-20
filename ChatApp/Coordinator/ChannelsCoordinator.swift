@@ -8,6 +8,10 @@
 import UIKit
 import TFSChatTransport
 
+protocol ChannelsCoordinatorProtocol {
+    func showConvesation(for channel: ChannelCellModel)
+}
+
 final class ChannelsCoordinator: Coordinator {
     var navigationController: UINavigationController
     
@@ -21,7 +25,9 @@ final class ChannelsCoordinator: Coordinator {
         viewController.tabBarItem = UITabBarItem(title: Project.Title.channels, image: Project.Image.chats, selectedImage: nil)
         navigationController.pushViewController(viewController, animated: false)
     }
-    
+}
+
+extension ChannelsCoordinator: ChannelsCoordinatorProtocol {
     func showConvesation(for channel: ChannelCellModel) {
         let viewController = ConversationVC()
         viewController.channel = channel
