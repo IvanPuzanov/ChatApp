@@ -18,4 +18,9 @@ extension UIViewController {
             self.present(alert, animated: true)
         }
     }
+    
+    func showActivityIndicator() {
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.startAnimating()
+    }
 }

@@ -35,6 +35,7 @@ enum Project {
         static let settings     = NSLocalizedString("Settings", comment: "")
         static let myProfile    = NSLocalizedString("My Profile", comment: "")
         static let newChannel   = NSLocalizedString("New Channel", comment: "")
+        static let selectPhoto  = NSLocalizedString("Select photo", comment: "")
         static let typeMessage  = NSLocalizedString("Type message", comment: "")
         static let editProfile  = NSLocalizedString("Edit Profile", comment: "")
     }
@@ -51,6 +52,7 @@ enum Project {
         static let saveGCD           = NSLocalizedString("Save GCD", comment: "")
         static let addPhoto          = NSLocalizedString("Add photo", comment: "")
         static let tryAgain          = NSLocalizedString("Try again", comment: "")
+        static let download          = NSLocalizedString("Download", comment: "")
         static let takePhoto         = NSLocalizedString("Take a photo", comment: "")
         static let addChannel        = NSLocalizedString("Add Channel", comment: "")
         static let editProfile       = NSLocalizedString("Edit Profile", comment: "")
@@ -60,7 +62,9 @@ enum Project {
     
     enum Image {
         static let chats         = UIImage(systemName: "bubble.left.and.bubble.right")
+        static let photo         = UIImage(systemName: "photo.fill")
         static let circle        = UIImage(systemName: "circle")
+        static let camera        = UIImage(systemName: "camera")
         static let arrowUp       = UIImage(systemName: "arrow.up.circle.fill")
         static let profile       = UIImage(systemName: "person.crop.circle")
         static let memoji1       = UIImage(named: "memoji1")

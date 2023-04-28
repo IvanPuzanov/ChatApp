@@ -1,5 +1,5 @@
 //
-//  TCImageView.swift
+//  TCProfileImageView.swift
 //  ChatApp
 //
 //  Created by Ivan Puzanov on 05.04.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class TCImageView: UIControl {
+final class TCProfileImageView: UIControl {
     // MARK: - Параметры
     
     enum Size: CGFloat {
@@ -50,7 +50,7 @@ final class TCImageView: UIControl {
     }
 }
 
-extension TCImageView {
+extension TCProfileImageView {
     func setUser(user: User) {
         if let imageData = user.avatar {
             self.image = UIImage(data: imageData)
@@ -124,7 +124,7 @@ extension TCImageView {
     }
 }
 
-private extension TCImageView {
+private extension TCProfileImageView {
     func configure() {
         clipsToBounds = true
         backgroundColor = .systemGray3

@@ -16,17 +16,19 @@ enum ConversationError: String, Error {
 final class ConversationViewModel {
     // MARK: - Сервисы
     
+    private let sseService  = SSEService(host: "167.235.86.234", port: 8080)
     private let chatService = ChatService(host: "167.235.86.234", port: 8080)
     private let coreDataService: CoreDataServiceProtocol
+    private let notificationCenter: NotificationCenter = .default
     
     // MARK: - Параметры
     
     private let output          = PassthroughSubject<Output, Never>()
-    private var subcriptions    = Set<AnyCancellable>()
+    private var disposeBag      = Set<AnyCancellable>()
     
     private var user: User?
     private var userID: String? = UIDevice.current.identifierForVendor?.uuidString
-    private var channel: ChannelCellModel?
+    public weak var channel: ChannelCellModel?
     
     private var cachedMessages = Set<MessageCellModel>()
     private var actualMessages = Set<MessageCellModel>()
@@ -35,7 +37,6 @@ final class ConversationViewModel {
     
     init(coreDataService: CoreDataServiceProtocol = CoreDataService.shared) {
         self.coreDataService = coreDataService
-        setupKeyboardBinding()
     }
 }
 
@@ -44,40 +45,51 @@ final class ConversationViewModel {
 extension ConversationViewModel: ViewModel {
     enum Input {
         case fetchUser
-        case fetchMessages(for: ChannelCellModel)
+        case fetchMessages
+        case fetchCachedMessages
         case loadImage
         case sendMessage(text: String)
+        case subscribeKeyboardEvents
+        case subscribeOnEvents
+        case addImage(image: UIImage)
+        case removeSubcription
     }
     
     enum Output {
-        // Запрос сообщений
-        case fetchMessagesDidFail(error: ConversationError)
-        case fetchMessagesSucceed(messages: [DateComponents: [MessageCellModel]])
+        case fetchMessagesSucceeded(messages: [DateComponents: [MessageCellModel]])
+        case imageLoadSucceeded(image: UIImage)
+        case sendMessageSucceeded
+        case imageAdded(image: UIImage)
         
-        case imageLoadSucceed(image: UIImage)
-        
-        // Отправка сообщений
-        case sendMessageDidFail(error: ConversationError)
-        case sendMessageSucceed
-        
-        // Показ/скрытие клавиатуры
         case keyboardDidShow(height: CGFloat)
         case keyboardDidHide
+        
+        case errorOccured(error: ConversationError)
     }
     
     func transform(_ input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
         input.sink { [weak self] event in
             switch event {
-            case .fetchMessages(let channel):
-                self?.fetchMessages(for: channel)
+            case .fetchMessages:
+                self?.fetchMessages()
+            case .fetchCachedMessages:
+                self?.fetchAllCachedMessages()
             case .loadImage:
                 self?.loadImage()
             case .fetchUser:
                 self?.fetchUser()
             case .sendMessage(let text):
                 self?.sendMessage(text: text)
+            case .addImage:
+                break
+            case .subscribeKeyboardEvents:
+                self?.subscribeKeyboardEvents()
+            case .subscribeOnEvents:
+                self?.subscribeOnEvents()
+            case .removeSubcription:
+                self?.sseService.cancelSubscription()
             }
-        }.store(in: &subcriptions)
+        }.store(in: &disposeBag)
         
         return output.eraseToAnyPublisher()
     }
@@ -86,24 +98,23 @@ extension ConversationViewModel: ViewModel {
 // MARK: - Методы View Model
 
 private extension ConversationViewModel {
-    func fetchMessages(for channel: ChannelCellModel) {
-        self.channel = channel
-        self.fetchAllCachedMessages()
+    func fetchMessages() {
+        guard let channel else { return }
         
         chatService
             .loadMessages(channelId: channel.id)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.output.send(.fetchMessagesDidFail(error: .fetchMessagesDidFail))
+                    self?.output.send(.errorOccured(error: .fetchMessagesDidFail))
                 }
             } receiveValue: { [weak self] messages in
                 let messageCellModels       = messages.map { MessageCellModel(message: $0) }
                 guard let groupedMessages   = self?.groupMessagesByDate(messages: messageCellModels) else { return }
                 
+                self?.output.send(.fetchMessagesSucceeded(messages: groupedMessages))
                 self?.actualMessages = Set(messageCellModels)
-                self?.output.send(.fetchMessagesSucceed(messages: groupedMessages))
                 self?.updateCachedMessages()
-            }.store(in: &subcriptions)
+            }.store(in: &disposeBag)
 
     }
     
@@ -119,8 +130,8 @@ private extension ConversationViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] image in
                 guard let image else { return }
-                self?.output.send(.imageLoadSucceed(image: image))
-            }.store(in: &subcriptions)
+                self?.output.send(.imageLoadSucceeded(image: image))
+            }.store(in: &disposeBag)
 
     }
     
@@ -132,7 +143,7 @@ private extension ConversationViewModel {
                 self?.user = nil
             } receiveValue: { [weak self] user in
                 self?.user = user
-            }.store(in: &subcriptions)
+            }.store(in: &disposeBag)
         
         FileService.shared.fetchUser()
     }
@@ -144,44 +155,44 @@ private extension ConversationViewModel {
             .sendMessage(text: text, channelId: channel.id, userId: userID, userName: user.name)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.output.send(.sendMessageDidFail(error: .sendMessageDidFail))
+                    self?.output.send(.errorOccured(error: .sendMessageDidFail))
                 }
             } receiveValue: { [weak self] _ in
-                self?.fetchMessages(for: channel)
-            }.store(in: &subcriptions)
+                self?.output.send(.sendMessageSucceeded)
+                self?.fetchMessages()
+            }.store(in: &disposeBag)
 
     }
     
-    func setupKeyboardBinding() {
-        NotificationCenter.default
-            .publisher(for: UIApplication.keyboardWillShowNotification)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] notification in
-                guard let userInfo = notification.userInfo as? NSDictionary else { return }
-                guard let keyboardFrameInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+    func subscribeKeyboardEvents() {
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc
+    private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo as? NSDictionary else { return }
+        guard let keyboardFrameInfo = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
 
-                let keyboardSize    = keyboardFrameInfo.cgRectValue.size
-                let bottomInset     = UIApplication.shared.windows.first?.safeAreaInsets.bottom
+        let keyboardSize = keyboardFrameInfo.cgRectValue.size
+        let bottomInset  = UIApplication.shared.windows.first?.safeAreaInsets.bottom
 
-                switch bottomInset {
-                case .some(let value):
-                    switch value {
-                    case 0:
-                        self?.output.send(.keyboardDidShow(height: keyboardSize.height))
-                    default:
-                        self?.output.send(.keyboardDidShow(height: keyboardSize.height - value))
-                    }
-                default:
-                    break
-                }
-            }.store(in: &subcriptions)
-
-        NotificationCenter.default
-            .publisher(for: UIApplication.keyboardWillHideNotification)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.output.send(.keyboardDidHide)
-            }.store(in: &subcriptions)
+        switch bottomInset {
+        case .some(let value):
+            switch value {
+            case 0:
+                self.output.send(.keyboardDidShow(height: keyboardSize.height))
+            default:
+                self.output.send(.keyboardDidShow(height: keyboardSize.height - value))
+            }
+        default:
+            break
+        }
+    }
+    
+    @objc
+    private func keyboardWillHide(notification: NSNotification) {
+        self.output.send(.keyboardDidHide)
     }
     
     func groupMessagesByDate(messages: [MessageCellModel]) -> [DateComponents: [MessageCellModel]] {
@@ -191,6 +202,24 @@ private extension ConversationViewModel {
         }
         
         return groupedMessages
+    }
+    
+    func subscribeOnEvents() {
+        guard let channel else { return }
+        
+        sseService
+            .subscribeOnEvents()
+            .sink { [weak self] _ in
+                self?.output.send(.errorOccured(error: .fetchMessagesDidFail))
+            } receiveValue: { [weak self] event in
+                switch event.resourceID {
+                case channel.id:
+                    self?.fetchMessages()
+                default:
+                    break
+                }
+            }.store(in: &disposeBag)
+
     }
 }
 
@@ -205,7 +234,8 @@ extension ConversationViewModel {
             let groupedMessages = self.groupMessagesByDate(messages: sortedCachedMessages)
             
             self.cachedMessages = Set(sortedCachedMessages)
-            self.output.send(.fetchMessagesSucceed(messages: groupedMessages))
+            
+            self.output.send(.fetchMessagesSucceeded(messages: groupedMessages))
         } catch {  }
     }
     

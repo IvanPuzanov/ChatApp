@@ -29,8 +29,9 @@ final class DateCVHeader: UICollectionReusableView {
 // MARK: - Методы установки значений
 
 extension DateCVHeader: ConfigurableViewProtocol {
-    typealias ConfigurationModel = DateComponents
-    func configure(with model: DateComponents) {
+    typealias ConfigurationModel = DateComponents?
+    func configure(with model: DateComponents?) {
+        guard let model else { return }
         let calendar            = Calendar.current
         let date                = calendar.date(from: model)?.convert(for: .conversation)
         self.titleLabel.text    = date

@@ -34,8 +34,12 @@ final class TCSendButton: UIControl {
 
 // MARK: - Методы событий
 
-private extension TCSendButton {
-    func isActiveChanged() {
+extension TCSendButton {
+    func setImage(_ image: UIImage?) {
+        self.arrowImageView.image = image
+    }
+    
+    private func isActiveChanged() {
         switch isActive {
         case true:
             UIView.animate(withDuration: 0.1) {

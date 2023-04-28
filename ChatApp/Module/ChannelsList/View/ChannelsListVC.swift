@@ -45,7 +45,9 @@ extension ChannelsListVC {
         configureSearchController()
         configureNewChannelAlert()
         
+        input.send(.fetchCachedChannels)
         input.send(.fetchChannels)
+        input.send(.subscribeToEvents)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,27 +66,21 @@ private extension ChannelsListVC {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] event in
                 switch event {
-                case .fetchChannelsDidFail(let error):
-                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
-                case .fetchChannelsDidSucceed(let channels), .channelsDidFilter(let channels):
-                    self?.navigationItem.prompt = nil
-//                    channels.forEach { model in
-//                        self?.viewModel.save(with: model)
-//                    }
+                case .fetchChannelsDidSucceeded(let channels), .channelsDidFilter(let channels):
                     self?.update(with: channels)
                 case .showAddChannelAlert:
                     guard let self else { return }
                     self.present(self.newChannelAlert, animated: true)
-                case .createChannelDidFail:
-                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: Project.Title.Error.channelDidntCreate)
-                case .createChannelDidSucceed:
+                case .createChannelDidSucceeded:
                     break
-                case .deleteChannelDidFail(let error):
-                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
-                case .deleteChannelDidSucceed:
+                case .deleteChannelDidSucceeded:
                     self?.input.send(.fetchChannels)
                 case .connectionIsBroken:
                     self?.showErrorAlert(title: Project.AlertTitle.noConnection, message: nil)
+                case .updateChannel:
+                    break
+                case .errorOccured(let error):
+                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
                 }
             }.store(in: &disposeBag)
     }
@@ -120,7 +116,7 @@ private extension ChannelsListVC {
         snapshot.appendItems(channels, toSection: .main)
         
         DispatchQueue.main.async {
-            self.dataSource?.apply(snapshot)
+            self.dataSource?.apply(snapshot, animatingDifferences: true)
             self.tableView.refreshControl?.endRefreshing()
         }
     }

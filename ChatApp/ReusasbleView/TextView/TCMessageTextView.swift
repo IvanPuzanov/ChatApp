@@ -22,6 +22,7 @@ final class TCMessageTextView: UIView {
     private var containerView   = UIView()
     private var placeholder     = UILabel()
     public let textView         = UITextView()
+    public let imageButton      = TCSendButton()
     public let sendButton       = TCSendButton()
     
     // MARK: - Инициализация
@@ -31,6 +32,7 @@ final class TCMessageTextView: UIView {
         
         configure()
         configureBlurredView()
+        configureImageButton()
         configureContainerView()
         configurePlaceholder()
         configureSendButton()
@@ -45,6 +47,11 @@ final class TCMessageTextView: UIView {
 // MARK: - Методы обработки событий
 
 extension TCMessageTextView {
+    func addImage(_ imageLink: String) {
+        resetText()
+        textView.insertText(imageLink)
+    }
+    
     func resetText() {
         textView.text           = String()
         sendButton.isActive     = false
@@ -87,6 +94,22 @@ private extension TCMessageTextView {
         }
     }
     
+    func configureImageButton() {
+        self.addSubview(imageButton)
+        imageButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageButton.setImage(Project.Image.camera)
+        
+        let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
+        
+        NSLayoutConstraint.activate([
+            imageButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15),
+            imageButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bottomInset ?? 0) - 13),
+            imageButton.heightAnchor.constraint(equalToConstant: 28),
+            imageButton.widthAnchor.constraint(equalToConstant: 28)
+        ])
+    }
+    
     func configureContainerView() {
         self.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +122,7 @@ private extension TCMessageTextView {
         let bottomInset = UIApplication.shared.windows.first?.safeAreaInsets.bottom
         
         NSLayoutConstraint.activate([
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            containerView.leadingAnchor.constraint(equalTo: imageButton.trailingAnchor, constant: 10),
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bottomInset ?? 0) - 5)
@@ -119,7 +142,7 @@ private extension TCMessageTextView {
         
         NSLayoutConstraint.activate([
             placeholder.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            placeholder.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 15)
+            placeholder.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         ])
     }
     
@@ -149,7 +172,7 @@ private extension TCMessageTextView {
         textView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            textView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            textView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
             textView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 5),
             textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -5),
             textView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -5)

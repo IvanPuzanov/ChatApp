@@ -23,8 +23,7 @@ final class ChannelTVCell: UITableViewCell {
     
     private let disclosureView      = UIImageView()
     private var dateLabel           = UILabel()
-    private let profileImageView    = TCImageView(size: .medium)
-    private let activityIndicator   = UIView()
+    private let profileImageView    = TCProfileImageView(size: .medium)
     private var nameLabel           = UILabel()
     private var messageLabel        = UILabel()
     
@@ -42,12 +41,6 @@ final class ChannelTVCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        
-        self.activityIndicator.layer.borderColor = UIColor.systemBackground.cgColor
     }
 }
 
@@ -112,25 +105,6 @@ private extension ChannelTVCell {
         NSLayoutConstraint.activate([
             profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             profileImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
-        ])
-    }
-    
-    func configureActivityIndicator() {
-        self.addSubview(activityIndicator)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        
-        activityIndicator.layer.cornerRadius    = 10
-        activityIndicator.layer.borderWidth     = 3
-        activityIndicator.layer.borderColor     = UIColor.systemBackground.cgColor
-        activityIndicator.backgroundColor       = .systemGreen
-        activityIndicator.layer.masksToBounds   = true
-        activityIndicator.layer.allowsEdgeAntialiasing = true
-        
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: -4),
-            activityIndicator.centerYAnchor.constraint(equalTo: profileImageView.topAnchor, constant: 4),
-            activityIndicator.heightAnchor.constraint(equalToConstant: 20),
-            activityIndicator.widthAnchor.constraint(equalToConstant: 20)
         ])
     }
     

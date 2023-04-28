@@ -1,5 +1,5 @@
 //
-//  MessageCVCell.swift
+//  MessageTextCVCell.swift
 //  ChatApp
 //
 //  Created by Ivan Puzanov on 07.03.2023.
@@ -8,7 +8,7 @@
 import UIKit
 import TFSChatTransport
 
-final class MessageCVCell: UICollectionViewCell {
+final class MessageTextCVCell: UICollectionViewCell {
     // MARK: - UI
     
     private let stackView       = UIStackView()
@@ -16,8 +16,8 @@ final class MessageCVCell: UICollectionViewCell {
     private var leftTailImage   = UIImageView()
     private var rightTailImage  = UIImageView()
     private var containerView   = UIView()
-    private let messageLabel    = UILabel()
-    private let dateLabel       = UILabel()
+    private var messageLabel    = UILabel()
+    private var dateLabel       = UILabel()
     
     // MARK: - Инициализация
     
@@ -40,41 +40,28 @@ final class MessageCVCell: UICollectionViewCell {
 
 // MARK: - Методы установки значений
 
-extension MessageCVCell: ConfigurableViewProtocol {
+extension MessageTextCVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = MessageCellModel
     func configure(with model: MessageCellModel) {
-        self.messageLabel.text  = model.text
-        self.dateLabel.text     = model.date.showOnlyTime()
+                
+        let isUserMessage = model.sender == .user
         
-        switch model.sender {
-        case .user:
-            self.dateLabel.textColor            = .white.withAlphaComponent(0.7)
-            self.messageLabel.textColor         = .white
-            self.containerView.backgroundColor  = .systemBlue
-
-            self.stackView.alignment        = .trailing
-            self.rightTailImage.image       = Project.Image.rightGrayTail
-            self.leftTailImage.isHidden     = true
-            self.rightTailImage.isHidden    = false
-        case .interlocutor:
-            self.senderLabel.text               = model.userName
-            self.dateLabel.textColor            = .systemGray2
-            self.messageLabel.textColor         = Project.Color.bubbleTextColor
-            self.containerView.backgroundColor  = .systemGray6
-
-            self.stackView.alignment        = .leading
-            self.leftTailImage.image        = Project.Image.leftGrayTail
-            self.leftTailImage.isHidden     = false
-            self.rightTailImage.isHidden    = true
-        default:
-            break
-        }
+        self.containerView.backgroundColor  = isUserMessage ? .systemBlue : .systemGray6
+        self.stackView.alignment            = isUserMessage ? .trailing : .leading
+        self.senderLabel.isHidden           = isUserMessage
+        self.senderLabel.text               = model.userName.isEmpty ? "No name" : model.userName
+        self.dateLabel.text                 = model.date.showOnlyTime()
+        self.dateLabel.textColor            = isUserMessage ? .white.withAlphaComponent(0.7) : .systemGray2
+        self.messageLabel.textColor         = isUserMessage ? .white : Project.Color.bubbleTextColor
+        self.messageLabel.text              = model.text
+        self.leftTailImage.isHidden         = isUserMessage
+        self.rightTailImage.isHidden        = !isUserMessage
     }
 }
 
 // MARK: - Методы конфигурации
 
-private extension MessageCVCell {
+private extension MessageTextCVCell {
     func configureStackView() {
         self.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,6 +101,7 @@ private extension MessageCVCell {
     func configureLeftTailImageView() {
         self.addSubview(leftTailImage)
         leftTailImage.translatesAutoresizingMaskIntoConstraints = false
+        leftTailImage.image = Project.Image.leftGrayTail
         
         NSLayoutConstraint.activate([
             leftTailImage.centerXAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 4),
@@ -124,6 +112,7 @@ private extension MessageCVCell {
     func configureRightTailImageView() {
         self.addSubview(rightTailImage)
         rightTailImage.translatesAutoresizingMaskIntoConstraints = false
+        rightTailImage.image = Project.Image.rightGrayTail
         
         NSLayoutConstraint.activate([
             rightTailImage.centerXAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -4),
@@ -132,10 +121,15 @@ private extension MessageCVCell {
     }
     
     func configureDateLabel() {
-        self.containerView.addSubview(dateLabel)
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 11, weight: .regular))
+            .withTextColor(.systemGray2)
+            .withAlignment(.right)
+            .withNumberLines(0)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        dateLabel.configure(fontSize: 11, fontWeight: .regular, textColor: .systemGray2, textAlignment: .right)
+        self.containerView.addSubview(dateLabel)
         dateLabel.setContentCompressionResistancePriority(.init(751), for: .horizontal)
         
         NSLayoutConstraint.activate([
@@ -145,11 +139,15 @@ private extension MessageCVCell {
     }
     
     func configureMessageLabel() {
-        self.containerView.addSubview(messageLabel)
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
+        messageLabel = UILabelBuilder()
+            .withFont(.systemFont(ofSize: 15, weight: .regular))
+            .withTextColor(.label)
+            .withAlignment(.left)
+            .withNumberLines(0)
+            .translatesAutoresingMaskIntoConstraints(false)
+            .build()
         
-        messageLabel.numberOfLines = 0
-        messageLabel.configure(fontSize: 15, fontWeight: .regular, textColor: .label, textAlignment: .left)
+        self.containerView.addSubview(messageLabel)
         
         NSLayoutConstraint.activate([
             messageLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),

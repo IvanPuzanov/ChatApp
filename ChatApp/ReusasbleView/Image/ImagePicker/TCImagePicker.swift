@@ -56,6 +56,10 @@ extension TCImagePicker {
             alertController.addAction(action)
         }
         
+        if let action = self.action(for: .photoLibrary, title: Project.Button.selectFromGallery) {
+            alertController.addAction(action)
+        }
+        
         alertController.addAction(UIAlertAction(title: Project.Button.cancel, style: .cancel, handler: nil))
         
         if UIDevice.current.userInterfaceIdiom == .pad {

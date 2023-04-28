@@ -9,6 +9,7 @@ import UIKit
 
 protocol ProfileCoordinatorProtocol {
     func showUserEditor(for user: User)
+    func showImageLoader()
 }
 
 final class ProfileCoordinator: Coordinator {
@@ -31,6 +32,11 @@ extension ProfileCoordinator: ProfileCoordinatorProtocol {
         let viewController  = ProfileEditorVC()
         viewController.user = user
         
+        navigationController.present(UINavigationController(rootViewController: viewController), animated: true)
+    }
+    
+    func showImageLoader() {
+        let viewController = ListLoadImagesVC()
         navigationController.present(UINavigationController(rootViewController: viewController), animated: true)
     }
 }

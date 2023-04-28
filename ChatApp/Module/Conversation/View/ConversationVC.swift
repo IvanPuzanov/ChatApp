@@ -20,7 +20,7 @@ final class ConversationVC: UIViewController {
     private var disposeBag    = Set<AnyCancellable>()
     
     private var dataSource: UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>?
-    private var layout: UICollectionViewCompositionalLayout!
+    private var layout: UICollectionViewCompositionalLayout?
     private var messageTextViewBottomAnchor = NSLayoutConstraint()
     
     // MARK: - UI
@@ -40,17 +40,18 @@ extension ConversationVC {
         bindViewModel()
         
         configurePlaceholder()
-        configureCollectionView()
         configureMessageTextView()
+        configureCollectionView()
         configureNavigationBar()
         configureDataSource()
         configureLayout()
         
         input.send(.fetchUser)
-        
-        guard let channel else { return }
-        input.send(.fetchMessages(for: channel))
+        input.send(.fetchCachedMessages)
+        input.send(.fetchMessages)
         input.send(.loadImage)
+        input.send(.subscribeKeyboardEvents)
+        input.send(.subscribeOnEvents)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,13 +59,51 @@ extension ConversationVC {
         
         self.tabBarController?.tabBar.isHidden = true
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+//        self.dataSource = nil
+    }
 }
 
 // MARK: - Методы обработки событий
 
 private extension ConversationVC {
+    func bindViewModel() {
+        viewModel.channel = channel
+        let output = viewModel.transform(input.eraseToAnyPublisher())
+        output
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .fetchMessagesSucceeded(let messages):
+                    self?.update(with: messages)
+                    self?.placeholder.isHidden = !messages.isEmpty
+                case .imageLoadSucceeded(let image):
+                    self?.chatNavigationBar.setImage(image)
+                case .sendMessageSucceeded:
+                    self?.messageTextView.resetText()
+                case .imageAdded(let image):
+                    break
+                case .keyboardDidShow(let height):
+                    self?.messageTextViewBottomAnchor.constant = -height
+                    UIView.animate(withDuration: 0.23) {
+                        self?.view.layoutIfNeeded()
+                    }
+                    self?.scrollToBottom()
+                case .keyboardDidHide:
+                    self?.messageTextViewBottomAnchor.constant = 0
+                    self?.scrollToBottom()
+                case .errorOccured(let error):
+                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
+                }
+            }.store(in: &disposeBag)
+    }
+    
     func update(with messages: [DateComponents: [MessageCellModel]]) {
         var snapshot = NSDiffableDataSourceSnapshot<DateComponents, MessageCellModel>()
+        
         let sortedMessages = messages.sorted { first, second in
             return Calendar.current.date(from: first.key) ?? Date() < Calendar.current.date(from: second.key) ?? Date()
         }
@@ -74,8 +113,10 @@ private extension ConversationVC {
             snapshot.appendItems(message, toSection: date)
         }
         
-        DispatchQueue.main.async {
-            self.dataSource?.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async { [weak self] in
+            guard self?.view.window != nil else { return }
+            self?.dataSource?.apply(snapshot, animatingDifferences: false)
+            self?.scrollToBottom()
         }
     }
     
@@ -86,46 +127,34 @@ private extension ConversationVC {
                 
         input.send(.sendMessage(text: text))
     }
+    
+    @objc
+    func addImageButtonTapped() {
+        let imageLoaderVC = ListLoadImagesVC()
+        let navigationController = UINavigationController(rootViewController: imageLoaderVC)
+        imageLoaderVC.imagePickerSubject
+            .sink { [weak self] (_, imageLink) in
+                self?.messageTextView.addImage(imageLink)
+            }.store(in: &disposeBag)
+        self.present(navigationController, animated: true)
+    }
+    
+    func scrollToBottom(animated: Bool = true) {
+        guard
+            let lastSection   = dataSource?.snapshot().sectionIdentifiers.last,
+            let lastSectionIndex = dataSource?.snapshot().indexOfSection(lastSection),
+            let numberOfItems = dataSource?.snapshot().numberOfItems(inSection: lastSection)
+        else { return }
+        
+        let lastItemIndex = IndexPath(item: numberOfItems - 1, section: lastSectionIndex)
+        
+        collectionView.scrollToItem(at: lastItemIndex, at: .top, animated: animated)
+    }
 }
 
 // MARK: - Методы конфигурации
 
 private extension ConversationVC {
-    func bindViewModel() {
-        let output = viewModel.transform(input.eraseToAnyPublisher())
-        output
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] event in
-                switch event {
-                case .fetchMessagesDidFail(let error):
-                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
-                case .fetchMessagesSucceed(let messages):
-                    self?.update(with: messages)
-                    self?.placeholder.isHidden = !messages.isEmpty
-                case .imageLoadSucceed(let image):
-                    self?.chatNavigationBar.setImage(image)
-                case .sendMessageDidFail(let error):
-                    self?.showErrorAlert(title: Project.AlertTitle.ooops, message: error.rawValue)
-                case .sendMessageSucceed:
-                    self?.messageTextView.resetText()
-                case .keyboardDidShow(let height):
-                    // Андрей, если ты видишь этот код, пожалуйста знай,
-                    // что этого безобразия скоро не будет, я просто пока экспериментирую🥲
-                    UIView.animate(withDuration: 0.3) {
-                        self?.collectionView.contentInset.bottom += height
-                        self?.messageTextViewBottomAnchor.constant = -height
-                    }
-                    self?.view.layoutIfNeeded()
-                case .keyboardDidHide:
-                    UIView.animate(withDuration: 0.3) {
-                        self?.messageTextViewBottomAnchor.constant = 0
-                        self?.collectionView.contentInset.bottom = 60
-                    }
-                    self?.view.layoutIfNeeded()
-                }
-            }.store(in: &disposeBag)
-    }
-    
     func configurePlaceholder() {
         view.addSubview(placeholder)
         placeholder.translatesAutoresizingMaskIntoConstraints = false
@@ -142,6 +171,7 @@ private extension ConversationVC {
         self.view.addSubview(messageTextView)
         
         messageTextView.sendButton.addTarget(nil, action: #selector(sendButtonTapped), for: .touchUpInside)
+        messageTextView.imageButton.addTarget(nil, action: #selector(addImageButtonTapped), for: .touchUpInside)
         messageTextViewBottomAnchor = messageTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         
         NSLayoutConstraint.activate([
@@ -156,7 +186,8 @@ private extension ConversationVC {
         collectionView.backgroundColor      = .clear
         collectionView.keyboardDismissMode  = .interactive
         
-        collectionView.register(MessageCVCell.self, forCellWithReuseIdentifier: MessageCVCell.id)
+        collectionView.register(MessageTextCVCell.self, forCellWithReuseIdentifier: MessageTextCVCell.id)
+        collectionView.register(MessageImageCVCell.self, forCellWithReuseIdentifier: MessageImageCVCell.id)
         collectionView.register(DateCVHeader.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: DateCVHeader.id)
@@ -168,10 +199,8 @@ private extension ConversationVC {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: messageTextView.topAnchor)
         ])
-        
-        collectionView.contentInset.bottom = 60
     }
     
     func configureNavigationBar() {
@@ -195,18 +224,26 @@ private extension ConversationVC {
     
     func configureDataSource() {
         typealias DataSource = UICollectionViewDiffableDataSource<DateComponents, MessageCellModel>
-        dataSource = DataSource(collectionView: self.collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageCVCell.id, for: indexPath) as? MessageCVCell
-            cell?.configure(with: itemIdentifier)
-            return cell
+        dataSource = DataSource(collectionView: collectionView, cellProvider: { collectionView, indexPath, itemIdentifier in
+            let isValidURL = URL(string: itemIdentifier.text)?.isValid
+
+            switch isValidURL {
+            case true:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageImageCVCell.id, for: indexPath) as? MessageImageCVCell
+                cell?.configure(with: itemIdentifier)
+                return cell
+            default:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MessageTextCVCell.id, for: indexPath) as? MessageTextCVCell
+                cell?.configure(with: itemIdentifier)
+                return cell
+            }
         })
         
-        guard let dataSource else { return }
-        dataSource.supplementaryViewProvider = { [unowned self] _, _, indexPath in
+        dataSource?.supplementaryViewProvider = { [unowned self] _, _, indexPath in
             if let cell = self.collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
                                                                                withReuseIdentifier: DateCVHeader.id,
                                                                                for: indexPath) as? DateCVHeader {
-                cell.configure(with: dataSource.snapshot().sectionIdentifiers[indexPath.section])
+                cell.configure(with: dataSource?.snapshot().sectionIdentifiers[indexPath.section])
                 return cell
             }
             return nil
@@ -224,6 +261,8 @@ private extension ConversationVC {
             group.contentInsets.trailing    = 12
             
             let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = .init(10)
+            section.contentInsets.bottom = 10
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem
             let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
@@ -237,6 +276,7 @@ private extension ConversationVC {
             return section
         })
         
+        guard let layout else { return }
         self.collectionView.setCollectionViewLayout(layout, animated: true)
     }
 }

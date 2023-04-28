@@ -43,7 +43,7 @@ extension ProfileEditorViewModel: ViewModel {
     }
     
     enum Output {
-        case savingSucceed
+        case savingSucceeded
         case savingInProgress
         case savingCanceled
         case showAlert(alert: UIAlertController)
@@ -90,7 +90,7 @@ private extension ProfileEditorViewModel {
                     let ok = UIAlertAction(title: Project.Button.ok, style: .cancel)
                     return [ok]
                 }
-                self.output.send(.savingSucceed)
+                self.output.send(.savingSucceeded)
             }
         } catch {
             DispatchQueue.main.async { [weak self] in
@@ -114,6 +114,7 @@ private extension ProfileEditorViewModel {
 
 private extension ProfileEditorViewModel {
     func cancelSaving() {
+        user = fileService.currentUser
         userWorkItem?.cancel()
         userWorkItem = nil
         

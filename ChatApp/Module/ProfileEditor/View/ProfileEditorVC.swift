@@ -27,11 +27,10 @@ final class ProfileEditorVC: UIViewController {
     public var saveButton         = UIBarButtonItem()
     public var activity           = UIActivityIndicatorView(style: .medium)
     
-    public let profileImageView   = TCImageView(size: .large)
+    public let profileImageView   = TCProfileImageView(size: .large)
     public let addPhotoButton     = UIButton()
     public let profileEditor      = TCProfileEditor()
-    
-    private var imagePicker: TCImagePicker?
+    private var imagePicker       = UIImagePickerController()
 }
 
 // MARK: - Жизненный цикл
@@ -52,6 +51,12 @@ extension ProfileEditorVC {
         
         setup(with: user)
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        input.send(.cancel)
+    }
 }
 
 // MARK: - Методы обработки событий
@@ -61,7 +66,8 @@ private extension ProfileEditorVC {
     func buttonTapped(_ button: UIControl) {
         switch button {
         case addPhotoButton:
-            imagePicker?.present(from: addPhotoButton)
+            let actionSheet = configureAddPhotoActionSheet()
+            self.present(actionSheet, animated: true)
         case cancelButton:
             input.send(.cancel)
             dismiss(animated: true)
@@ -114,6 +120,39 @@ private extension ProfileEditorVC {
         self.user.bio       = bio
         self.user.avatar    = profileImageView.image?.pngData()
     }
+    
+    func configureAddPhotoActionSheet() -> UIAlertController {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let takeAPhoto = UIAlertAction(title: Project.Button.takePhoto, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true)
+        }
+        let selectFromGalleryAction = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true)
+        }
+        let loadImageAction = UIAlertAction(title: "Download", style: .default) { [weak self] _ in
+            guard let self else { return }
+            let imageLoaderVC = ListLoadImagesVC()
+            let navigationController = UINavigationController(rootViewController: imageLoaderVC)
+            imageLoaderVC.imagePickerSubject
+                .sink { (image, _) in
+                    self.profileImageView.setImage(image: image)
+                }.store(in: &self.disposeBag)
+            self.present(navigationController, animated: true)
+        }
+        let cancelAction = UIAlertAction(title: Project.Button.cancel, style: .cancel)
+        
+        actionSheet.addAction(takeAPhoto)
+        actionSheet.addAction(selectFromGalleryAction)
+        actionSheet.addAction(loadImageAction)
+        actionSheet.addAction(cancelAction)
+        
+        return actionSheet
+    }
 }
 
 // MARK: - Методы конфигурации
@@ -123,7 +162,7 @@ private extension ProfileEditorVC {
         let output = viewModel.transform(input.eraseToAnyPublisher())
         output.sink { [weak self] event in
             switch event {
-            case .savingSucceed:
+            case .savingSucceeded:
                 self?.savingCanceled()
             case .savingInProgress:
                 self?.savingInProgress()
@@ -197,15 +236,19 @@ private extension ProfileEditorVC {
     }
     
     func configureImagePicker() {
-        self.imagePicker = TCImagePicker(presentationController: self, delegate: self)
+        self.imagePicker.delegate = self
+        self.imagePicker.allowsEditing = true
     }
 }
 
-// MARK: - ImagePickerProtocol
-
-extension ProfileEditorVC: ImagePickerProtocol {
-    func didSelect(image: UIImage?) {
-        guard let image else { return }
-        self.profileImageView.setImage(image: image)
+extension ProfileEditorVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        if let image = info[.editedImage] as? UIImage {
+            self.profileImageView.setImage(image: image)
+        } else if let image = info[.originalImage] as? UIImage {
+            self.profileImageView.setImage(image: image)
+        }
+        
+        dismiss(animated: true)
     }
 }

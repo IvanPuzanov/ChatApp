@@ -10,7 +10,7 @@ import Combine
 import TFSChatTransport
 
 final class ChannelCellModel {
-    // MARK: - Инициализация
+    // MARK: - Параметры
     
     private let uuid = UUID()
     
@@ -21,6 +21,8 @@ final class ChannelCellModel {
     public var logoURL: String?
     
     public var dbChannel: DBChannel?
+    
+    // MARK: - Инициализация
     
     init(channel: Channel) {
         self.id             = channel.id
@@ -42,7 +44,7 @@ final class ChannelCellModel {
 
 extension ChannelCellModel: Hashable {
     static func == (lhs: ChannelCellModel, rhs: ChannelCellModel) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.uuid == rhs.uuid
     }
     
     func hash(into hasher: inout Hasher) {}

@@ -11,7 +11,7 @@ final class TCChatNavigationBar: UIView {
     // MARK: - UI
     
     private let blurredView         = UIView()
-    private let profileImageView    = TCImageView(size: .chat)
+    private let profileImageView    = TCProfileImageView(size: .chat)
     private let nameLabel           = UILabel()
     private let shadowImage         = UIView()
     
@@ -104,7 +104,7 @@ extension TCChatNavigationBar {
         NSLayoutConstraint.activate([
             nameLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             nameLabel.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 5),
-            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20)
+            nameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -22)
         ])
     }
     

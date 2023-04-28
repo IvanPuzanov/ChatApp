@@ -20,25 +20,26 @@ enum ChannelError: String, Error {
 final class ChannelsListViewModel {
     // MARK: - Сервисы
     
+    private let sseService  = SSEService(host: "167.235.86.234", port: 8080)
     private let chatService = ChatService(host: "167.235.86.234", port: 8080)
     private let coreDataService: CoreDataServiceProtocol
     
     // MARK: - Combine
     
-    private let output              = PassthroughSubject<Output, Never>()
-    private var cancellabels        = Set<AnyCancellable>()
+    private let output           = PassthroughSubject<Output, Never>()
+    private var disposeBag       = Set<AnyCancellable>()
     
     // MARK: - Параметры
     
-    private var channels            = [ChannelCellModel]()
-    private var cachedChannels      = Set<ChannelCellModel>()
-    private var actualChannels      = Set<ChannelCellModel>()
+    private var channels         = [ChannelCellModel]()
+    private var cachedChannels   = Set<ChannelCellModel>()
+    private var actualChannels   = Set<ChannelCellModel>()
     
-    private var isFiletered         = false
-    private var filteredChannels    = [ChannelCellModel]()
+    private var isFiletered      = false
+    private var filteredChannels = [ChannelCellModel]()
     
-    private let monitor             = NWPathMonitor()
-    private let monitorQueue        = DispatchQueue(label: "monitorQueue")
+    private let monitor          = NWPathMonitor()
+    private let monitorQueue     = DispatchQueue(label: "monitorQueue")
     
     // MARK: - Инициализация
     
@@ -53,27 +54,23 @@ final class ChannelsListViewModel {
 extension ChannelsListViewModel: ViewModel {
     enum Input {
         case fetchChannels
+        case fetchCachedChannels
         case addChannelTapped
         case filterChannels(filter: String?)
         case createChannel(name: String)
         case delete(channel: ChannelCellModel)
+        case subscribeToEvents
     }
     
     enum Output {
-        case fetchChannelsDidFail(error: ChannelError)
-        case fetchChannelsDidSucceed(channels: [ChannelCellModel])
-        
+        case errorOccured(error: ChannelError)
+        case fetchChannelsDidSucceeded(channels: [ChannelCellModel])
         case channelsDidFilter(channels: [ChannelCellModel])
-        
+        case createChannelDidSucceeded
+        case deleteChannelDidSucceeded
         case showAddChannelAlert
-        
-        case createChannelDidFail(error: ChannelError)
-        case createChannelDidSucceed
-        
-        case deleteChannelDidFail(error: ChannelError)
-        case deleteChannelDidSucceed
-        
         case connectionIsBroken
+        case updateChannel(id: String)
     }
     
     func transform(_ input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {
@@ -81,6 +78,8 @@ extension ChannelsListViewModel: ViewModel {
             switch event {
             case .fetchChannels:
                 self?.fetchChannels()
+            case .fetchCachedChannels:
+                self?.fetchAllCachedChannels()
             case .addChannelTapped:
                 self?.output.send(.showAddChannelAlert)
             case .filterChannels(let filter):
@@ -89,8 +88,10 @@ extension ChannelsListViewModel: ViewModel {
                 self?.createChannel(name: name)
             case .delete(let channel):
                 self?.deleteChannel(channel)
+            case .subscribeToEvents:
+                self?.subscribeToEvents()
             }
-        }.store(in: &cancellabels)
+        }.store(in: &disposeBag)
         
         return output.eraseToAnyPublisher()
     }
@@ -99,17 +100,14 @@ extension ChannelsListViewModel: ViewModel {
 // MARK: - Методы View Model
 
 private extension ChannelsListViewModel {
-    func fetchChannels() {
-        // Запрос кэшированных каналов
-        self.fetchAllCachedChannels()
-        
+    func fetchChannels() {        
         // Запрос актуальных каналов с сервера
         chatService
             .loadChannels()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.output.send(.fetchChannelsDidFail(error: .fetchChannelDidFail))
+                    self?.output.send(.errorOccured(error: .fetchChannelDidFail))
                 }
             } receiveValue: { [weak self] channels in
                 let channelViewModels = channels.map { ChannelCellModel(channel: $0) }
@@ -117,12 +115,12 @@ private extension ChannelsListViewModel {
                 let sortedChannels = channelViewModels.sorted { lhs, rhs in
                     return lhs.lastActivity ?? Date() > rhs.lastActivity ?? Date()
                 }
-                
+            
+                self?.output.send(.fetchChannelsDidSucceeded(channels: sortedChannels))
                 self?.channels = sortedChannels
                 self?.actualChannels = Set(sortedChannels)
-                self?.output.send(.fetchChannelsDidSucceed(channels: sortedChannels))
                 self?.updateCachedChannels()
-            }.store(in: &cancellabels)
+            }.store(in: &disposeBag)
 
     }
     
@@ -132,12 +130,12 @@ private extension ChannelsListViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.output.send(.createChannelDidFail(error: .createChannelDidFail))
+                    self?.output.send(.errorOccured(error: .createChannelDidFail))
                 }
             } receiveValue: { [weak self] _ in
-                self?.output.send(.createChannelDidSucceed)
+                self?.output.send(.createChannelDidSucceeded)
                 self?.fetchChannels()
-            }.store(in: &cancellabels)
+            }.store(in: &disposeBag)
 
     }
     
@@ -147,11 +145,11 @@ private extension ChannelsListViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.output.send(.deleteChannelDidFail(error: .deleteChannelDidFail))
+                    self?.output.send(.errorOccured(error: .deleteChannelDidFail))
                 }
             } receiveValue: { [weak self] _ in
-                self?.output.send(.deleteChannelDidSucceed)
-            }.store(in: &cancellabels)
+                self?.output.send(.deleteChannelDidSucceeded)
+            }.store(in: &disposeBag)
 
     }
     
@@ -181,6 +179,23 @@ private extension ChannelsListViewModel {
         
         monitor.start(queue: monitorQueue)
     }
+    
+    func subscribeToEvents() {
+        sseService
+            .subscribeOnEvents()
+            .sink { completion in
+                print(completion)
+            } receiveValue: { [weak self] event in
+                switch event.eventType {
+                case .add:
+                    self?.fetchChannels()
+                case .delete:
+                    self?.fetchChannels()
+                case .update:
+                    self?.fetchChannels()
+                }
+            }.store(in: &disposeBag)
+    }
 }
 
 // MARK: - Core Data methods
@@ -194,7 +209,7 @@ extension ChannelsListViewModel {
            
             self.channels = channelViewModels
             self.cachedChannels = Set(channelViewModels)
-            self.output.send(.fetchChannelsDidSucceed(channels: channelViewModels))
+            self.output.send(.fetchChannelsDidSucceeded(channels: channelViewModels))
         } catch {}
     }
     

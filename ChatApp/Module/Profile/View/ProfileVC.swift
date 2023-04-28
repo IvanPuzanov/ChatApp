@@ -18,13 +18,14 @@ final class ProfileVC: UIViewController {
     
     // MARK: - UI
     
-    private var stackView         = UIStackView()
-    private let profileImageView  = TCImageView(size: .large)
-    private var addPhotoButton    = UIButton()
-    private var nameLabel         = UILabel()
-    private var bioLabel          = UILabel()
-    private var editButton        = UIButton()
-    private var imagePicker: TCImagePicker?
+    private var stackView               = UIStackView()
+    private let profileImageView        = TCProfileImageView(size: .large)
+    private var addPhotoButton          = UIButton()
+    private var nameLabel               = UILabel()
+    private var bioLabel                = UILabel()
+    private var editButton              = UIButton()
+    private var imagePickerController   = UIImagePickerController()
+//    private var imagePicker: TCImagePicker?
 }
 
 // MARK: - Жизненный цикл
@@ -79,7 +80,36 @@ extension ProfileVC {
     private func buttonTapped(_ sender: UIButton) {
         switch sender {
         case addPhotoButton:
-            self.imagePicker?.present(from: addPhotoButton)
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            
+            let takeAPhoto = UIAlertAction(title: Project.Button.takePhoto, style: .default) { [weak self] _ in
+                guard let self else { return }
+                self.imagePickerController.sourceType = .camera
+                self.present(self.imagePickerController, animated: true)
+            }
+            let selectFromGalleryAction = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { [weak self] _ in
+                guard let self else { return }
+                self.imagePickerController.sourceType = .photoLibrary
+                self.present(self.imagePickerController, animated: true)
+            }
+            let loadImageAction = UIAlertAction(title: Project.Button.download, style: .default) { [weak self] _ in
+                guard let self else { return }
+                let imageLoaderVC = ListLoadImagesVC()
+                let navigationController = UINavigationController(rootViewController: imageLoaderVC)
+                imageLoaderVC.imagePickerSubject
+                    .sink { (image, _) in
+                        self.input.send(.imageDidSelect(image: image))
+                    }.store(in: &self.disposeBag)
+                self.present(navigationController, animated: true)
+            }
+            let cancelAction = UIAlertAction(title: Project.Button.cancel, style: .cancel)
+            
+            actionSheet.addAction(takeAPhoto)
+            actionSheet.addAction(selectFromGalleryAction)
+            actionSheet.addAction(loadImageAction)
+            actionSheet.addAction(cancelAction)
+            
+            self.present(actionSheet, animated: true)
         case editButton:
             self.input.send(.showEditor)
         default:
@@ -187,13 +217,20 @@ private extension ProfileVC {
     }
     
     func configureImagePicker() {
-        self.imagePicker = TCImagePicker(presentationController: self, delegate: self)
+        imagePickerController.delegate         = self
+        imagePickerController.allowsEditing    = true
+//        self.imagePicker = TCImagePicker(presentationController: self, delegate: self)
     }
 }
 
-extension ProfileVC: ImagePickerProtocol {
-    func didSelect(image: UIImage?) {
-        guard let image else { return }
-        self.input.send(.imageDidSelect(image: image))
+extension ProfileVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        if let image = info[.editedImage] as? UIImage {
+            self.input.send(.imageDidSelect(image: image))
+        } else if let image = info[.originalImage] as? UIImage {
+            self.input.send(.imageDidSelect(image: image))
+        }
+        
+        dismiss(animated: true)
     }
 }
