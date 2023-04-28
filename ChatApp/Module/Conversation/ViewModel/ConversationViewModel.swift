@@ -45,26 +45,23 @@ final class ConversationViewModel {
 extension ConversationViewModel: ViewModel {
     enum Input {
         case fetchUser
-        case fetchMessages
-        case fetchCachedMessages
         case loadImage
-        case sendMessage(text: String)
-        case subscribeKeyboardEvents
-        case subscribeOnEvents
-        case addImage(image: UIImage)
+        case fetchMessages
         case removeSubcription
+        case subscribeOnEvents
+        case fetchCachedMessages
+        case subscribeKeyboardEvents
+        case addImage(image: UIImage)
+        case sendMessage(text: String)
     }
     
     enum Output {
-        case fetchMessagesSucceeded(messages: [DateComponents: [MessageCellModel]])
-        case imageLoadSucceeded(image: UIImage)
-        case sendMessageSucceeded
-        case imageAdded(image: UIImage)
-        
-        case keyboardDidShow(height: CGFloat)
         case keyboardDidHide
-        
+        case sendMessageSucceeded
+        case keyboardDidShow(height: CGFloat)
+        case imageLoadSucceeded(image: UIImage)
         case errorOccured(error: ConversationError)
+        case fetchMessagesSucceeded(messages: [DateComponents: [MessageCellModel]])
     }
     
     func transform(_ input: AnyPublisher<Input, Never>) -> AnyPublisher<Output, Never> {

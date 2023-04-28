@@ -84,8 +84,6 @@ private extension ConversationVC {
                     self?.chatNavigationBar.setImage(image)
                 case .sendMessageSucceeded:
                     self?.messageTextView.resetText()
-                case .imageAdded(let image):
-                    break
                 case .keyboardDidShow(let height):
                     self?.messageTextViewBottomAnchor.constant = -height
                     UIView.animate(withDuration: 0.23) {
@@ -253,7 +251,7 @@ private extension ConversationVC {
     
     func configureLayout() {
         layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(70))
+            let itemSize    = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(180))
             let item        = NSCollectionLayoutItem(layoutSize: itemSize)
             let group       = NSCollectionLayoutGroup.vertical(layoutSize: itemSize, subitems: [item])
             

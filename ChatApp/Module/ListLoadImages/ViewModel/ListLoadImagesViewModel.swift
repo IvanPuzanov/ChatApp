@@ -56,7 +56,7 @@ private extension ListLoadImagesViewModel {
         imagesService.getImages(for: page) { [weak self] result in
             switch result {
             case .success(let images):
-                var newImages = Set(images).subtracting(self?.images ?? [])
+                let newImages = Set(images).subtracting(self?.images ?? [])
                 self?.images += newImages
                 self?.output.send(.imagesListFetchingSucceeded(images: self?.images))
             case .failure:

@@ -13,7 +13,7 @@ extension URL {
         let matches = detector.matches(in: self.absoluteString, options: [], range: NSRange(location: 0, length: self.absoluteString.utf16.count))
 
         for match in matches {
-            guard let range = Range(match.range, in: self.absoluteString) else { continue }
+            guard Range(match.range, in: self.absoluteString) != nil else { continue }
             return true
         }
         

@@ -55,12 +55,12 @@ extension MessageImageCVCell: ConfigurableViewProtocol {
 
 private extension MessageImageCVCell {
     func configureStackView() {
+        stackView = UIStackViewBuilder()
+            .withAxis(.vertical)
+            .withSpacing(5)
+            .translatesAutoresizingMaskIntoConstraints(false)
+            .build()
         self.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.spacing = 5
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -88,8 +88,8 @@ private extension MessageImageCVCell {
         stackView.addArrangedSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 200),
-            imageView.heightAnchor.constraint(equalToConstant: 200)
+            imageView.heightAnchor.constraint(equalToConstant: 180),
+            imageView.widthAnchor.constraint(equalToConstant: 180)
         ])
     }
     
