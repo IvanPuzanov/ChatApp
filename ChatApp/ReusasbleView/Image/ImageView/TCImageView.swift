@@ -48,6 +48,7 @@ extension TCImageView {
             let task = URLSession.shared.dataTask(with: url) { data, _, _ in
                 guard let data, let image = UIImage(data: data) else { return }
                 DispatchQueue.main.async {
+                    guard let loadWorkItem = self?.loadWorkItem, !loadWorkItem.isCancelled else { return }
                     self?.image = image
                 }
             }

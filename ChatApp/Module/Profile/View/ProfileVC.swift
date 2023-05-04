@@ -12,9 +12,16 @@ final class ProfileVC: UIViewController {
     // MARK: - Параметры
     
     public var coordinator: ProfileCoordinatorProtocol?
-    private var viewModel       = ProfileViewModel()
-    private var input           = PassthroughSubject<ProfileViewModel.Input, Never>()
-    private var disposeBag      = Set<AnyCancellable>()
+    private var viewModel               = ProfileViewModel()
+    private var input                   = PassthroughSubject<ProfileViewModel.Input, Never>()
+    private var disposeBag              = Set<AnyCancellable>()
+    private var cardTransitionService   = CardTransitionService()
+    
+    private let buttonPressRecognizer   = UILongPressGestureRecognizer()
+    private var isAnimating             = false
+    
+    private let animatingLayer          = CAEmitterLayer()
+    private let longPressRecognizer     = UILongPressGestureRecognizer()
     
     // MARK: - UI
     
@@ -25,7 +32,6 @@ final class ProfileVC: UIViewController {
     private var bioLabel                = UILabel()
     private var editButton              = UIButton()
     private var imagePickerController   = UIImagePickerController()
-//    private var imagePicker: TCImagePicker?
 }
 
 // MARK: - Жизненный цикл
@@ -37,6 +43,8 @@ extension ProfileVC {
         bindViewModel()
         
         configure()
+        configureAnimationLayer()
+        configureLongPressRecognizer()
         configureNavigationBar()
         configureStackView()
         configureProfileImageView()
@@ -80,41 +88,81 @@ extension ProfileVC {
     private func buttonTapped(_ sender: UIButton) {
         switch sender {
         case addPhotoButton:
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            
-            let takeAPhoto = UIAlertAction(title: Project.Button.takePhoto, style: .default) { [weak self] _ in
-                guard let self else { return }
-                self.imagePickerController.sourceType = .camera
-                self.present(self.imagePickerController, animated: true)
-            }
-            let selectFromGalleryAction = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { [weak self] _ in
-                guard let self else { return }
-                self.imagePickerController.sourceType = .photoLibrary
-                self.present(self.imagePickerController, animated: true)
-            }
-            let loadImageAction = UIAlertAction(title: Project.Button.download, style: .default) { [weak self] _ in
-                guard let self else { return }
-                let imageLoaderVC = ListLoadImagesVC()
-                let navigationController = UINavigationController(rootViewController: imageLoaderVC)
-                imageLoaderVC.imagePickerSubject
-                    .sink { (image, _) in
-                        self.input.send(.imageDidSelect(image: image))
-                    }.store(in: &self.disposeBag)
-                self.present(navigationController, animated: true)
-            }
-            let cancelAction = UIAlertAction(title: Project.Button.cancel, style: .cancel)
-            
-            actionSheet.addAction(takeAPhoto)
-            actionSheet.addAction(selectFromGalleryAction)
-            actionSheet.addAction(loadImageAction)
-            actionSheet.addAction(cancelAction)
-            
-            self.present(actionSheet, animated: true)
+            self.showActionSheet()
         case editButton:
             self.input.send(.showEditor)
         default:
             break
         }
+    }
+    
+    func showActionSheet() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let takeAPhoto = UIAlertAction(title: Project.Button.takePhoto, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.imagePickerController.sourceType = .camera
+            self.present(self.imagePickerController, animated: true)
+        }
+        let selectFromGalleryAction = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.imagePickerController.sourceType = .photoLibrary
+            self.present(self.imagePickerController, animated: true)
+        }
+        let loadImageAction = UIAlertAction(title: Project.Button.download, style: .default) { [weak self] _ in
+            guard let self else { return }
+            let imageLoaderVC = ListLoadImagesVC()
+            let navigationController = UINavigationController(rootViewController: imageLoaderVC)
+            imageLoaderVC.imagePickerSubject
+                .sink { (image, _) in
+                    self.input.send(.imageDidSelect(image: image))
+                }.store(in: &self.disposeBag)
+            self.present(navigationController, animated: true)
+        }
+        let cancelAction = UIAlertAction(title: Project.Button.cancel, style: .cancel)
+        
+        actionSheet.addAction(takeAPhoto)
+        actionSheet.addAction(selectFromGalleryAction)
+        actionSheet.addAction(loadImageAction)
+        actionSheet.addAction(cancelAction)
+        
+        self.present(actionSheet, animated: true)
+    }
+    
+    @objc
+    func editButtonLongPressed() {
+        guard buttonPressRecognizer.state == .began else { return }
+        isAnimating.toggle()
+        
+        if isAnimating {
+            let angle: CGFloat  = 18 * (Double.pi / 180)
+            
+            let position        = CABasicAnimation(keyPath: #keyPath(CALayer.position))
+            position.fromValue  = CGPoint(x: editButton.center.x - 10, y: editButton.center.y - 10)
+            position.toValue    = CGPoint(x: editButton.center.x + 10, y: editButton.center.y + 10)
+            
+            let rotation        = CABasicAnimation(keyPath: "transform.rotation")
+            rotation.fromValue  = -angle
+            rotation.toValue    = angle
+            
+            let groupAnimation          = CAAnimationGroup()
+            groupAnimation.animations   = [position, rotation]
+            groupAnimation.duration     = 0.3
+            groupAnimation.repeatCount  = .infinity
+            groupAnimation.autoreverses = true
+            
+            editButton.layer.add(groupAnimation, forKey: nil)
+        } else {
+            self.editButton.layer.removeAllAnimations()
+            self.editButton.layoutIfNeeded()
+        }
+    }
+    
+    @objc
+    func viewLongPressed() {
+        let location = longPressRecognizer.location(in: view)
+        
+        animatingLayer.emitterPosition = location
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -134,6 +182,28 @@ private extension ProfileVC {
         default:
             self.view.backgroundColor = .secondarySystemBackground
         }
+    }
+    
+    func configureAnimationLayer() {
+        animatingLayer.emitterPosition = view.frame.origin
+        animatingLayer.emitterSize = CGSize(width: 30, height: 30)
+        animatingLayer.emitterShape = CAEmitterLayerEmitterShape.circle
+        
+        let cell = CAEmitterCell()
+        cell.contents = UIImage(named: "TinkoffGerb")
+        cell.lifetime = 1
+        animatingLayer.emitterCells = [cell]
+        
+        view.layer.addSublayer(animatingLayer)
+    }
+    
+    func configureLongPressRecognizer() {
+        longPressRecognizer.delegate = self
+        longPressRecognizer.cancelsTouchesInView = false
+        longPressRecognizer.minimumPressDuration = 0.1
+        longPressRecognizer.addTarget(self, action: #selector(viewLongPressed))
+        
+        view.addGestureRecognizer(longPressRecognizer)
     }
     
     func configureNavigationBar() {
@@ -208,6 +278,8 @@ private extension ProfileVC {
             .addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             .build()
         
+        buttonPressRecognizer.addTarget(self, action: #selector(editButtonLongPressed))
+        self.editButton.addGestureRecognizer(buttonPressRecognizer)
         self.stackView.addArrangedSubview(editButton)
         
         NSLayoutConstraint.activate([
@@ -232,5 +304,11 @@ extension ProfileVC: UIImagePickerControllerDelegate, UINavigationControllerDele
         }
         
         dismiss(animated: true)
+    }
+}
+
+extension ProfileVC: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

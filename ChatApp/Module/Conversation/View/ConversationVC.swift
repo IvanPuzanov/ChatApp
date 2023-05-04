@@ -59,12 +59,6 @@ extension ConversationVC {
         
         self.tabBarController?.tabBar.isHidden = true
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-//        self.dataSource = nil
-    }
 }
 
 // MARK: - Методы обработки событий
@@ -259,7 +253,7 @@ private extension ConversationVC {
             group.contentInsets.trailing    = 12
             
             let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = .init(10)
+//            section.interGroupSpacing = .init(10)
             section.contentInsets.bottom = 10
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem

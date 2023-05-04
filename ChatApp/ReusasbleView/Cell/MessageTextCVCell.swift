@@ -19,6 +19,11 @@ final class MessageTextCVCell: UICollectionViewCell {
     private var messageLabel    = UILabel()
     private var dateLabel       = UILabel()
     
+    // MARK: - Параметры
+    
+    private var stackViewTopAnchor: NSLayoutConstraint = .init()
+    private var stackViewBottomAnchor: NSLayoutConstraint = .init()
+    
     // MARK: - Инициализация
     
     override init(frame: CGRect) {
@@ -48,14 +53,21 @@ extension MessageTextCVCell: ConfigurableViewProtocol {
         
         self.containerView.backgroundColor  = isUserMessage ? .systemBlue : .systemGray6
         self.stackView.alignment            = isUserMessage ? .trailing : .leading
-        self.senderLabel.isHidden           = isUserMessage
+        self.senderLabel.isHidden           = isUserMessage || model.isPreviousSelf
         self.senderLabel.text               = model.userName.isEmpty ? "No name" : model.userName
         self.dateLabel.text                 = model.date.showOnlyTime()
         self.dateLabel.textColor            = isUserMessage ? .white.withAlphaComponent(0.7) : .systemGray2
         self.messageLabel.textColor         = isUserMessage ? .white : Project.Color.bubbleTextColor
         self.messageLabel.text              = model.text
-        self.leftTailImage.isHidden         = isUserMessage
+        self.leftTailImage.isHidden         = isUserMessage || (!isUserMessage && model.isNextSelf)
         self.rightTailImage.isHidden        = !isUserMessage
+        
+//        self.leftTailImage.isHidden         = model.isNextSelf
+        
+        let topInset: CGFloat               = model.isPreviousSelf ? 2 : 5
+        let bottomInset: CGFloat            = model.isNextSelf ? 5 : 15
+        stackViewBottomAnchor.constant      = -bottomInset
+        stackViewTopAnchor.constant         = topInset
     }
 }
 
@@ -67,12 +79,14 @@ private extension MessageTextCVCell {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         stackView.axis = .vertical
+        stackViewTopAnchor = stackView.topAnchor.constraint(equalTo: topAnchor, constant: 5)
+        stackViewBottomAnchor = stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            stackViewTopAnchor,
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5)
+            stackViewBottomAnchor
         ])
     }
     

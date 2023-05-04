@@ -15,6 +15,11 @@ final class MessageImageCVCell: UICollectionViewCell {
     private var imageView   = TCImageView()
     private var dateLabel   = UILabel()
     
+    // MARK: - Параметры
+    
+    private var stackViewTopAnchor: NSLayoutConstraint = .init()
+    private var stackViewBottomAnchor: NSLayoutConstraint = .init()
+    
     // MARK: - Инициализация
     
     override init(frame: CGRect) {
@@ -36,10 +41,17 @@ final class MessageImageCVCell: UICollectionViewCell {
 extension MessageImageCVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = MessageCellModel
     func configure(with model: MessageCellModel) {
+        let isUserMessage = model.sender == .user
+        
         stackView.alignment     = model.sender == .user ? .trailing : .leading
-        senderLabel.isHidden    = model.sender == .user ? true : false
+        senderLabel.isHidden    = isUserMessage || model.isPreviousSelf
         senderLabel.text        = model.userName.isEmpty ? "No name" : model.userName
         dateLabel.text          = model.date.showOnlyTime()
+        
+        let topInset: CGFloat               = model.isPreviousSelf ? 2 : 0
+        let bottomInset: CGFloat            = model.isNextSelf ? 2 : 15
+        stackViewBottomAnchor.constant      = -bottomInset
+        stackViewTopAnchor.constant         = topInset
         
         imageView.loadImage(urlString: model.text)
     }
@@ -58,15 +70,19 @@ private extension MessageImageCVCell {
         stackView = UIStackViewBuilder()
             .withAxis(.vertical)
             .withSpacing(5)
+            .withMargins(left: 5, right: 5)
             .translatesAutoresizingMaskIntoConstraints(false)
             .build()
         self.addSubview(stackView)
         
+        stackViewTopAnchor = stackView.topAnchor.constraint(equalTo: topAnchor)
+        stackViewBottomAnchor = stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackViewTopAnchor,
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            stackViewBottomAnchor
         ])
     }
     

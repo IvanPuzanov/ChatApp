@@ -21,7 +21,8 @@ struct MessageCellModel {
     let userName: String
     let text: String
     let date: Date
-    let isPreviousSelf = false
+    var isPreviousSelf  = false
+    var isNextSelf      = false
     
     init(message: Message) {
         self.text       = message.text

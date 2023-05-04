@@ -193,7 +193,22 @@ private extension ConversationViewModel {
     }
     
     func groupMessagesByDate(messages: [MessageCellModel]) -> [DateComponents: [MessageCellModel]] {
-        let groupedMessages = Dictionary(grouping: messages) { (value) -> DateComponents in
+        var preparedMessages = [MessageCellModel]()
+        messages.enumerated().forEach { index, message in
+            let nextIndex       = index + 1
+            let previousIndex   = index - 1
+            
+            var newMessage = message
+            if messages.indices.contains(previousIndex) && messages[previousIndex].userID == message.userID {
+                newMessage.isPreviousSelf = true
+            }
+            if messages.indices.contains(nextIndex) && messages[nextIndex].userID == message.userID {
+                newMessage.isNextSelf = true
+            }
+            preparedMessages.append(newMessage)
+        }
+        
+        let groupedMessages = Dictionary(grouping: preparedMessages) { (value) -> DateComponents in
             let date = Calendar.current.dateComponents([.day, .year, .month], from: (value.date))
             return date
         }
