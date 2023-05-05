@@ -21,6 +21,7 @@ final class ProfileVC: UIViewController {
     
     private var longPressRecognizer     = UILongPressGestureRecognizer()
     private var logoEmitterLayer        = CAEmitterLayer()
+    private let cardTransitionService   = CardTransitionService()
     
     // MARK: - UI
     
@@ -69,7 +70,14 @@ extension ProfileVC {
                 case .userDidFetch(let user):
                     self?.setup(with: user)
                 case .showEditor(let user):
-                    self?.coordinator?.showUserEditor(for: user)
+                    let profileEditor = ProfileEditorVC()
+                    let navigationController = UINavigationController(rootViewController: profileEditor)
+                    profileEditor.user = user
+                    navigationController.modalPresentationStyle = .overCurrentContext
+                    navigationController.transitioningDelegate = self?.cardTransitionService
+                    
+                    self?.present(navigationController, animated: true)
+//                    self?.coordinator?.showUserEditor(for: user)
                 }
             }.store(in: &disposeBag)
     }

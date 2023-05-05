@@ -26,7 +26,29 @@ extension CardTransitionService: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
+        let containerView = transitionContext.containerView
+        guard let toViewController = transitionContext.viewController(forKey: .to),
+              let fromViewController = transitionContext.viewController(forKey: .from) else {
+            return
+        }
+
+        switch transition {
+        case .presentation:
+            containerView.addSubview(toViewController.view)
+            toViewController.view.alpha = 0
+            UIView.animate(withDuration: 0.4, animations: {
+                toViewController.view.alpha = 1
+            }, completion: { _ in
+                transitionContext.completeTransition(true)
+            })
+        case .dismissal:
+            UIView.animate(withDuration: 0.4, animations: {
+                fromViewController.view.alpha = 0
+            }, completion: { _ in
+                transitionContext.completeTransition(true)
+                fromViewController.view.removeFromSuperview()
+            })
+        }
     }
 }
 
