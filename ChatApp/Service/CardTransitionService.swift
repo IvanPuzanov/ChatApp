@@ -36,18 +36,18 @@ extension CardTransitionService: UIViewControllerAnimatedTransitioning {
         case .presentation:
             containerView.addSubview(toViewController.view)
             toViewController.view.alpha = 0
-            UIView.animate(withDuration: 0.4, animations: {
+            UIView.animate(withDuration: 0.4) {
                 toViewController.view.alpha = 1
-            }, completion: { _ in
+            } completion: { _ in
                 transitionContext.completeTransition(true)
-            })
+            }
         case .dismissal:
-            UIView.animate(withDuration: 0.4, animations: {
-                fromViewController.view.alpha = 0
-            }, completion: { _ in
+            UIView.animate(withDuration: 0.4) {
+                fromViewController.view.alpha = 1
+            } completion: { _ in
                 transitionContext.completeTransition(true)
                 fromViewController.view.removeFromSuperview()
-            })
+            }
         }
     }
 }

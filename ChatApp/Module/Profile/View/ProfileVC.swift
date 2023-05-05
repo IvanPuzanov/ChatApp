@@ -73,7 +73,7 @@ extension ProfileVC {
                     let profileEditor = ProfileEditorVC()
                     let navigationController = UINavigationController(rootViewController: profileEditor)
                     profileEditor.user = user
-                    navigationController.modalPresentationStyle = .overCurrentContext
+                    navigationController.modalPresentationStyle = .currentContext
                     navigationController.transitioningDelegate = self?.cardTransitionService
                     
                     self?.present(navigationController, animated: true)
