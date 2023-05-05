@@ -15,6 +15,8 @@ final class ProfileCardView: UIView {
         case full
     }
     private var cardViewMode: CardViewMode
+    private var gestureRecognizer = UILongPressGestureRecognizer()
+    private var isAnimating: Bool = false
     
     // MARK: - UI
     
@@ -31,10 +33,64 @@ final class ProfileCardView: UIView {
     init(cardViewMode: CardViewMode) {
         self.cardViewMode = cardViewMode
         super.init(frame: .zero)
+        
+        configure()
+        configureStackView()
+        configureProfileImageView()
+        configureAddPhotoButton()
+        configureNameLabel()
+        configureBioLabel()
+        configureEditButton()
+        configureImagePicker()
     }
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Методы обработки событий
+
+extension ProfileCardView {
+    func setup(with user: User) {
+        self.nameLabel.text = user.name
+        self.bioLabel.text  = user.bio
+        self.profileImageView.setName(name: user.name)
+        
+        guard let avatar = user.avatar, let profileImage = UIImage(data: avatar) else { return }
+        self.profileImageView.setImage(image: profileImage)
+    }
+    
+    func addEditButtonAction(target: Any?, action: Selector) {
+        self.editButton.addTarget(target, action: action, for: .touchUpInside)
+    }
+    
+    @objc
+    func changeAnimation() {
+        guard gestureRecognizer.state == .began else { return }
+        isAnimating.toggle()
+        
+        if isAnimating {
+            let angle: CGFloat  = 18 * (Double.pi / 180)
+            
+            let position        = CABasicAnimation(keyPath: #keyPath(CALayer.position))
+            position.fromValue  = CGPoint(x: editButton.center.x - 10, y: editButton.center.y - 10)
+            position.toValue    = CGPoint(x: editButton.center.x + 10, y: editButton.center.y + 10)
+            
+            let rotation        = CABasicAnimation(keyPath: "transform.rotation")
+            rotation.fromValue  = -angle
+            rotation.toValue    = angle
+            
+            let groupAnimation          = CAAnimationGroup()
+            groupAnimation.animations   = [position, rotation]
+            groupAnimation.duration     = 0.3
+            groupAnimation.repeatCount  = .infinity
+            groupAnimation.autoreverses = true
+            
+            editButton.layer.add(groupAnimation, forKey: nil)
+        } else {
+            editButton.layer.removeAllAnimations()
+        }
     }
 }
 
@@ -61,7 +117,8 @@ private extension ProfileCardView {
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             stackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
     
@@ -109,16 +166,16 @@ private extension ProfileCardView {
             .withBackgroundColor(.systemBlue)
             .withCorner(radius: 17)
             .translatesAutoresizingMaskIntoConstraints(false)
-//            .addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
             .build()
         
-//        let longTapRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(editButtonLongTapped))
-//        self.editButton.addGestureRecognizer(longTapRecognizer)
+        gestureRecognizer.addTarget(self, action: #selector(changeAnimation))
+        editButton.addGestureRecognizer(gestureRecognizer)
+        
         self.stackView.addArrangedSubview(editButton)
         
         NSLayoutConstraint.activate([
             editButton.heightAnchor.constraint(equalToConstant: 50),
-            editButton.widthAnchor.constraint(equalTo: widthAnchor, constant: -40)
+            editButton.widthAnchor.constraint(equalTo: widthAnchor, constant: -60)
         ])
     }
     

@@ -15,13 +15,12 @@ final class ProfileVC: UIViewController {
     private var viewModel               = ProfileViewModel()
     private var input                   = PassthroughSubject<ProfileViewModel.Input, Never>()
     private var disposeBag              = Set<AnyCancellable>()
-    private var cardTransitionService   = CardTransitionService()
     
     private let buttonPressRecognizer   = UILongPressGestureRecognizer()
     private var isAnimating             = false
     
-    private let animatingLayer          = CAEmitterLayer()
-    private let longPressRecognizer     = UILongPressGestureRecognizer()
+    private var longPressRecognizer     = UILongPressGestureRecognizer()
+    private var logoEmitterLayer        = CAEmitterLayer()
     
     // MARK: - UI
     
@@ -43,8 +42,6 @@ extension ProfileVC {
         bindViewModel()
         
         configure()
-        configureAnimationLayer()
-        configureLongPressRecognizer()
         configureNavigationBar()
         configureStackView()
         configureProfileImageView()
@@ -53,6 +50,8 @@ extension ProfileVC {
         configureBioLabel()
         configureEditButton()
         configureImagePicker()
+        configureLongPressRecognzier()
+        configureLogoEmitterLayer()
         
         input.send(.fetchUser)
     }
@@ -153,16 +152,28 @@ extension ProfileVC {
             
             editButton.layer.add(groupAnimation, forKey: nil)
         } else {
-            self.editButton.layer.removeAllAnimations()
-            self.editButton.layoutIfNeeded()
+            editButton.layer.removeAllAnimations()
         }
     }
     
     @objc
-    func viewLongPressed() {
+    private func viewLongPressed() {
         let location = longPressRecognizer.location(in: view)
         
-        animatingLayer.emitterPosition = location
+        logoEmitterLayer.emitterPosition = location
+        
+        switch longPressRecognizer.state {
+        case .began:
+            logoEmitterLayer.lifetime   = 1
+            logoEmitterLayer.opacity    = 1
+        case .changed:
+            logoEmitterLayer.emitterPosition = location
+        case .ended:
+            logoEmitterLayer.lifetime   = 0
+            logoEmitterLayer.opacity    = 0
+        default:
+            break
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -182,28 +193,6 @@ private extension ProfileVC {
         default:
             self.view.backgroundColor = .secondarySystemBackground
         }
-    }
-    
-    func configureAnimationLayer() {
-        animatingLayer.emitterPosition = view.frame.origin
-        animatingLayer.emitterSize = CGSize(width: 30, height: 30)
-        animatingLayer.emitterShape = CAEmitterLayerEmitterShape.circle
-        
-        let cell = CAEmitterCell()
-        cell.contents = UIImage(named: "TinkoffGerb")
-        cell.lifetime = 1
-        animatingLayer.emitterCells = [cell]
-        
-        view.layer.addSublayer(animatingLayer)
-    }
-    
-    func configureLongPressRecognizer() {
-        longPressRecognizer.delegate = self
-        longPressRecognizer.cancelsTouchesInView = false
-        longPressRecognizer.minimumPressDuration = 0.1
-        longPressRecognizer.addTarget(self, action: #selector(viewLongPressed))
-        
-        view.addGestureRecognizer(longPressRecognizer)
     }
     
     func configureNavigationBar() {
@@ -292,6 +281,40 @@ private extension ProfileVC {
         imagePickerController.delegate         = self
         imagePickerController.allowsEditing    = true
 //        self.imagePicker = TCImagePicker(presentationController: self, delegate: self)
+    }
+    
+    func configureLongPressRecognzier() {
+        view.addGestureRecognizer(longPressRecognizer)
+        longPressRecognizer.minimumPressDuration = 0.1
+        longPressRecognizer.addTarget(self, action: #selector(viewLongPressed))
+    }
+    
+    func configureLogoEmitterLayer() {
+        logoEmitterLayer.lifetime           = 0
+        logoEmitterLayer.emitterShape       = .line
+        logoEmitterLayer.emitterSize        = CGSize(width: 1, height: 1)
+        
+        let logo = makeEmitterCell()
+        
+        logoEmitterLayer.emitterCells = [logo]
+        
+        view.layer.addSublayer(logoEmitterLayer)
+    }
+    
+    func makeEmitterCell() -> CAEmitterCell {
+        let cell                = CAEmitterCell()
+        cell.spin               = 1
+        cell.scale              = 0.2
+        cell.lifetime           = 1
+        cell.velocity           = 100
+        cell.birthRate          = 25
+        cell.spinRange          = 2
+        cell.velocityRange      = 30
+        cell.emissionRange      = CGFloat.pi * 2
+        cell.emissionLongitude  = CGFloat.pi
+        
+        cell.contents = UIImage(named: "tinkoff_gerb")?.cgImage
+        return cell
     }
 }
 
