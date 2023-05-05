@@ -150,7 +150,7 @@ extension ProfileVC {
             groupAnimation.repeatCount  = .infinity
             groupAnimation.autoreverses = true
             
-            editButton.layer.add(groupAnimation, forKey: nil)
+            editButton.layer.add(groupAnimation, forKey: "editButtonShake")
         } else {
             editButton.layer.removeAllAnimations()
         }
@@ -164,13 +164,11 @@ extension ProfileVC {
         
         switch longPressRecognizer.state {
         case .began:
-            logoEmitterLayer.lifetime   = 1
-            logoEmitterLayer.opacity    = 1
+            logoEmitterLayer.lifetime = 1
         case .changed:
             logoEmitterLayer.emitterPosition = location
         case .ended:
-            logoEmitterLayer.lifetime   = 0
-            logoEmitterLayer.opacity    = 0
+            logoEmitterLayer.lifetime = 0
         default:
             break
         }
@@ -287,6 +285,8 @@ private extension ProfileVC {
         view.addGestureRecognizer(longPressRecognizer)
         longPressRecognizer.minimumPressDuration = 0.1
         longPressRecognizer.addTarget(self, action: #selector(viewLongPressed))
+        longPressRecognizer.delegate = self
+        longPressRecognizer.cancelsTouchesInView = false
     }
     
     func configureLogoEmitterLayer() {
@@ -309,6 +309,7 @@ private extension ProfileVC {
         cell.velocity           = 100
         cell.birthRate          = 25
         cell.spinRange          = 2
+        cell.alphaSpeed         = -1
         cell.velocityRange      = 30
         cell.emissionRange      = CGFloat.pi * 2
         cell.emissionLongitude  = CGFloat.pi
