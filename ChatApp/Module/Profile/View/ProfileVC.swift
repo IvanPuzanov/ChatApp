@@ -70,14 +70,7 @@ extension ProfileVC {
                 case .userDidFetch(let user):
                     self?.setup(with: user)
                 case .showEditor(let user):
-                    let profileEditor = ProfileEditorVC()
-                    let navigationController = UINavigationController(rootViewController: profileEditor)
-                    profileEditor.user = user
-                    navigationController.modalPresentationStyle = .currentContext
-                    navigationController.transitioningDelegate = self?.cardTransitionService
-                    
-                    self?.present(navigationController, animated: true)
-//                    self?.coordinator?.showUserEditor(for: user)
+                    self?.showEditor(for: user)
                 }
             }.store(in: &disposeBag)
     }
@@ -111,11 +104,13 @@ extension ProfileVC {
             self.imagePickerController.sourceType = .camera
             self.present(self.imagePickerController, animated: true)
         }
+        
         let selectFromGalleryAction = UIAlertAction(title: Project.Button.selectFromGallery, style: .default) { [weak self] _ in
             guard let self else { return }
             self.imagePickerController.sourceType = .photoLibrary
             self.present(self.imagePickerController, animated: true)
         }
+        
         let loadImageAction = UIAlertAction(title: Project.Button.download, style: .default) { [weak self] _ in
             guard let self else { return }
             let imageLoaderVC = ListLoadImagesVC()
@@ -126,6 +121,7 @@ extension ProfileVC {
                 }.store(in: &self.disposeBag)
             self.present(navigationController, animated: true)
         }
+        
         let cancelAction = UIAlertAction(title: Project.Button.cancel, style: .cancel)
         
         actionSheet.addAction(takeAPhoto)
@@ -134,6 +130,16 @@ extension ProfileVC {
         actionSheet.addAction(cancelAction)
         
         self.present(actionSheet, animated: true)
+    }
+    
+    func showEditor(for user: User) {
+        let profileEditor = ProfileEditorVC()
+        let navigationController = UINavigationController(rootViewController: profileEditor)
+        profileEditor.user = user
+        navigationController.modalPresentationStyle = .currentContext
+        navigationController.transitioningDelegate = self.cardTransitionService
+        
+        self.present(navigationController, animated: true)
     }
     
     @objc

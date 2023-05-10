@@ -180,19 +180,7 @@ private extension ProfileCardView {
     }
     
     func configureImagePicker() {
-        imagePickerController.delegate         = self
-        imagePickerController.allowsEditing    = true
-    }
-}
-
-extension ProfileCardView: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let image = info[.editedImage] as? UIImage {
-//            self.input.send(.imageDidSelect(image: image))
-        } else if let image = info[.originalImage] as? UIImage {
-//            self.input.send(.imageDidSelect(image: image))
-        }
-        
-//        dismiss(animated: true)
+        imagePickerController.allowsEditing = true
+//        imagePickerController.delegate = self
     }
 }
