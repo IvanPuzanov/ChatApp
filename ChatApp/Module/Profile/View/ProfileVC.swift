@@ -233,6 +233,7 @@ private extension ProfileVC {
     }
     
     func configureProfileImageView() {
+        self.profileImageView.accessibilityIdentifier = "profileImageView"
         self.stackView.addArrangedSubview(profileImageView)
     }
     
@@ -253,6 +254,7 @@ private extension ProfileVC {
             .withTextColor(.label)
             .build()
         
+        self.nameLabel.accessibilityIdentifier = "nameLabel"
         self.stackView.addArrangedSubview(nameLabel)
     }
     
@@ -264,6 +266,7 @@ private extension ProfileVC {
             .withNumberLines(3)
             .build()
         
+        self.bioLabel.accessibilityIdentifier = "bioLabel"
         self.stackView.setCustomSpacing(10, after: nameLabel)
         self.stackView.addArrangedSubview(bioLabel)
     }

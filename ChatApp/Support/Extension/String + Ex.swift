@@ -22,4 +22,9 @@ extension String {
         guard let date = self.convertToDate() else { return "N/A" }
         return date.convert(for: .channel)
     }
+    
+    func isURL() -> Bool {
+        guard let url = URL(string: self) else { return false }
+        return url.isValid
+    }
 }

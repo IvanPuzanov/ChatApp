@@ -19,17 +19,15 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>ChatApp\NO_LOGS.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
-		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>2ABEC55D29A4A1C10046CB38</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2AEE4DA92A0B9AF500E7E04C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

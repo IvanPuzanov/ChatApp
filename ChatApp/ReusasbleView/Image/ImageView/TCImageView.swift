@@ -13,6 +13,8 @@ final class TCImageView: UIImageView {
     private var loadWorkItem: DispatchWorkItem?
     private var backgroundQueue = DispatchQueue(label: "imageLoadQueue", qos: .utility)
     
+    // MARK: - Инициализация
+    
     convenience init() {
         self.init(frame: .zero)
         
@@ -40,7 +42,6 @@ extension TCImageView {
         
         loadWorkItem?.cancel()
         loadWorkItem = nil
-        
     }
     
     private func makeLoadWorkItem(url: URL) {
@@ -52,7 +53,7 @@ extension TCImageView {
                     self?.image = image
                 }
             }
-            
+
             task.resume()
         }
     }

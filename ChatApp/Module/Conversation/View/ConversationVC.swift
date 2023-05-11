@@ -253,8 +253,6 @@ private extension ConversationVC {
             group.contentInsets.trailing    = 12
             
             let section = NSCollectionLayoutSection(group: group)
-//            section.interGroupSpacing = .init(10)
-            section.contentInsets.bottom = 10
             
             typealias SupplementaryItem = NSCollectionLayoutBoundarySupplementaryItem
             let layoutSize      = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),

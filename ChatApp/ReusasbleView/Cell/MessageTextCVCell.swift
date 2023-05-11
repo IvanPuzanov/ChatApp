@@ -49,7 +49,7 @@ extension MessageTextCVCell: ConfigurableViewProtocol {
     typealias ConfigurationModel = MessageCellModel
     func configure(with model: MessageCellModel) {
                 
-        let isUserMessage = model.sender == .user
+        let isUserMessage = (model.sender == .user)
         
         self.containerView.backgroundColor  = isUserMessage ? .systemBlue : .systemGray6
         self.stackView.alignment            = isUserMessage ? .trailing : .leading

@@ -50,6 +50,8 @@ final class TCProfileImageView: UIControl {
     }
 }
 
+// MARK: - Методы установки значений
+
 extension TCProfileImageView {
     func setUser(user: User) {
         if let imageData = user.avatar {
@@ -123,6 +125,8 @@ extension TCProfileImageView {
         return preparedName.uppercased()
     }
 }
+
+// MARK: - Методы конфигурации
 
 private extension TCProfileImageView {
     func configure() {

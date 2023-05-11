@@ -64,8 +64,8 @@ extension ChannelTVCell: ConfigurableViewProtocol {
         
         switch model.lastMessage {
         case .some(let message):
-            self.messageLabel.text = message
-            self.messageLabel.font = .systemFont(ofSize: 15, weight: .regular)
+            self.messageLabel.text      = message.isURL() ? "Photo 🌄" : message
+            self.messageLabel.font      = .systemFont(ofSize: 15, weight: .regular)
             self.messageLabel.textColor = .secondaryLabel
             
             self.dateLabel.isHidden         = false
