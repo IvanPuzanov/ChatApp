@@ -1,0 +1,39 @@
+{
+  "configurations" : [
+    {
+      "id" : "7B559327-099C-476C-A73D-0D36A6971F22",
+      "name" : "Configuration 1",
+      "options" : {
+        "targetForVariableExpansion" : {
+          "containerPath" : "container:ChatApp.xcodeproj",
+          "identifier" : "2ABEC55D29A4A1C10046CB38",
+          "name" : "ChatApp"
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ChatApp.xcodeproj",
+      "identifier" : "2ABEC55D29A4A1C10046CB38",
+      "name" : "ChatApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ChatApp.xcodeproj",
+        "identifier" : "2AEE4DC12A0BD35800E7E04C",
+        "name" : "ChatAppUITests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:ChatApp.xcodeproj",
+        "identifier" : "2AEE4DA92A0B9AF500E7E04C",
+        "name" : "ChatAppUnitTests"
+      }
+    }
+  ],
+  "version" : 1
+}

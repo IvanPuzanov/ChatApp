@@ -35,6 +35,9 @@
          <TestPlanReference
             reference = "container:ChatApp/ChatAppUITests.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:ChatAppTestsGroup.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference

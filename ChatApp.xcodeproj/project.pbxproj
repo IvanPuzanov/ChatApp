@@ -14,6 +14,7 @@
 		2A1A876929DDBAED00317E04 /* TCProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876829DDBAED00317E04 /* TCProfileImageView.swift */; };
 		2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876A29DDD1C300317E04 /* ProfileVC.swift */; };
 		2A1A876E29DDD1D700317E04 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */; };
+		2A29676A2A0D462700BFA002 /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */; };
 		2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD3E29E3208500579201 /* CoreDataService.swift */; };
 		2A30CD4F29E3F75700579201 /* ChannelsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */; };
 		2A44330929F162EF00F3BED1 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44330829F162EF00F3BED1 /* ViewModel.swift */; };
@@ -103,6 +104,9 @@
 		2A1A876829DDBAED00317E04 /* TCProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImageView.swift; sourceTree = "<group>"; };
 		2A1A876A29DDD1C300317E04 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModelTests.swift; sourceTree = "<group>"; };
+		2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		2A2967842A161CA900BFA002 /* ChatAppTestsGroup.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChatAppTestsGroup.xctestplan; sourceTree = "<group>"; };
 		2A30CD3E29E3208500579201 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsDataSource.swift; sourceTree = "<group>"; };
 		2A44330829F162EF00F3BED1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -210,6 +214,30 @@
 				2A1A876329DD4D0700317E04 /* TCPlaceholder.swift */,
 			);
 			path = Placeholder;
+			sourceTree = "<group>";
+		};
+		2A2967662A0D460B00BFA002 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				2A2967672A0D461300BFA002 /* Profile */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		2A2967672A0D461300BFA002 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				2A2967682A0D461A00BFA002 /* ViewModel */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		2A2967682A0D461A00BFA002 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		2A30CD4D29E3F74300579201 /* DataSource */ = {
@@ -435,8 +463,10 @@
 		2ABEC55529A4A1C10046CB38 = {
 			isa = PBXGroup;
 			children = (
+				2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */,
 				2AEE4DCE2A0BD42F00E7E04C /* ChatAppUITests.xctestplan */,
 				2AEE4DB92A0BA5BE00E7E04C /* ChatAppTests.xctestplan */,
+				2A2967842A161CA900BFA002 /* ChatAppTestsGroup.xctestplan */,
 				2ABEC56029A4A1C10046CB38 /* ChatApp */,
 				2AEE4DAB2A0B9AF600E7E04C /* ChatAppUnitTests */,
 				2AEE4DC32A0BD35900E7E04C /* ChatAppUITests */,
@@ -682,6 +712,7 @@
 			isa = PBXGroup;
 			children = (
 				2AEE4DB62A0B9C4800E7E04C /* Service */,
+				2A2967662A0D460B00BFA002 /* Module */,
 			);
 			path = ChatAppUnitTests;
 			sourceTree = "<group>";
@@ -988,6 +1019,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2AEE4DBB2A0BA73800E7E04C /* FileServiceTests.swift in Sources */,
+				2A29676A2A0D462700BFA002 /* ProfileViewModelTests.swift in Sources */,
 				2AEE4DBD2A0BC9D100E7E04C /* ImagesServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1029,6 +1061,7 @@
 /* Begin XCBuildConfiguration section */
 		2ABEC57029A4A1C50046CB38 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1314,7 +1347,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1335,7 +1368,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1356,7 +1389,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUnitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1375,7 +1408,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1395,7 +1428,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1415,7 +1448,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T9GV6HD4BD;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanpuzan0v.ChatAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

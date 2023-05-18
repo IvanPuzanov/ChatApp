@@ -1,0 +1,21 @@
+default_platform(:ios)
+
+platform :ios do
+    desc "Установка зависимостей, сборка с помощью scan"
+    lane :custom_build_for_testing do
+        cocoapods
+        scan
+    end
+    desc "Запуск тестов на уже скомпилированном приложении"
+    lane :custom_run_tests do
+        scan(
+             testplan: "ChatAppTestsGroup",
+             test_without_building: true
+             )
+    end
+    desc "Вызов первых двух лэйнов"
+    lane :custom_build_and_test do
+        custom_build_for_testing
+        custom_run_tests
+    end
+end
