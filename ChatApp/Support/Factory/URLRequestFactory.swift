@@ -26,14 +26,13 @@ final class URLRequestFactory {
 
 extension URLRequestFactory: URLRequestFactoryProtocol {
     func getImagesRequest(for page: Int) throws -> URLRequest {
-        guard // let apiKey = Bundle.main.object(forInfoDictionaryKey: "UnsplashAPIKey") as? String,
+        guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "UnsplashAPIKey") as? String,
               let url = url(with: "/photos/", query: "client_id=eS1N7yFvIuMsCmwuoo0n_g26k2XwFkn4neIvAdAs_VM&page=\(page)&per_page=100")
         else {
             throw NetworkError.makeRequest
         }
         
-//        print("API_KEY – \(apiKey)")
-//        print("URL – \(url)")
+        print(apiKey)
         
         return URLRequest(url: url)
     }

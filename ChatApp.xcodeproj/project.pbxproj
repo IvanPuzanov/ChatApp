@@ -107,6 +107,7 @@
 		2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModelTests.swift; sourceTree = "<group>"; };
 		2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		2A2967842A161CA900BFA002 /* ChatAppTestsGroup.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChatAppTestsGroup.xctestplan; sourceTree = "<group>"; };
+		2A2967852A16738700BFA002 /* ChatAppConfiguration.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ChatAppConfiguration.xcconfig; sourceTree = "<group>"; };
 		2A30CD3E29E3208500579201 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsDataSource.swift; sourceTree = "<group>"; };
 		2A44330829F162EF00F3BED1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -463,6 +464,7 @@
 		2ABEC55529A4A1C10046CB38 = {
 			isa = PBXGroup;
 			children = (
+				2A2967852A16738700BFA002 /* ChatAppConfiguration.xcconfig */,
 				2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */,
 				2AEE4DCE2A0BD42F00E7E04C /* ChatAppUITests.xctestplan */,
 				2AEE4DB92A0BA5BE00E7E04C /* ChatAppTests.xctestplan */,
@@ -1061,7 +1063,6 @@
 /* Begin XCBuildConfiguration section */
 		2ABEC57029A4A1C50046CB38 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2A29677E2A14BA9600BFA002 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1176,7 +1177,7 @@
 		};
 		2ABEC57329A4A1C50046CB38 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D4A7F92CD1BEFA41CACFF3DD /* Pods-ChatApp.debug.xcconfig */;
+			baseConfigurationReference = 2A2967852A16738700BFA002 /* ChatAppConfiguration.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
