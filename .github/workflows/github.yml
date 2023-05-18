@@ -13,6 +13,6 @@ jobs:
       uses: TFS-iOS/chat-app-IvanPuzanov
       if: always()
       with:
-        webhook: ${{ secrets.DISCORD }}
+        webhook-url: ${{ secrets.DISCORD }}
     - name: Run
       run: bundle exec fastlane custom_build_and_test
