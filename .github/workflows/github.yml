@@ -11,5 +11,5 @@ jobs:
         bundler-cache: true
     - name: Run
       env:
-        SECRETS_URL: ${{ secrets.DISCORD }}
+        SECRETS_URL: ${{ secrets.DISCORD/github }}
       run: bundle exec fastlane custom_build_and_test
