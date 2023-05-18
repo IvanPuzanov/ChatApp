@@ -10,6 +10,7 @@ jobs:
         ruby-version: '3.1'
         bundler-cache: true
     - name: Run
-      env:
-        SECRETS_URL: ${{ secrets.DISCORD }}
+      uses: ./
+      with:
+        webhook-url: ${{ secrets.DISCORD }}
       run: bundle exec fastlane custom_build_and_test
