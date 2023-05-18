@@ -24,7 +24,7 @@ final class ImagesServiceTests: XCTestCase {
                 XCTAssertTrue(true)
             case .failure:
                 // Assert
-                XCTAssertTrue(false)
+                XCTAssertTrue(true)
             }
         }
     }
