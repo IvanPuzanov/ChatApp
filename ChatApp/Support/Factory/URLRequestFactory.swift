@@ -32,6 +32,9 @@ extension URLRequestFactory: URLRequestFactoryProtocol {
             throw NetworkError.makeRequest
         }
         
+//        print("API_KEY – \(apiKey)")
+//        print("URL – \(url)")
+        
         return URLRequest(url: url)
     }
 }

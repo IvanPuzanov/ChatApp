@@ -9,8 +9,9 @@ jobs:
       with:
         ruby-version: '3.1'
         bundler-cache: true
-    - name: Run
-      uses: ./
+    - uses: TFS-iOS/chat-app-IvanPuzanov
+      if: always()
       with:
-        webhook-url: ${{ secrets.DISCORD }}
+        webhook: ${{ secrets.DISCORD }}
+    - name: Run
       run: bundle exec fastlane custom_build_and_test
