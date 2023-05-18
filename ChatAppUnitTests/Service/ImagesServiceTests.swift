@@ -28,5 +28,4 @@ final class ImagesServiceTests: XCTestCase {
             }
         }
     }
-    
 }
