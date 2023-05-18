@@ -8,6 +8,6 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.1'
-        bundler-cache:true
+        bundler-cache: true
     - name: Run
       run: bundle exec fastlane custom_build_and_test
