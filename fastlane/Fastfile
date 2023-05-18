@@ -4,12 +4,15 @@ platform :ios do
     desc "Установка зависимостей, сборка с помощью scan"
     lane :custom_build_for_testing do
         cocoapods
-        scan
+        scan(
+            scheme: "ChatApp"
+        )
     end
     desc "Запуск тестов на уже скомпилированном приложении"
     lane :custom_run_tests do
         scan(
              testplan: "ChatAppTestsGroup",
+             scheme: "ChatApp",
              test_without_building: true
              )
     end
