@@ -12,11 +12,11 @@ final class ProfileVC: UIViewController {
     // MARK: - Параметры
     
     public var coordinator: ProfileCoordinatorProtocol?
-    private var viewModel               = ProfileViewModel()
-    private var input                   = PassthroughSubject<ProfileViewModel.Input, Never>()
-    private var disposeBag              = Set<AnyCancellable>()
+    private var viewModel: ProfileViewModel = ProfileViewModel()
+    private var input                       = PassthroughSubject<ProfileViewModel.Input, Never>()
+    private var disposeBag                  = Set<AnyCancellable>()
     
-    private let cardTransitionService   = CardTransitionService()
+    private let cardTransitionService       = CardTransitionService()
     
     // MARK: - UI
     
@@ -27,6 +27,13 @@ final class ProfileVC: UIViewController {
     private var bioLabel                = UILabel()
     private var editButton              = UIButton()
     private var imagePickerController   = UIImagePickerController()
+    
+    // MARK: - Инициализация
+    
+    convenience init(viewModel: ProfileViewModel) {
+        self.init(nibName: nil, bundle: nil)
+        self.viewModel = viewModel
+    }
 }
 
 // MARK: - Жизненный цикл

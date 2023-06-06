@@ -39,11 +39,6 @@ extension TCImageView {
         backgroundQueue.async(execute: loadWorkItem)
     }
     
-    func cancelLoading() {
-        image = nil
-        urlSession?.cancel()
-    }
-    
     private func makeLoadWorkItem(url: URL) {
         loadWorkItem = DispatchWorkItem { [weak self] in
             self?.urlSession = URLSession.shared.dataTask(with: url) { data, _, _ in
@@ -55,6 +50,11 @@ extension TCImageView {
             }
             self?.urlSession?.resume()
         }
+    }
+    
+    func cancelLoading() {
+        image = nil
+        urlSession?.cancel()
     }
 }
 

@@ -15,9 +15,13 @@ protocol ProfileCoordinatorProtocol {
 final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
     
+    // MARK: - Инициализация
+    
     init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
+    
+    // MARK: - Запуск координатора
     
     func start() {
         let viewController = ProfileVC()

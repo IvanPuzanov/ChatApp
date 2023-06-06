@@ -15,6 +15,7 @@
 		2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876A29DDD1C300317E04 /* ProfileVC.swift */; };
 		2A1A876E29DDD1D700317E04 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */; };
 		2A29676A2A0D462700BFA002 /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */; };
+		2A29678A2A1B72A300BFA002 /* ProfileAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2967892A1B72A300BFA002 /* ProfileAssembly.swift */; };
 		2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD3E29E3208500579201 /* CoreDataService.swift */; };
 		2A30CD4F29E3F75700579201 /* ChannelsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */; };
 		2A44330929F162EF00F3BED1 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44330829F162EF00F3BED1 /* ViewModel.swift */; };
@@ -108,6 +109,7 @@
 		2A2967842A161CA900BFA002 /* ChatAppTestsGroup.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChatAppTestsGroup.xctestplan; sourceTree = "<group>"; };
 		2A2967852A16738700BFA002 /* ChatAppConfiguration.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ChatAppConfiguration.xcconfig; sourceTree = "<group>"; };
 		2A2967872A1697C400BFA002 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		2A2967892A1B72A300BFA002 /* ProfileAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAssembly.swift; sourceTree = "<group>"; };
 		2A30CD3E29E3208500579201 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		2A30CD4E29E3F75700579201 /* ChannelsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsDataSource.swift; sourceTree = "<group>"; };
 		2A44330829F162EF00F3BED1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -239,6 +241,14 @@
 				2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		2A2967882A1B728E00BFA002 /* Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				2A2967892A1B72A300BFA002 /* ProfileAssembly.swift */,
+			);
+			path = Assembly;
 			sourceTree = "<group>";
 		};
 		2A30CD4D29E3F74300579201 /* DataSource */ = {
@@ -491,6 +501,7 @@
 		2ABEC56029A4A1C10046CB38 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
+				2A2967882A1B728E00BFA002 /* Assembly */,
 				2AA9B09C29B1E8FB00311B3F /* Service */,
 				2ABEC57829A4A2110046CB38 /* Coordinator */,
 				2AA9B09F29B1ED0D00311B3F /* Model */,
@@ -969,6 +980,7 @@
 				2AEB6DEA29BA5FBB004D0A3D /* SettingsVC.swift in Sources */,
 				2A1A876129DC671F00317E04 /* UIViewController + Ex.swift in Sources */,
 				2A58C3B829D98E1000780504 /* SettingsCoordinator.swift in Sources */,
+				2A29678A2A1B72A300BFA002 /* ProfileAssembly.swift in Sources */,
 				2A58C3BF29D9B70200780504 /* ChannelsListViewModel.swift in Sources */,
 				2AEB6DF429BB9831004D0A3D /* TCThemeView.swift in Sources */,
 				2AD5807629E99DD500EC47B2 /* UIButtonBuilder.swift in Sources */,
