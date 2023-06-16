@@ -54,10 +54,6 @@ extension ChannelsListVC {
         super.viewWillAppear(animated)
         
         self.tabBarController?.tabBar.isHidden = false
-        
-        DispatchQueue.global(qos: .background).sync {
-            print(Thread.current.isMainThread)
-        }
     }
 }
 
