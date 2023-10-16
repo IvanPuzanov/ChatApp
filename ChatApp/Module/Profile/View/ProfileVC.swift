@@ -16,8 +16,6 @@ final class ProfileVC: UIViewController {
     private var input                       = PassthroughSubject<ProfileViewModel.Input, Never>()
     private var disposeBag                  = Set<AnyCancellable>()
     
-    private let cardTransitionService       = CardTransitionService()
-    
     // MARK: - UI
     
     private var stackView               = UIStackView()
@@ -136,8 +134,6 @@ extension ProfileVC {
         let profileEditor = ProfileEditorVC()
         let navigationController = UINavigationController(rootViewController: profileEditor)
         profileEditor.user = user
-        navigationController.modalPresentationStyle = .currentContext
-        navigationController.transitioningDelegate = self.cardTransitionService
         
         self.present(navigationController, animated: true)
     }

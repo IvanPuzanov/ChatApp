@@ -19,7 +19,6 @@ final class CoreDataService {
     // MARK: - Singleton
     
     static let shared = CoreDataService()
-    private init() {  }
     
     // MARK: - Core Data Stack
     

@@ -7,18 +7,16 @@
 
 import UIKit
 import Combine
-import TFSChatTransport
 
 enum Section: String, CaseIterable { case main }
 
 final class ChannelsListVC: UITableViewController {
     // MARK: - Параметры
     
-    private var viewModel       = ChannelsListViewModel()
-    private var input           = PassthroughSubject<ChannelsListViewModel.Input, Never>()
-    private var disposeBag      = Set<AnyCancellable>()
+    private var viewModel: ChannelsListViewModel
+    private var input       = PassthroughSubject<ChannelsListViewModel.Input, Never>()
+    private var disposeBag  = Set<AnyCancellable>()
     
-    public var coordinator: ChannelsCoordinatorProtocol?
     private var dataSource: ChannelsDataSource?
     
     // MARK: - UI
@@ -28,6 +26,17 @@ final class ChannelsListVC: UITableViewController {
     private var newChannelAlert     = UIAlertController(title: Project.Title.newChannel,
                                                         message: nil,
                                                         preferredStyle: .alert)
+    
+    // MARK: - Инициализация
+    
+    init(viewModel: ChannelsListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 // MARK: - Жизненный цикл
@@ -209,7 +218,7 @@ private extension ChannelsListVC {
 extension ChannelsListVC {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let channel = dataSource?.itemIdentifier(for: indexPath) else { return }
-        coordinator?.showConvesation(for: channel)
+        input.send(.showConversation(for: channel))
     }
     
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

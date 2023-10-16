@@ -14,6 +14,9 @@
 		2A1A876929DDBAED00317E04 /* TCProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876829DDBAED00317E04 /* TCProfileImageView.swift */; };
 		2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876A29DDD1C300317E04 /* ProfileVC.swift */; };
 		2A1A876E29DDD1D700317E04 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */; };
+		2A2450072AD5A68B00DA40CD /* ServiceAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2450062AD5A68B00DA40CD /* ServiceAssembly.swift */; };
+		2A2450092AD5A7F800DA40CD /* ChannelsListModuleAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2450082AD5A7F800DA40CD /* ChannelsListModuleAssembly.swift */; };
+		2A24500C2AD5A97A00DA40CD /* ChannelsListOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A24500B2AD5A97A00DA40CD /* ChannelsListOutput.swift */; };
 		2A29676A2A0D462700BFA002 /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */; };
 		2A29678A2A1B72A300BFA002 /* ProfileAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A2967892A1B72A300BFA002 /* ProfileAssembly.swift */; };
 		2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A30CD3E29E3208500579201 /* CoreDataService.swift */; };
@@ -50,7 +53,6 @@
 		2AAB2AA72A0BF34E00B468ED /* ProfileUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB2AA62A0BF34E00B468ED /* ProfileUITests.swift */; };
 		2AB4C7FF29C352170067BAF5 /* UILabelBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB4C7FE29C352170067BAF5 /* UILabelBuilder.swift */; };
 		2AB974EB29FF9F5D00981C35 /* ProfileCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB974EA29FF9F5D00981C35 /* ProfileCardView.swift */; };
-		2AB974EE2A010B8500981C35 /* CardTransitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB974ED2A010B8500981C35 /* CardTransitionService.swift */; };
 		2ABEC56229A4A1C10046CB38 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */; };
 		2ABEC56B29A4A1C50046CB38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */; };
 		2ABEC56E29A4A1C50046CB38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2ABEC56C29A4A1C50046CB38 /* LaunchScreen.storyboard */; };
@@ -105,6 +107,9 @@
 		2A1A876829DDBAED00317E04 /* TCProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCProfileImageView.swift; sourceTree = "<group>"; };
 		2A1A876A29DDD1C300317E04 /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		2A1A876D29DDD1D700317E04 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		2A2450062AD5A68B00DA40CD /* ServiceAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceAssembly.swift; sourceTree = "<group>"; };
+		2A2450082AD5A7F800DA40CD /* ChannelsListModuleAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsListModuleAssembly.swift; sourceTree = "<group>"; };
+		2A24500B2AD5A97A00DA40CD /* ChannelsListOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsListOutput.swift; sourceTree = "<group>"; };
 		2A2967692A0D462700BFA002 /* ProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModelTests.swift; sourceTree = "<group>"; };
 		2A2967842A161CA900BFA002 /* ChatAppTestsGroup.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ChatAppTestsGroup.xctestplan; sourceTree = "<group>"; };
 		2A2967852A16738700BFA002 /* ChatAppConfiguration.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ChatAppConfiguration.xcconfig; sourceTree = "<group>"; };
@@ -144,7 +149,6 @@
 		2AAB2AA62A0BF34E00B468ED /* ProfileUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUITests.swift; sourceTree = "<group>"; };
 		2AB4C7FE29C352170067BAF5 /* UILabelBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabelBuilder.swift; sourceTree = "<group>"; };
 		2AB974EA29FF9F5D00981C35 /* ProfileCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardView.swift; sourceTree = "<group>"; };
-		2AB974ED2A010B8500981C35 /* CardTransitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTransitionService.swift; sourceTree = "<group>"; };
 		2ABEC55E29A4A1C10046CB38 /* ChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2ABEC56129A4A1C10046CB38 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2ABEC56A29A4A1C50046CB38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -219,6 +223,14 @@
 			path = Placeholder;
 			sourceTree = "<group>";
 		};
+		2A24500A2AD5A96700DA40CD /* Output */ = {
+			isa = PBXGroup;
+			children = (
+				2A24500B2AD5A97A00DA40CD /* ChannelsListOutput.swift */,
+			);
+			path = Output;
+			sourceTree = "<group>";
+		};
 		2A2967662A0D460B00BFA002 /* Module */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,6 +259,8 @@
 			isa = PBXGroup;
 			children = (
 				2A2967892A1B72A300BFA002 /* ProfileAssembly.swift */,
+				2A2450062AD5A68B00DA40CD /* ServiceAssembly.swift */,
+				2A2450082AD5A7F800DA40CD /* ChannelsListModuleAssembly.swift */,
 			);
 			path = Assembly;
 			sourceTree = "<group>";
@@ -342,7 +356,6 @@
 				2A30CD3E29E3208500579201 /* CoreDataService.swift */,
 				2AC2931E29F7FF7F00EA73A0 /* NetworkService.swift */,
 				2A8259D329FBC329001BBEBC /* ImagesService.swift */,
-				2AB974ED2A010B8500981C35 /* CardTransitionService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -638,6 +651,7 @@
 		2AE04CA929AC9AD700DBB90E /* ChannelsList */ = {
 			isa = PBXGroup;
 			children = (
+				2A24500A2AD5A96700DA40CD /* Output */,
 				2AE04CAF29AC9B1400DBB90E /* View */,
 				2A58C3BD29D9B6F200780504 /* ViewModel */,
 			);
@@ -995,6 +1009,7 @@
 				2AB974EB29FF9F5D00981C35 /* ProfileCardView.swift in Sources */,
 				2ABEC57A29A4A27F0046CB38 /* Coordinator.swift in Sources */,
 				2A1A876929DDBAED00317E04 /* TCProfileImageView.swift in Sources */,
+				2A24500C2AD5A97A00DA40CD /* ChannelsListOutput.swift in Sources */,
 				2AC2931429F7005B00EA73A0 /* MessageImageCVCell.swift in Sources */,
 				2AB4C7FF29C352170067BAF5 /* UILabelBuilder.swift in Sources */,
 				2AA6ACD529ADC609002BB019 /* CALayer + Ex.swift in Sources */,
@@ -1005,12 +1020,13 @@
 				2A7BEEF529E6AF7300798C08 /* Chat.xcdatamodeld in Sources */,
 				2AC2931D29F7FDF700EA73A0 /* ListLoadImagesViewModel.swift in Sources */,
 				2AEC10E429ACDFA6000EF08D /* UIButton + Ex.swift in Sources */,
-				2AB974EE2A010B8500981C35 /* CardTransitionService.swift in Sources */,
 				2A1A876B29DDD1C300317E04 /* ProfileVC.swift in Sources */,
 				2A94007729FB9569005F7A6C /* ImageModel.swift in Sources */,
 				2A66835729DAC06C00AEB87B /* ChannelsListVC.swift in Sources */,
+				2A2450092AD5A7F800DA40CD /* ChannelsListModuleAssembly.swift in Sources */,
 				2AD5807429E9879A00EC47B2 /* TCButton.swift in Sources */,
 				2AD5807229E983E400EC47B2 /* UIStackViewBuilder.swift in Sources */,
+				2A2450072AD5A68B00DA40CD /* ServiceAssembly.swift in Sources */,
 				2AE04CB329AC9EDC00DBB90E /* ProfileCoordinator.swift in Sources */,
 				2AA9B0BF29B62D8100311B3F /* TCSendButton.swift in Sources */,
 				2A30CD3F29E3208500579201 /* CoreDataService.swift in Sources */,

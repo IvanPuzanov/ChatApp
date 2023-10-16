@@ -1,0 +1,20 @@
+PODS:
+  - SwiftLint (0.51.0)
+  - TFSChatTransport (3.1.0)
+
+DEPENDENCIES:
+  - SwiftLint
+  - TFSChatTransport
+
+SPEC REPOS:
+  trunk:
+    - SwiftLint
+    - TFSChatTransport
+
+SPEC CHECKSUMS:
+  SwiftLint: 1b7561918a19e23bfed960e40759086e70f4dba5
+  TFSChatTransport: bc49159a7d95dd50a8db108f69e390cfddae92a1
+
+PODFILE CHECKSUM: 8bbc80db468f531a6c5d448d02b9eca20f25d75c
+
+COCOAPODS: 1.12.1

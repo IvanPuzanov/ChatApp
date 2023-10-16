@@ -20,8 +20,8 @@ enum ChannelError: String, Error {
 final class ChannelsListViewModel {
     // MARK: - Сервисы
     
-    private let sseService  = SSEService(host: "167.235.86.234", port: 8080)
-    private let chatService = ChatService(host: "167.235.86.234", port: 8080)
+    private let sseService: SSEService
+    private let chatService: ChatService
     private let coreDataService: CoreDataServiceProtocol
     
     // MARK: - Combine
@@ -30,6 +30,8 @@ final class ChannelsListViewModel {
     private var disposeBag       = Set<AnyCancellable>()
     
     // MARK: - Параметры
+    
+    private let moduleOutput: ChannelsListOutput
     
     private var channels         = [ChannelCellModel]()
     private var cachedChannels   = Set<ChannelCellModel>()
@@ -40,11 +42,15 @@ final class ChannelsListViewModel {
     
     private let monitor          = NWPathMonitor()
     private let monitorQueue     = DispatchQueue(label: "monitorQueue")
-    
+        
     // MARK: - Инициализация
     
-    init(coreDataService: CoreDataServiceProtocol = CoreDataService.shared) {
-        self.coreDataService = coreDataService
+    init(sseService: SSEService, chatService: ChatService, coreDataService: CoreDataServiceProtocol, moduleOutput: ChannelsListOutput) {
+        self.sseService         = sseService
+        self.chatService        = chatService
+        self.coreDataService    = coreDataService
+        self.moduleOutput       = moduleOutput
+        
         runMonitor()
     }
 }
@@ -60,6 +66,7 @@ extension ChannelsListViewModel: ViewModel {
         case createChannel(name: String)
         case delete(channel: ChannelCellModel)
         case subscribeToEvents
+        case showConversation(for: ChannelCellModel)
     }
     
     enum Output {
@@ -90,6 +97,8 @@ extension ChannelsListViewModel: ViewModel {
                 self?.deleteChannel(channel)
             case .subscribeToEvents:
                 self?.subscribeToEvents()
+            case .showConversation(let model):
+                self?.moduleOutput.showConversation(for: model)
             }
         }.store(in: &disposeBag)
         
